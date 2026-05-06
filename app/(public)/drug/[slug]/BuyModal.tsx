@@ -30,6 +30,11 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
       setError(`Only ${ask.qty_remaining} units available`)
       return
     }
+    if (total <= 0) {
+      setError('Invalid order total')
+      return
+    }
+    setError(null)
     setStep('payment')
   }
 

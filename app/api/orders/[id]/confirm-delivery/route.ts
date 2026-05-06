@@ -17,7 +17,7 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   // Verify buyer owns this order
   const { data: order } = await supabase
     .from('orders')
-    .select('id, seller_id, total_amount, listing_id')
+    .select('id, seller_id, total_amount')
     .eq('id', id)
     .eq('buyer_id', user.id)
     .eq('status', 'shipped')

@@ -8,10 +8,19 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  await supabase.from('orders')
+  // Verify order is in 'paid' state and belongs to this seller
+  const { data: order } = await supabase
+    .from('orders').select('status').eq('id', id).eq('seller_id', user.id).single()
+
+  if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+  if (order.status !== 'paid') return NextResponse.json({ error: 'Order must be paid before confirming' }, { status: 400 })
+
+  const { error } = await supabase.from('orders')
     .update({ status: 'confirmed', updated_at: new Date().toISOString() })
     .eq('id', id)
     .eq('seller_id', user.id)
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   captureServerEvent(user.id, { event: 'order_confirmed', props: { order_id: id } })
 

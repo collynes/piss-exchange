@@ -48,7 +48,7 @@ export default async function SellerListingsPage() {
                     {l.brand_name} · <span className="text-muted">{l.origin_country}</span>
                   </td>
                   <td className="px-4 py-2.5 text-right text-sm text-red font-semibold tabular-nums">
-                    {Number(l.price_per_unit).toFixed(2)}
+                    {formatKES(Number(l.price_per_unit))}
                   </td>
                   <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">
                     {l.qty_remaining.toLocaleString()} / {l.qty_available.toLocaleString()}

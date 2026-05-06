@@ -10,6 +10,9 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   const { data: adminProfile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
   if (adminProfile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  await supabase.from('profiles').update({ verified: false, updated_at: new Date().toISOString() }).eq('id', id)
-  return NextResponse.redirect(new URL('/admin/users', process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'))
+  const { error } = await supabase.from('profiles').update({ verified: false, updated_at: new Date().toISOString() }).eq('id', id)
+  const dest = error
+    ? `/admin/users?error=${encodeURIComponent(error.message)}`
+    : '/admin/users?success=suspended'
+  return NextResponse.redirect(new URL(dest, process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'))
 }

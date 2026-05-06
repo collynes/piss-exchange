@@ -26,7 +26,7 @@ export default async function DrugPage({ params }: PageProps) {
   if (!drug) notFound()
 
   const [{ data: md }, { data: asks }, { data: bids }, { data: trades }] = await Promise.all([
-    supabase.from('market_data').select('*').eq('drug_id', drug.id).single(),
+    supabase.from('market_data').select('*').eq('drug_id', drug.id).maybeSingle(),
     supabase.from('listings')
       .select('id, seller_id, brand_name, origin_country, qty_remaining, price_per_unit, min_order_qty')
       .eq('drug_id', drug.id).eq('status', 'active')

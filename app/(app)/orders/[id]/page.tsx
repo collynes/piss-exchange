@@ -30,12 +30,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const payment = (order.payments as { amount: number; method: string; mpesa_ref: string | null; status: string; escrow_released_at: string | null }[] | null)?.[0]
 
   const currentStep = STATUS_STEPS.indexOf(order.status)
-  const isBuyer = true // simplified — in production check against user.id
 
-  const handleConfirmDelivery = async () => {
-    'use server'
-    // Server action to confirm delivery and release escrow
-  }
+  // need buyer_id/seller_id — re-query without RLS stripping
+  const { data: orderIds } = await supabase
+    .from('orders').select('buyer_id').eq('id', id).single()
+  const isBuyer = orderIds?.buyer_id === user.id
 
   return (
     <div className="max-w-2xl">
@@ -106,8 +105,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         </div>
       )}
 
-      {/* Confirm delivery */}
-      {order.status === 'shipped' && (
+      {/* Confirm delivery — only buyer can do this */}
+      {order.status === 'shipped' && isBuyer && (
         <div className="bg-green/10 border border-green/30 rounded p-5">
           <div className="text-sm font-semibold text-white mb-1">Your order has been shipped</div>
           <div className="text-xs text-muted mb-4">Confirm receipt to release payment to the seller.</div>

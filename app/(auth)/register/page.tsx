@@ -64,7 +64,7 @@ export default function RegisterPage() {
   }
 
   if (step === 1) return (
-    <div className="bg-surface border border-border2 rounded p-8">
+    <div className="bg-surface border border-border rounded-2xl p-8 shadow-xl shadow-black/20">
       <h1 className="text-white font-bold text-xl mb-1">Join the Exchange</h1>
       <p className="text-muted text-sm mb-6">Choose your role to get started</p>
       <div className="space-y-3">
@@ -93,7 +93,7 @@ export default function RegisterPage() {
   )
 
   return (
-    <div className="bg-surface border border-border2 rounded p-8">
+    <div className="bg-surface border border-border rounded-2xl p-8 shadow-xl shadow-black/20">
       <button onClick={() => setStep(1)} className="text-muted text-xs mb-4 hover:text-white flex items-center gap-1">
         ← Back
       </button>
@@ -126,7 +126,7 @@ export default function RegisterPage() {
               placeholder={placeholder}
               value={form[key as keyof typeof form]}
               onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white placeholder:text-muted focus:border-blue transition-colors"
+              className="w-full bg-bg border border-border rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-muted focus:border-blue focus:outline-none transition-colors"
             />
           </div>
         ))}
