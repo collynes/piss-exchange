@@ -9,13 +9,7 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-export async function generateStaticParams() {
-  const supabase = await createClient()
-  const { data } = await supabase.from('drugs').select('slug')
-  return (data ?? []).map(d => ({ slug: d.slug }))
-}
-
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function DrugPage({ params }: PageProps) {
   const { slug } = await params
