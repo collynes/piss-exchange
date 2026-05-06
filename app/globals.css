@@ -2,13 +2,13 @@
 
 @theme {
   /* Colors — light theme */
-  --color-bg:       #f3f5fb;
+  --color-bg:       #f9fafb;
   --color-surface:  #ffffff;
-  --color-surface2: #edf0f9;
-  --color-border:   #e2e7f2;
-  --color-border2:  #d0d8ec;
-  --color-text:     #3d4466;
-  --color-muted:    #8891b4;
+  --color-surface2: #f3f4f6;
+  --color-border:   #e5e7eb;
+  --color-border2:  #d1d5db;
+  --color-text:     #111827;
+  --color-muted:    #6b7280;
   --color-blue:     #2962ff;
   --color-green:    #089981;
   --color-red:      #f23645;
