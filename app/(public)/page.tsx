@@ -33,7 +33,7 @@ export default async function LandingPage() {
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden">
 
         {/* Grid background */}
-        <div className="absolute inset-0 opacity-[0.04]"
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{ backgroundImage: 'linear-gradient(#d1d4dc 1px, transparent 1px), linear-gradient(90deg, #d1d4dc 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
         {/* Gradient blobs */}

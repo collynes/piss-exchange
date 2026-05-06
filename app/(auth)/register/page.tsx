@@ -18,6 +18,18 @@ export default function RegisterPage() {
 
   const handleRoleSelect = (r: Role) => { setRole(r); setStep(2) }
 
+  const friendlyError = (msg: string) => {
+    if (/rate.limit|too.many/i.test(msg))
+      return 'Too many sign-up attempts — please wait a few minutes and try again.'
+    if (/already.registered|already.exists/i.test(msg))
+      return 'An account with this email already exists. Try logging in.'
+    if (/invalid.email/i.test(msg))
+      return 'Please enter a valid email address.'
+    if (/weak.password|password.should/i.test(msg))
+      return 'Password must be at least 6 characters.'
+    return msg
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!role) return
@@ -30,7 +42,7 @@ export default function RegisterPage() {
       password: form.password,
     })
     if (signUpError || !data.user) {
-      setError(signUpError?.message ?? 'Sign up failed')
+      setError(friendlyError(signUpError?.message ?? 'Sign up failed'))
       setLoading(false)
       return
     }
@@ -88,17 +100,21 @@ export default function RegisterPage() {
       <h1 className="text-white font-bold text-xl mb-1">
         {role === 'seller' ? 'Register as Seller' : 'Register as Buyer'}
       </h1>
-      <p className="text-muted text-sm mb-6">For licensed pharmaceutical entities · PPB Kenya</p>
+      <p className="text-muted text-sm mb-6">
+        {role === 'seller'
+          ? 'For manufacturers, importers & distributors · PPB Kenya'
+          : 'For pharmacies, hospitals & healthcare facilities'}
+      </p>
 
       {error && <div className="bg-red/10 border border-red/30 text-red text-sm p-3 rounded mb-4">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
-          { key: 'org_name', label: 'Organisation Name', placeholder: 'Pharma Ltd', required: true },
+          { key: 'org_name', label: 'Organisation Name', placeholder: role === 'seller' ? 'Batalo Pharma Ltd' : 'Nairobi General Hospital', required: true },
           { key: 'email', label: 'Email', placeholder: 'you@company.com', type: 'email', required: true },
           { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true },
           { key: 'phone', label: 'Phone', placeholder: '+254700000000', required: false },
-          { key: 'license_no', label: 'PPB License No.', placeholder: 'Optional', required: false },
+          ...(role === 'seller' ? [{ key: 'license_no', label: 'PPB License No.', placeholder: 'e.g. PPB/MNF/2024/001', required: false }] : []),
         ].map(({ key, label, placeholder, type = 'text', required }) => (
           <div key={key}>
             <label className="block text-xs text-muted uppercase tracking-wider mb-1">
