@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { captureServerEvent } from '@/lib/posthog'
 
 // M-Pesa callback — uses service role to bypass RLS
 const adminSupabase = createClient(
@@ -43,6 +44,16 @@ export async function POST(request: Request) {
       status: 'paid',
       updated_at: new Date().toISOString(),
     }).eq('id', payment.order_id)
+
+    // Fetch buyer_id for telemetry
+    const { data: order } = await adminSupabase
+      .from('orders').select('buyer_id').eq('id', payment.order_id).single()
+    if (order) {
+      captureServerEvent(order.buyer_id, {
+        event: 'payment_completed',
+        props: { order_id: payment.order_id, amount: payment.amount },
+      })
+    }
   } else {
     // Payment failed
     await adminSupabase.from('payments').update({

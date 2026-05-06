@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { captureServerEvent } from '@/lib/posthog'
 
 interface StkPushBody {
   orderId: string
@@ -78,6 +79,11 @@ export async function POST(request: Request) {
     method: 'mpesa',
     mpesa_checkout_id: checkoutId,
     status: 'pending',
+  })
+
+  captureServerEvent(user.id, {
+    event: 'payment_initiated',
+    props: { order_id: orderId, amount, method: 'mpesa' },
   })
 
   return NextResponse.json({ checkoutId })

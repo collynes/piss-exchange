@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createClient as createUserClient } from '@/lib/supabase/server'
+import { captureServerEvent } from '@/lib/posthog'
 
 const adminSupabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -57,6 +58,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       total_amount: orderFull.total_amount,
     })
   }
+
+  captureServerEvent(user.id, { event: 'order_delivered', props: { order_id: id } })
 
   return NextResponse.redirect(new URL(`/orders/${id}`, process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'))
 }

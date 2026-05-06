@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { captureServerEvent } from '@/lib/posthog'
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -11,6 +12,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     .update({ status: 'confirmed', updated_at: new Date().toISOString() })
     .eq('id', id)
     .eq('seller_id', user.id)
+
+  captureServerEvent(user.id, { event: 'order_confirmed', props: { order_id: id } })
 
   return NextResponse.redirect(new URL(`/seller/orders`, process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'))
 }
