@@ -1,26 +1,35 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Colors */
+  --color-bg:       #131722;
+  --color-surface:  #1e2330;
+  --color-surface2: #2a2e39;
+  --color-border:   #2a2e39;
+  --color-border2:  #363a45;
+  --color-text:     #d1d4dc;
+  --color-muted:    #787b86;
+  --color-blue:     #2962ff;
+  --color-green:    #089981;
+  --color-red:      #f23645;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Font */
+  --font-sans: 'Inter', system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Ticker animation */
+  --animate-ticker: ticker 36s linear infinite;
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  body {
+    background-color: #131722;
+    color: #d1d4dc;
+    -webkit-font-smoothing: antialiased;
+    font-variant-numeric: tabular-nums;
+  }
 }
