@@ -295,3 +295,29 @@ create policy "trades_public_read" on trades for select using (true);
 create policy "settings_admin_all" on platform_settings for all using (
   exists (select 1 from profiles where id = auth.uid() and role = 'admin')
 );
+
+-- ── FIX: SECURITY DEFINER helper to avoid RLS infinite recursion ──────────
+-- All admin policies use is_admin() instead of inline subquery on profiles
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+STABLE
+SET search_path = public
+AS $$
+  SELECT EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin');
+$$;
+
+DROP POLICY IF EXISTS "drugs_admin_all"       ON drugs;
+DROP POLICY IF EXISTS "profiles_admin_all"    ON profiles;
+DROP POLICY IF EXISTS "listings_admin_all"    ON listings;
+DROP POLICY IF EXISTS "orders_admin_all"      ON orders;
+DROP POLICY IF EXISTS "payments_admin_all"    ON payments;
+DROP POLICY IF EXISTS "settings_admin_all"    ON platform_settings;
+
+CREATE POLICY "drugs_admin_all"       ON drugs             FOR ALL USING (is_admin());
+CREATE POLICY "profiles_admin_all"    ON profiles          FOR ALL USING (is_admin());
+CREATE POLICY "listings_admin_all"    ON listings          FOR ALL USING (is_admin());
+CREATE POLICY "orders_admin_all"      ON orders            FOR ALL USING (is_admin());
+CREATE POLICY "payments_admin_all"    ON payments          FOR ALL USING (is_admin());
+CREATE POLICY "settings_admin_all"    ON platform_settings FOR ALL USING (is_admin());
