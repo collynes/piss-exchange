@@ -17,7 +17,10 @@ export async function Nav() {
   return (
     <nav className="flex items-center justify-between px-6 h-14 bg-surface border-b border-border sticky top-0 z-50 backdrop-blur-sm bg-surface/95">
       <Link href="/" className="flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-blue rounded-lg flex items-center justify-center text-white font-black text-xs shadow-sm">DH</div>
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black text-[11px] shadow-sm shrink-0"
+          style={{ background: 'linear-gradient(135deg, #2962ff, #089981)' }}>
+          DH
+        </div>
         <span className="text-white font-bold text-sm tracking-tight">
           PISS<span className="text-blue">.</span>Exchange
         </span>
