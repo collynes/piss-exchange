@@ -44,7 +44,7 @@ export default async function SellerOrdersPage() {
                     <span className="text-[10px] text-muted capitalize bg-surface2 px-1.5 py-0.5 rounded">{order.status}</span>
                   </td>
                   <td className="px-4 py-2.5 text-right text-xs text-muted">
-                    {new Date(order.created_at).toLocaleDateString('en-KE')}
+                    {new Date(order.created_at as string).toLocaleDateString('en-KE')}
                   </td>
                   <td className="px-4 py-2.5 text-right">
                     <div className="flex gap-1 justify-end">

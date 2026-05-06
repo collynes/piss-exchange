@@ -14,7 +14,7 @@ export interface Bid {
   id: string
   qty: number
   price_per_unit: number
-  created_at: string
+  created_at: string | null
 }
 
 interface OrderBookProps {
@@ -85,7 +85,7 @@ export function OrderBook({ asks, bids, isAuthenticated, onBuyClick, onBidClick 
             <span className="relative text-green font-semibold tabular-nums">{Number(bid.price_per_unit).toFixed(2)}</span>
             <span className="relative text-right text-text tabular-nums">{bid.qty.toLocaleString()}</span>
             <span className="relative text-right text-muted text-[10px]">
-              {new Date(bid.created_at).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}
+              {bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' }) : '—'}
             </span>
           </div>
         ))}

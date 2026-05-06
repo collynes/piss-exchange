@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 interface Setting {
   key: string
   value: string
-  updated_at: string
+  updated_at: string | null
 }
 
 const SETTING_LABELS: Record<string, { label: string; desc: string }> = {
@@ -53,7 +53,7 @@ export default function AdminSettingsPage() {
               <div>
                 <div className="text-sm font-semibold text-white">{meta?.label ?? setting.key}</div>
                 <div className="text-xs text-muted mt-0.5">{meta?.desc}</div>
-                <div className="text-[10px] text-muted/50 mt-1">Last updated: {new Date(setting.updated_at).toLocaleString('en-KE')}</div>
+                <div className="text-[10px] text-muted/50 mt-1">Last updated: {setting.updated_at ? new Date(setting.updated_at).toLocaleString('en-KE') : '—'}</div>
               </div>
               <button
                 onClick={() => toggle(setting.key, setting.value)}

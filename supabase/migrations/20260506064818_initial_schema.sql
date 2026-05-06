@@ -26,7 +26,7 @@ create table profiles (
   license_no   text,
   doc_url      text,
   verified     boolean not null default false,
-  country_id   uuid references countries(id) default (select id from countries where code = 'KE'),
+  country_id   uuid references countries(id),
   created_at   timestamptz default now(),
   updated_at   timestamptz default now()
 );
@@ -51,7 +51,7 @@ create table drugs (
   dosage_form  text not null,
   strength     text not null,
   category     text not null,
-  country_id   uuid references countries(id) default (select id from countries where code = 'KE'),
+  country_id   uuid references countries(id),
   active       boolean not null default true,
   created_at   timestamptz default now()
 );
@@ -67,6 +67,8 @@ insert into drugs (generic_name, slug, atc_code, dosage_form, strength, category
   ('Salbutamol Sulphate', 'salbutamol-100mcg-inhaler', 'R03AC02', 'Inhaler', '100mcg/dose', 'Respiratory'),
   ('Doxycycline Hyclate', 'doxycycline-100mg-capsule', 'J01AA02', 'Capsule', '100mg', 'Antibiotics'),
   ('Amlodipine Besylate', 'amlodipine-5mg-tablet', 'C08CA01', 'Tablet', '5mg', 'Cardiovascular');
+
+update drugs set country_id = (select id from countries where code = 'KE');
 
 -- ── LISTINGS (ASKS) ────────────────────────────────────────────────────────
 create type listing_status as enum ('active', 'filled', 'expired', 'cancelled');

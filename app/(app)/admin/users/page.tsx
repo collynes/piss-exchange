@@ -35,7 +35,7 @@ export default async function AdminUsersPage() {
                 </td>
                 <td className="px-4 py-2.5 text-right text-xs text-muted capitalize">{u.role}</td>
                 <td className="px-4 py-2.5 text-right text-xs text-muted">{u.license_no ?? '—'}</td>
-                <td className="px-4 py-2.5 text-right text-xs text-muted">{new Date(u.created_at).toLocaleDateString('en-KE')}</td>
+                <td className="px-4 py-2.5 text-right text-xs text-muted">{new Date(u.created_at!).toLocaleDateString('en-KE')}</td>
                 <td className="px-4 py-2.5 text-right">
                   <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${u.verified ? 'bg-green/10 text-green' : 'bg-muted/10 text-muted'}`}>
                     {u.verified ? 'Verified' : 'Pending'}

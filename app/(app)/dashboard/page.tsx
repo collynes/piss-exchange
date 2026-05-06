@@ -106,7 +106,7 @@ export default async function DashboardPage({
                       <Link href={`/orders/${order.id}`} className="text-sm text-white hover:text-blue transition-colors">
                         {drug?.generic_name ?? '—'}
                       </Link>
-                      <div className="text-[10px] text-muted">{new Date(order.created_at).toLocaleDateString('en-KE')}</div>
+                      <div className="text-[10px] text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
                     </td>
                     <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">{order.qty.toLocaleString()}</td>
                     <td className="px-4 py-2.5 text-right text-sm text-white tabular-nums font-semibold">{formatKES(Number(order.total_amount))}</td>

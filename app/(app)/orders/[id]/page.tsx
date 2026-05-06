@@ -73,7 +73,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           { label: 'Quantity', value: order.qty.toLocaleString() + ' units' },
           { label: 'Price/unit', value: `KES ${Number(order.price_per_unit).toFixed(2)}` },
           { label: 'Total', value: formatKES(Number(order.total_amount)), bold: true },
-          { label: 'Placed', value: new Date(order.created_at).toLocaleString('en-KE') },
+          { label: 'Placed', value: new Date(order.created_at as string).toLocaleString('en-KE') },
         ].map(({ label, value, bold }) => (
           <div key={label} className="flex justify-between text-sm">
             <span className="text-muted">{label}</span>
@@ -92,7 +92,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               { label: 'Amount', value: formatKES(Number(payment.amount)) },
               { label: 'Status', value: payment.status },
               payment.mpesa_ref && { label: 'M-Pesa Ref', value: payment.mpesa_ref },
-              payment.escrow_released_at && { label: 'Escrow Released', value: new Date(payment.escrow_released_at).toLocaleString('en-KE') },
+              payment.escrow_released_at && { label: 'Escrow Released', value: new Date(payment.escrow_released_at as string).toLocaleString('en-KE') },
             ].filter(Boolean).map((item) => {
               const i = item as { label: string; value: string }
               return (
