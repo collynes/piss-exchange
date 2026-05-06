@@ -51,8 +51,8 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-surface border border-border2 rounded w-full max-w-sm" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <h2 className="text-white font-semibold text-sm">Place Bid — {drugName}</h2>
-          <button onClick={onClose} className="text-muted hover:text-white text-lg leading-none">×</button>
+          <h2 className="text-text font-semibold text-sm">Place Bid — {drugName}</h2>
+          <button onClick={onClose} className="text-muted hover:text-text text-lg leading-none">×</button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
@@ -61,7 +61,7 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
             </label>
             <input type="number" step="0.01" min="0.01" required value={price} onChange={e => setPrice(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white placeholder:text-muted focus:border-blue transition-colors" />
+              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text placeholder:text-muted focus:border-blue transition-colors" />
           </div>
           <div>
             <label className="block text-xs text-muted uppercase tracking-wider mb-1">
@@ -69,12 +69,12 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
             </label>
             <input type="number" min="1" required value={qty} onChange={e => setQty(e.target.value)}
               placeholder="100"
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white placeholder:text-muted focus:border-blue transition-colors" />
+              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text placeholder:text-muted focus:border-blue transition-colors" />
           </div>
           <div>
             <label className="block text-xs text-muted uppercase tracking-wider mb-1">Valid for (days)</label>
             <select value={days} onChange={e => setDays(e.target.value)}
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white focus:border-blue transition-colors">
+              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text focus:border-blue transition-colors">
               <option value="1">1 day</option>
               <option value="3">3 days</option>
               <option value="7">7 days</option>

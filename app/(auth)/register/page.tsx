@@ -65,14 +65,14 @@ export default function RegisterPage() {
 
   if (step === 1) return (
     <div className="bg-surface border border-border rounded-2xl p-8 shadow-xl shadow-black/20">
-      <h1 className="text-white font-bold text-xl mb-1">Join the Exchange</h1>
+      <h1 className="text-text font-bold text-xl mb-1">Join the Exchange</h1>
       <p className="text-muted text-sm mb-6">Choose your role to get started</p>
       <div className="space-y-3">
         {(['seller', 'buyer'] as Role[]).map(r => (
           <button key={r} onClick={() => handleRoleSelect(r)}
             className="w-full flex items-center justify-between p-4 bg-bg border border-border2 rounded hover:border-blue hover:bg-blue/10 transition-all text-left group">
             <div>
-              <div className="text-white font-semibold capitalize">
+              <div className="text-text font-semibold capitalize">
                 {r === 'seller' ? 'Join as a Seller' : 'Join as a Buyer'}
               </div>
               <div className="text-muted text-xs mt-1">
@@ -94,10 +94,10 @@ export default function RegisterPage() {
 
   return (
     <div className="bg-surface border border-border rounded-2xl p-8 shadow-xl shadow-black/20">
-      <button onClick={() => setStep(1)} className="text-muted text-xs mb-4 hover:text-white flex items-center gap-1">
+      <button onClick={() => setStep(1)} className="text-muted text-xs mb-4 hover:text-text flex items-center gap-1">
         ← Back
       </button>
-      <h1 className="text-white font-bold text-xl mb-1">
+      <h1 className="text-text font-bold text-xl mb-1">
         {role === 'seller' ? 'Register as Seller' : 'Register as Buyer'}
       </h1>
       <p className="text-muted text-sm mb-6">
@@ -126,12 +126,12 @@ export default function RegisterPage() {
               placeholder={placeholder}
               value={form[key as keyof typeof form]}
               onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-              className="w-full bg-bg border border-border rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-muted focus:border-blue focus:outline-none transition-colors"
+              className="w-full bg-bg border border-border rounded-lg px-3 py-2.5 text-sm text-text placeholder:text-muted focus:border-blue focus:outline-none transition-colors"
             />
           </div>
         ))}
         <button type="submit" disabled={loading}
-          className="w-full bg-blue hover:bg-blue/90 text-white font-semibold py-2.5 rounded text-sm disabled:opacity-50 transition-colors">
+          className="w-full bg-blue hover:bg-blue/90 text-text font-semibold py-2.5 rounded text-sm disabled:opacity-50 transition-colors">
           {loading ? 'Creating account…' : 'Create Account'}
         </button>
       </form>

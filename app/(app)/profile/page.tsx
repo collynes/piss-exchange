@@ -14,7 +14,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="max-w-lg">
-      <h1 className="text-lg font-bold text-white mb-6">My Profile</h1>
+      <h1 className="text-lg font-bold text-text mb-6">My Profile</h1>
       <div className="bg-surface border border-border rounded p-6 space-y-4">
         {[
           { label: 'Email', value: user.email ?? '—' },

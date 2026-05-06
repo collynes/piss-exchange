@@ -89,10 +89,10 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-surface border border-border2 rounded w-full max-w-sm" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <h2 className="text-white font-semibold text-sm">
+          <h2 className="text-text font-semibold text-sm">
             {step === 'confirm' ? `Buy ${ask.brand_name}` : 'Pay via M-Pesa'}
           </h2>
-          <button onClick={onClose} className="text-muted hover:text-white text-lg leading-none">×</button>
+          <button onClick={onClose} className="text-muted hover:text-text text-lg leading-none">×</button>
         </div>
         <div className="p-5">
           {step === 'confirm' ? (
@@ -100,11 +100,11 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
               <div className="bg-bg rounded p-3 mb-4 space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-muted">Drug</span>
-                  <span className="text-white">{drugName}</span>
+                  <span className="text-text">{drugName}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-muted">Brand</span>
-                  <span className="text-white">{ask.brand_name} · {ask.origin_country}</span>
+                  <span className="text-text">{ask.brand_name} · {ask.origin_country}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-muted">Price/unit</span>
@@ -112,7 +112,7 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-muted">Available</span>
-                  <span className="text-white">{ask.qty_remaining.toLocaleString()} units</span>
+                  <span className="text-text">{ask.qty_remaining.toLocaleString()} units</span>
                 </div>
               </div>
 
@@ -126,7 +126,7 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
                   max={ask.qty_remaining}
                   value={qty}
                   onChange={e => setQty(Number(e.target.value))}
-                  className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white focus:border-blue transition-colors"
+                  className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text focus:border-blue transition-colors"
                 />
               </div>
 
@@ -134,7 +134,7 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
 
               <div className="flex justify-between items-center mb-4">
                 <span className="text-muted text-xs">Total</span>
-                <span className="text-white font-bold text-lg">KES {total.toFixed(2)}</span>
+                <span className="text-text font-bold text-lg">KES {total.toFixed(2)}</span>
               </div>
 
               <button onClick={handleConfirm} className="w-full bg-blue text-white font-semibold py-2.5 rounded text-sm hover:bg-blue/90 transition-colors">
@@ -145,7 +145,7 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
             <>
               <div className="bg-bg rounded p-3 mb-4 flex justify-between items-center">
                 <span className="text-muted text-xs">Total to pay</span>
-                <span className="text-white font-bold text-lg">KES {total.toFixed(2)}</span>
+                <span className="text-text font-bold text-lg">KES {total.toFixed(2)}</span>
               </div>
 
               <div className="mb-4">
@@ -157,7 +157,7 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
                   placeholder="+254700000000"
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
-                  className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white placeholder:text-muted focus:border-blue transition-colors"
+                  className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text placeholder:text-muted focus:border-blue transition-colors"
                 />
                 <p className="text-[10px] text-muted mt-1">You will receive an M-Pesa push notification to confirm payment.</p>
               </div>

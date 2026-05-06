@@ -30,9 +30,9 @@ export function OrderBook({ asks, bids, isAuthenticated, onBuyClick, onBidClick 
   const maxBidQty = Math.max(...bids.map(b => b.qty), 1)
 
   return (
-    <div className="grid grid-cols-2 gap-0 overflow-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-0 overflow-auto">
       {/* Asks */}
-      <div className="border-r border-border p-3">
+      <div className="border-b md:border-b-0 md:border-r border-border p-3">
         <div className="text-[10px] font-bold text-red uppercase tracking-wider mb-2 pb-2 border-b border-border">
           Asks — Sellers
         </div>

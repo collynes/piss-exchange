@@ -26,8 +26,9 @@ export default async function OrdersPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-lg font-bold text-white mb-6">My Orders</h1>
-      <div className="bg-surface border border-border rounded overflow-hidden">
+      <h1 className="text-lg font-bold text-text mb-6">My Orders</h1>
+      <div className="overflow-x-auto">
+      <div className="bg-surface border border-border rounded overflow-hidden min-w-[640px]">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
@@ -47,13 +48,13 @@ export default async function OrdersPage() {
               return (
                 <tr key={order.id} className="border-b border-border/30 hover:bg-bg transition-colors">
                   <td className="px-4 py-2.5">
-                    <Link href={`/drug/${drug?.slug}`} className="text-sm text-white hover:text-blue transition-colors">
+                    <Link href={`/drug/${drug?.slug}`} className="text-sm text-text hover:text-blue transition-colors">
                       {drug?.generic_name ?? '—'}
                     </Link>
                   </td>
                   <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">{order.qty.toLocaleString()}</td>
                   <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">{Number(order.price_per_unit).toFixed(2)}</td>
-                  <td className="px-4 py-2.5 text-right text-sm text-white font-semibold tabular-nums">{formatKES(Number(order.total_amount))}</td>
+                  <td className="px-4 py-2.5 text-right text-sm text-text font-semibold tabular-nums">{formatKES(Number(order.total_amount))}</td>
                   <td className="px-4 py-2.5 text-right">
                     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
                       {order.status}
@@ -74,6 +75,7 @@ export default async function OrdersPage() {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   )

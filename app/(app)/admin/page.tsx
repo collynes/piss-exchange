@@ -30,7 +30,7 @@ export default async function AdminPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-lg font-bold text-white mb-6">Admin Overview</h1>
+      <h1 className="text-lg font-bold text-text mb-6">Admin Overview</h1>
 
       <div className="grid grid-cols-4 gap-3 mb-8">
         {[
@@ -57,7 +57,7 @@ export default async function AdminPage() {
         ].map(link => (
           <Link key={link.href} href={link.href}
             className="bg-surface border border-border rounded p-5 hover:border-blue/40 transition-colors group">
-            <div className="text-sm font-semibold text-white group-hover:text-blue transition-colors mb-1">{link.label}</div>
+            <div className="text-sm font-semibold text-text group-hover:text-blue transition-colors mb-1">{link.label}</div>
             <div className="text-xs text-muted">{link.desc}</div>
           </Link>
         ))}

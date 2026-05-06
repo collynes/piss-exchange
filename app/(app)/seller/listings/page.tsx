@@ -17,14 +17,15 @@ export default async function SellerListingsPage() {
   return (
     <div className="max-w-5xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-bold text-white">My Listings</h1>
+        <h1 className="text-lg font-bold text-text">My Listings</h1>
         <Link href="/seller/listings/new"
           className="px-3 py-1.5 bg-blue text-white text-xs font-semibold rounded hover:bg-blue/90 transition-colors">
           + List Drug
         </Link>
       </div>
 
-      <div className="bg-surface border border-border rounded overflow-hidden">
+      <div className="overflow-x-auto">
+      <div className="bg-surface border border-border rounded overflow-hidden min-w-[640px]">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
@@ -39,7 +40,7 @@ export default async function SellerListingsPage() {
               return (
                 <tr key={l.id} className="border-b border-border/30 hover:bg-bg transition-colors">
                   <td className="px-4 py-2.5">
-                    <Link href={`/drug/${drug?.slug}`} className="text-sm font-semibold text-white hover:text-blue transition-colors">
+                    <Link href={`/drug/${drug?.slug}`} className="text-sm font-semibold text-text hover:text-blue transition-colors">
                       {drug?.generic_name ?? '—'}
                     </Link>
                     <div className="text-[10px] text-muted">{drug?.strength} · {drug?.dosage_form}</div>
@@ -77,6 +78,7 @@ export default async function SellerListingsPage() {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   )

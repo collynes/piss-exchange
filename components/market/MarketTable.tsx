@@ -22,7 +22,30 @@ interface MarketRow {
 export function MarketTable({ rows }: { rows: MarketRow[] }) {
   return (
     <div className="overflow-auto flex-1">
-      <table className="w-full border-collapse">
+      {/* Mobile cards */}
+      <div className="md:hidden divide-y divide-border">
+        {rows.map(row => (
+          <Link key={row.drug_id} href={`/drug/${row.slug}`}
+            className="flex items-center justify-between px-4 py-3 hover:bg-surface2 transition-colors">
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-semibold text-text truncate">{row.generic_name}</div>
+              <div className="text-xs text-muted">{row.strength} · {row.dosage_form}</div>
+            </div>
+            <div className="text-right ml-3 flex-shrink-0">
+              <div className={`text-sm font-bold tabular-nums ${Number(row.change_pct) >= 0 ? 'text-green' : 'text-red'}`}>
+                {row.best_ask ? Number(row.best_ask).toFixed(2) : '—'}
+              </div>
+              <ChangeBadge pct={Number(row.change_pct)} />
+            </div>
+          </Link>
+        ))}
+        {rows.length === 0 && (
+          <div className="px-4 py-8 text-center text-muted text-sm">No drugs listed yet.</div>
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <table className="w-full border-collapse hidden md:table">
         <thead className="sticky top-0 bg-surface z-10">
           <tr className="border-b border-border">
             {['Generic Drug', 'Last (KES)', 'Change', 'Best Ask', 'Best Bid', 'Volume', 'Deals', 'Sellers', ''].map(h => (
@@ -35,10 +58,10 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
         <tbody>
           {rows.map(row => (
             <tr key={row.drug_id}
-              className="border-b border-border/30 hover:bg-surface cursor-pointer transition-colors"
+              className="border-b border-border/50 hover:bg-surface2 cursor-pointer transition-colors"
               onClick={() => { window.location.href = `/drug/${row.slug}` }}>
               <td className="px-4 py-2.5">
-                <div className="text-sm font-semibold text-white">{row.generic_name}</div>
+                <div className="text-sm font-semibold text-text">{row.generic_name}</div>
                 <div className="text-[10.5px] text-muted mt-0.5">{row.strength} · {row.dosage_form}{row.atc_code ? ` · ${row.atc_code}` : ''}</div>
               </td>
               <td className={`px-4 py-2.5 text-right text-sm font-semibold tabular-nums ${Number(row.change_pct) >= 0 ? 'text-green' : 'text-red'}`}>
@@ -58,7 +81,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
               <td className="px-4 py-2.5 text-right text-xs text-muted">{row.seller_count}</td>
               <td className="px-4 py-2.5 text-right">
                 <Link href={`/drug/${row.slug}`} onClick={e => e.stopPropagation()}
-                  className="px-2.5 py-1 bg-surface2 text-muted text-xs rounded hover:bg-blue hover:text-white transition-colors">
+                  className="px-2.5 py-1 bg-surface2 text-muted text-xs rounded-lg hover:bg-blue hover:text-white transition-colors">
                   View
                 </Link>
               </td>

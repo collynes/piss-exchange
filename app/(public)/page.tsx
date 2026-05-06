@@ -50,7 +50,7 @@ export default async function LandingPage() {
 
         {/* Main headline */}
         <h1 className="relative text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 max-w-4xl">
-          <span className="text-white">The smarter way</span>
+          <span className="text-text">The smarter way</span>
           <br />
           <span style={{
             background: 'linear-gradient(135deg, #2962ff 0%, #089981 50%, #2962ff 100%)',
@@ -72,7 +72,7 @@ export default async function LandingPage() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 mb-12">
           <Link href="/register"
-            className="px-8 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+            className="px-8 py-4 rounded-full font-bold text-text text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
             style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 28px rgba(41,98,255,0.35)' }}>
             Join the Exchange
           </Link>
@@ -120,7 +120,7 @@ export default async function LandingPage() {
       <section className="max-w-5xl mx-auto px-6 py-20">
         <div className="text-center mb-14">
           <div className="inline-block text-xs font-bold text-blue uppercase tracking-widest bg-blue/10 px-3 py-1 rounded-full mb-4">How it works</div>
-          <h2 className="text-3xl font-black text-white">From registration to delivery</h2>
+          <h2 className="text-3xl font-black text-text">From registration to delivery</h2>
           <p className="text-muted mt-2 text-sm max-w-md mx-auto">Four steps, fully digital, M-Pesa secured.</p>
         </div>
 
@@ -139,7 +139,7 @@ export default async function LandingPage() {
                 style={{ background: `${s.color}18`, border: `1.5px solid ${s.color}35`, color: s.color }}>
                 {s.step}
               </div>
-              <div className="text-sm font-bold text-white mb-2">{s.title}</div>
+              <div className="text-sm font-bold text-text mb-2">{s.title}</div>
               <div className="text-xs text-muted leading-relaxed">{s.desc}</div>
             </div>
           ))}
@@ -153,7 +153,7 @@ export default async function LandingPage() {
           <div className="p-8 rounded-2xl border border-border bg-bg hover:border-blue/30 transition-all">
             <div className="w-2 h-2 rounded-full bg-blue mb-6" />
             <div className="text-xs font-bold text-blue uppercase tracking-widest mb-2">For Sellers</div>
-            <h3 className="text-xl font-black text-white mb-3">Reach every pharmacy in Kenya</h3>
+            <h3 className="text-xl font-black text-text mb-3">Reach every pharmacy in Kenya</h3>
             <p className="text-sm text-muted leading-relaxed mb-6">
               List your pharmaceutical stock once. Buyers across Kenya see your pricing in real time. No middlemen, no margins lost.
             </p>
@@ -180,7 +180,7 @@ export default async function LandingPage() {
           <div className="p-8 rounded-2xl border border-border bg-bg hover:border-green/30 transition-all">
             <div className="w-2 h-2 rounded-full bg-green mb-6" />
             <div className="text-xs font-bold text-green uppercase tracking-widest mb-2">For Buyers</div>
-            <h3 className="text-xl font-black text-white mb-3">Buy at the best price, always</h3>
+            <h3 className="text-xl font-black text-text mb-3">Buy at the best price, always</h3>
             <p className="text-sm text-muted leading-relaxed mb-6">
               Compare every brand of a drug in one order book. Place bids, watch prices move and pay securely from your phone.
             </p>
@@ -213,7 +213,7 @@ export default async function LandingPage() {
               <span className="w-1.5 h-1.5 rounded-full bg-green" style={{ animation: 'pulse-dot 2s ease-in-out infinite' }} />
               Live listings
             </div>
-            <h2 className="text-3xl font-black text-white">What&apos;s on the exchange</h2>
+            <h2 className="text-3xl font-black text-text">What&apos;s on the exchange</h2>
             <p className="text-muted mt-2 text-sm">Real prices from verified sellers, right now.</p>
           </div>
 
@@ -228,7 +228,7 @@ export default async function LandingPage() {
               <Link href={`/drug/${row.slug}`} key={i}
                 className="grid grid-cols-5 px-5 py-3.5 border-b border-border/30 hover:bg-blue/5 transition-colors group items-center last:border-0">
                 <div className="col-span-2">
-                  <div className="text-sm font-semibold text-white group-hover:text-blue transition-colors">{row.generic_name}</div>
+                  <div className="text-sm font-semibold text-text group-hover:text-blue transition-colors">{row.generic_name}</div>
                   <div className="text-[10px] text-muted">{row.strength}</div>
                 </div>
                 <div className="text-right">
@@ -254,7 +254,7 @@ export default async function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
             <div className="inline-block text-xs font-bold text-muted uppercase tracking-widest bg-surface2 px-3 py-1 rounded-full mb-4">Why PISS Exchange</div>
-            <h2 className="text-3xl font-black text-white">Built for trust</h2>
+            <h2 className="text-3xl font-black text-text">Built for trust</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {[
@@ -267,7 +267,7 @@ export default async function LandingPage() {
             ].map(f => (
               <div key={f.title} className="p-6 rounded-2xl border border-border bg-bg hover:border-blue/20 transition-all">
                 <div className="w-1.5 h-1.5 rounded-full mb-4" style={{ background: f.color }} />
-                <div className="text-sm font-bold text-white mb-2">{f.title}</div>
+                <div className="text-sm font-bold text-text mb-2">{f.title}</div>
                 <div className="text-xs text-muted leading-relaxed">{f.desc}</div>
               </div>
             ))}
@@ -277,15 +277,15 @@ export default async function LandingPage() {
 
       {/* ── FINAL CTA ─────────────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        <div className="relative rounded-3xl overflow-hidden p-12 text-center"
-          style={{ background: 'linear-gradient(135deg, #1a2a5e 0%, #161b27 40%, #0d2b1f 100%)', border: '1px solid rgba(41,98,255,0.25)' }}>
+        <div className="relative rounded-3xl overflow-hidden p-10 md:p-12 text-center"
+          style={{ background: 'linear-gradient(135deg, #2962ff 0%, #1a47c8 50%, #0a6655 100%)' }}>
 
-          <div className="absolute inset-0 opacity-15 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse at center, #2962ff 0%, transparent 70%)' }} />
+          <div className="absolute inset-0 opacity-20 pointer-events-none"
+            style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
           <div className="relative">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-green uppercase tracking-widest bg-green/10 border border-green/20 px-4 py-1.5 rounded-full mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-white/80 uppercase tracking-widest bg-white/10 border border-white/20 px-4 py-1.5 rounded-full mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               Free to join
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
@@ -302,12 +302,12 @@ export default async function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/register"
-                className="px-10 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+                className="px-10 py-4 rounded-full font-bold text-text text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
                 style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 8px 32px rgba(41,98,255,0.35)' }}>
                 Create Free Account
               </Link>
               <Link href="/login"
-                className="px-10 py-4 rounded-full font-semibold text-muted text-sm border border-border hover:text-white hover:border-border2 transition-all">
+                className="px-10 py-4 rounded-full font-semibold text-muted text-sm border border-border hover:text-text hover:border-border2 transition-all">
                 Sign In
               </Link>
             </div>

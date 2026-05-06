@@ -43,15 +43,15 @@ export default async function DrugPage({ params }: PageProps) {
   ])
 
   return (
-    <div className="flex flex-col h-[calc(100vh-62px)] overflow-hidden">
+    <div className="flex flex-col md:h-[calc(100vh-62px)] md:overflow-hidden">
       {/* Drug header */}
       <div className="px-5 py-3 border-b border-border bg-surface flex items-center justify-between flex-shrink-0">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-base font-bold text-white">{drug.generic_name}</h1>
+            <h1 className="text-base font-bold text-text">{drug.generic_name}</h1>
             {md?.last_price ? (
               <>
-                <span className="text-xl font-bold text-white tabular-nums">
+                <span className="text-xl font-bold text-text tabular-nums">
                   {Number(md.last_price).toFixed(2)}
                   <span className="text-xs text-muted font-normal ml-1">KES</span>
                 </span>
@@ -66,7 +66,7 @@ export default async function DrugPage({ params }: PageProps) {
             {drug.atc_code && ` · ATC: ${drug.atc_code}`}
           </div>
         </div>
-        <Link href="/market" className="text-xs text-muted hover:text-white transition-colors">
+        <Link href="/market" className="text-xs text-muted hover:text-text transition-colors">
           ← Market
         </Link>
       </div>
@@ -83,7 +83,7 @@ export default async function DrugPage({ params }: PageProps) {
       />
 
       {/* Order book + trades (realtime) */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col md:overflow-hidden">
         <OrderBookClient
           drugId={drug.id}
           drugName={drug.generic_name}

@@ -79,34 +79,51 @@ export default async function MarketPage({ searchParams }: PageProps) {
   else if (filter === 'losers') filtered = rows.filter(r => r.change_pct < 0).sort((a, b) => a.change_pct - b.change_pct)
   else if (filter === 'active') filtered = [...rows].sort((a, b) => b.deals_today - a.deals_today)
 
+  const CATEGORIES = ['All', 'Antibiotics', 'Antimalarials', 'Diabetes', 'Cardiovascular', 'Respiratory', 'GI Tract', 'Pain Relief']
+
   return (
-    <div className="flex h-[calc(100vh-62px)]">
-      <div className="w-48 flex-shrink-0">
+    <div className="flex h-[calc(100vh-56px)]">
+      {/* Sidebar — desktop only */}
+      <div className="hidden md:block w-48 flex-shrink-0">
         <Suspense>
           <DrugSidebar drugs={sidebarDrugs} />
         </Suspense>
       </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="px-5 py-3 border-b border-border flex items-center justify-between flex-shrink-0">
-          <div>
-            <div className="text-sm font-semibold text-white">Market Board</div>
-            <div className="text-xs text-muted mt-0.5">{drugs?.length ?? 0} drugs · Updated every trade</div>
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        {/* Mobile category strip */}
+        <div className="md:hidden flex items-center gap-1.5 px-3 py-2 border-b border-border overflow-x-auto scrollbar-hide">
+          {CATEGORIES.map(c => (
+            <a key={c}
+              href={c === 'All' ? '/market' : `/market?cat=${c}`}
+              className={`whitespace-nowrap px-3 py-1 text-xs rounded-full border transition-colors flex-shrink-0
+                ${(cat ?? 'All') === c
+                  ? 'bg-blue text-white border-blue'
+                  : 'border-border text-muted hover:text-text'}`}>
+              {c}
+            </a>
+          ))}
+        </div>
+
+        {/* Toolbar */}
+        <div className="px-3 md:px-5 py-2.5 border-b border-border flex items-center justify-between flex-shrink-0 gap-2">
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-text">Market Board</div>
+            <div className="text-xs text-muted hidden sm:block">{drugs?.length ?? 0} drugs · Updated every trade</div>
           </div>
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 flex-shrink-0">
             {[
               { label: 'All', f: undefined },
               { label: 'Gainers', f: 'gainers' },
               { label: 'Losers', f: 'losers' },
-              { label: 'Most Active', f: 'active' },
+              { label: 'Active', f: 'active' },
             ].map(({ label, f }) => (
               <a key={label}
                 href={f ? `/market?filter=${f}${cat ? `&cat=${cat}` : ''}` : `/market${cat ? `?cat=${cat}` : ''}`}
-                className={`px-2.5 py-1 text-xs rounded border transition-colors
+                className={`px-2.5 py-1 text-xs rounded-lg border transition-colors whitespace-nowrap
                   ${filter === f || (!filter && !f)
-                    ? 'bg-surface2 text-white border-border2'
-                    : 'border-border2 text-muted hover:text-white'
-                  }`}>
+                    ? 'bg-surface2 text-text border-border2 font-semibold'
+                    : 'border-border text-muted hover:text-text'}`}>
                 {label}
               </a>
             ))}
@@ -115,13 +132,13 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
         <MarketTable rows={filtered} />
 
-        <div className="border-t border-border px-5 py-1.5 flex items-center gap-5 flex-shrink-0 text-[10.5px]">
-          <span className="text-muted">Drugs: <span className="text-text">{drugs?.length ?? 0}</span></span>
-          <span className="text-muted">Deals today: <span className="text-text">{formatNumber(totalDeals)}</span></span>
-          <span className="text-muted">Turnover: <span className="text-text">{formatKES(totalTurnover)}</span></span>
-          <span className="ml-auto flex items-center gap-1.5 text-green">
+        <div className="border-t border-border px-3 md:px-5 py-1.5 flex items-center gap-3 md:gap-5 flex-shrink-0 text-[10.5px] overflow-x-auto">
+          <span className="text-muted whitespace-nowrap">Drugs: <span className="text-text">{drugs?.length ?? 0}</span></span>
+          <span className="text-muted whitespace-nowrap hidden sm:inline">Deals today: <span className="text-text">{formatNumber(totalDeals)}</span></span>
+          <span className="text-muted whitespace-nowrap hidden sm:inline">Turnover: <span className="text-text">{formatKES(totalTurnover)}</span></span>
+          <span className="ml-auto flex items-center gap-1.5 text-green whitespace-nowrap">
             <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
-            Live · EAT
+            Live
           </span>
         </div>
       </div>

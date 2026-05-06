@@ -17,9 +17,9 @@ export function MoverCards({ drugs }: { drugs: MoverCard[] }) {
       {drugs.map(drug => (
         <Link key={drug.slug} href={`/drug/${drug.slug}`}
           className="bg-surface hover:bg-surface2 transition-colors p-5 group">
-          <div className="text-sm font-semibold text-white leading-tight">{drug.generic_name}</div>
+          <div className="text-sm font-semibold text-text leading-tight">{drug.generic_name}</div>
           <div className="text-xs text-muted mt-0.5">{drug.strength} · {drug.dosage_form}</div>
-          <div className="mt-4 text-2xl font-bold text-white tracking-tight">
+          <div className="mt-4 text-2xl font-bold text-text tracking-tight">
             {Number(drug.last_price).toFixed(2)}
             <span className="text-xs text-muted font-normal ml-1">KES</span>
           </div>

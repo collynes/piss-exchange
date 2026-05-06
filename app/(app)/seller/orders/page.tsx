@@ -16,8 +16,9 @@ export default async function SellerOrdersPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-lg font-bold text-white mb-6">Incoming Orders</h1>
-      <div className="bg-surface border border-border rounded overflow-hidden">
+      <h1 className="text-lg font-bold text-text mb-6">Incoming Orders</h1>
+      <div className="overflow-x-auto">
+      <div className="bg-surface border border-border rounded overflow-hidden min-w-[600px]">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
@@ -32,9 +33,9 @@ export default async function SellerOrdersPage() {
               const payment = (order.payments as { status: string }[] | null)?.[0]
               return (
                 <tr key={order.id} className="border-b border-border/30 hover:bg-bg transition-colors">
-                  <td className="px-4 py-2.5 text-sm text-white">{drug?.generic_name ?? '—'}</td>
+                  <td className="px-4 py-2.5 text-sm text-text">{drug?.generic_name ?? '—'}</td>
                   <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">{order.qty.toLocaleString()}</td>
-                  <td className="px-4 py-2.5 text-right text-sm text-white font-semibold tabular-nums">{formatKES(Number(order.total_amount))}</td>
+                  <td className="px-4 py-2.5 text-right text-sm text-text font-semibold tabular-nums">{formatKES(Number(order.total_amount))}</td>
                   <td className="px-4 py-2.5 text-right">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded capitalize ${payment?.status === 'completed' ? 'bg-green/10 text-green' : 'bg-muted/10 text-muted'}`}>
                       {payment?.status ?? '—'}
@@ -62,7 +63,7 @@ export default async function SellerOrdersPage() {
                           </button>
                         </form>
                       )}
-                      <Link href={`/orders/${order.id}`} className="text-[10px] text-muted hover:text-white transition-colors px-1">
+                      <Link href={`/orders/${order.id}`} className="text-[10px] text-muted hover:text-text transition-colors px-1">
                         View
                       </Link>
                     </div>
@@ -75,6 +76,7 @@ export default async function SellerOrdersPage() {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   )

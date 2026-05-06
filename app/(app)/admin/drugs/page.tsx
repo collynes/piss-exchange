@@ -44,7 +44,7 @@ export default function AdminDrugsPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-lg font-bold text-white mb-6">Drug Catalogue</h1>
+      <h1 className="text-lg font-bold text-text mb-6">Drug Catalogue</h1>
 
       {/* Add drug form */}
       <div className="bg-surface border border-border rounded p-5 mb-6">
@@ -65,7 +65,7 @@ export default function AdminDrugsPage() {
                 placeholder={placeholder}
                 value={form[key as keyof typeof form]}
                 onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                className="w-full bg-bg border border-border2 rounded px-2.5 py-1.5 text-xs text-white placeholder:text-muted focus:border-blue transition-colors"
+                className="w-full bg-bg border border-border2 rounded px-2.5 py-1.5 text-xs text-text placeholder:text-muted focus:border-blue transition-colors"
               />
             </div>
           ))}
@@ -95,7 +95,7 @@ export default function AdminDrugsPage() {
             ) : drugs.map(drug => (
               <tr key={drug.id} className="border-b border-border/30 hover:bg-bg transition-colors">
                 <td className="px-4 py-2.5">
-                  <div className="text-sm text-white">{drug.generic_name}</div>
+                  <div className="text-sm text-text">{drug.generic_name}</div>
                   <div className="text-[10px] text-muted font-mono">{drug.slug}</div>
                 </td>
                 <td className="px-4 py-2.5 text-right text-xs text-text">{drug.dosage_form}</td>

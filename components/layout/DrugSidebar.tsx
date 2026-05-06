@@ -23,7 +23,7 @@ export function DrugSidebar({ drugs }: { drugs: SidebarDrug[] }) {
         <input
           type="text"
           placeholder="Search drug…"
-          className="w-full bg-surface2 border border-border2 rounded px-2.5 py-1.5 text-xs text-white placeholder:text-muted focus:border-blue transition-colors"
+          className="w-full bg-surface2 border border-border2 rounded px-2.5 py-1.5 text-xs text-text placeholder:text-muted focus:border-blue transition-colors"
         />
       </div>
 
@@ -58,7 +58,7 @@ export function DrugSidebar({ drugs }: { drugs: SidebarDrug[] }) {
               <div className="text-[10px] text-muted">{drug.dosage_form}</div>
             </div>
             <div className="text-right">
-              <div className="text-xs font-semibold text-white">
+              <div className="text-xs font-semibold text-text">
                 {drug.last_price ? Number(drug.last_price).toFixed(2) : '—'}
               </div>
               <div className={`text-[10px] ${Number(drug.change_pct) >= 0 ? 'text-green' : 'text-red'}`}>

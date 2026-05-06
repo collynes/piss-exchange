@@ -25,8 +25,8 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
       <div className={cn('relative bg-surface border border-border2 rounded w-full max-w-md', className)}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <h2 className="text-white font-semibold text-sm">{title}</h2>
-          <button onClick={onClose} className="text-muted hover:text-white transition-colors text-lg leading-none">×</button>
+          <h2 className="text-text font-semibold text-sm">{title}</h2>
+          <button onClick={onClose} className="text-muted hover:text-text transition-colors text-lg leading-none">×</button>
         </div>
         <div className="p-5">{children}</div>
       </div>

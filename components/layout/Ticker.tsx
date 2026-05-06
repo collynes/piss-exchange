@@ -38,7 +38,7 @@ export async function Ticker() {
           return (
             <div key={i} className="inline-flex items-center gap-2 px-5 border-r border-border h-8 text-xs shrink-0">
               <span className="text-muted">{drug.generic_name} {drug.strength}</span>
-              <span className="text-white font-semibold">
+              <span className="text-text font-semibold">
                 {item.last_price ? `KES ${Number(item.last_price).toFixed(2)}` : '—'}
               </span>
               <span className={changeClass(pct)}>{formatChange(pct)}</span>

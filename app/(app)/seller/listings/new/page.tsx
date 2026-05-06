@@ -70,7 +70,7 @@ export default function NewListingPage() {
 
   return (
     <div className="max-w-lg">
-      <h1 className="text-lg font-bold text-white mb-6">List a Drug</h1>
+      <h1 className="text-lg font-bold text-text mb-6">List a Drug</h1>
 
       {/* Drug search */}
       <div className="bg-surface border border-border rounded p-5 mb-4">
@@ -78,10 +78,10 @@ export default function NewListingPage() {
         {selectedDrug ? (
           <div className="flex items-center justify-between bg-blue/10 border border-blue/30 rounded px-3 py-2">
             <div>
-              <div className="text-sm text-white font-semibold">{selectedDrug.generic_name}</div>
+              <div className="text-sm text-text font-semibold">{selectedDrug.generic_name}</div>
               <div className="text-xs text-muted">{selectedDrug.strength} · {selectedDrug.dosage_form}</div>
             </div>
-            <button onClick={() => setSelectedDrug(null)} className="text-muted hover:text-white text-xs">Change</button>
+            <button onClick={() => setSelectedDrug(null)} className="text-muted hover:text-text text-xs">Change</button>
           </div>
         ) : (
           <div>
@@ -89,14 +89,14 @@ export default function NewListingPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search generic name (e.g. Amoxicillin)…"
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white placeholder:text-muted focus:border-blue transition-colors mb-2"
+              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text placeholder:text-muted focus:border-blue transition-colors mb-2"
             />
             {drugs.length > 0 && (
               <div className="border border-border2 rounded overflow-hidden">
                 {drugs.map(drug => (
                   <button key={drug.id} onClick={() => { setSelectedDrug(drug); setSearch('') }}
                     className="w-full text-left px-3 py-2 text-sm hover:bg-surface2 transition-colors border-b border-border/50 last:border-0">
-                    <span className="text-white">{drug.generic_name}</span>
+                    <span className="text-text">{drug.generic_name}</span>
                     <span className="text-muted ml-2 text-xs">{drug.strength} · {drug.dosage_form}</span>
                   </button>
                 ))}
@@ -130,7 +130,7 @@ export default function NewListingPage() {
                 placeholder={placeholder}
                 value={form[key as keyof typeof form]}
                 onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-white placeholder:text-muted focus:border-blue transition-colors"
+                className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text placeholder:text-muted focus:border-blue transition-colors"
               />
             </div>
           ))}
@@ -138,7 +138,7 @@ export default function NewListingPage() {
           {form.qty_available && form.price_per_unit && (
             <div className="bg-bg rounded p-3 flex justify-between text-xs">
               <span className="text-muted">Total listing value</span>
-              <span className="text-white font-semibold">
+              <span className="text-text font-semibold">
                 KES {(Number(form.qty_available) * Number(form.price_per_unit)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
             </div>

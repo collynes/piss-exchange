@@ -41,7 +41,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-lg font-bold text-white mb-6">Platform Settings</h1>
+      <h1 className="text-lg font-bold text-text mb-6">Platform Settings</h1>
       <div className="bg-surface border border-border rounded overflow-hidden">
         {loading ? (
           <div className="px-5 py-6 text-center text-muted text-sm">Loading…</div>
@@ -51,7 +51,7 @@ export default function AdminSettingsPage() {
           return (
             <div key={setting.key} className={`flex items-center justify-between px-5 py-4 ${i < settings.length - 1 ? 'border-b border-border' : ''}`}>
               <div>
-                <div className="text-sm font-semibold text-white">{meta?.label ?? setting.key}</div>
+                <div className="text-sm font-semibold text-text">{meta?.label ?? setting.key}</div>
                 <div className="text-xs text-muted mt-0.5">{meta?.desc}</div>
                 <div className="text-[10px] text-muted/50 mt-1">Last updated: {setting.updated_at ? new Date(setting.updated_at).toLocaleString('en-KE') : '—'}</div>
               </div>

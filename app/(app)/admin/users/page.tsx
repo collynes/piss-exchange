@@ -16,8 +16,9 @@ export default async function AdminUsersPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-lg font-bold text-white mb-6">User Management</h1>
-      <div className="bg-surface border border-border rounded overflow-hidden">
+      <h1 className="text-lg font-bold text-text mb-6">User Management</h1>
+      <div className="overflow-x-auto">
+      <div className="bg-surface border border-border rounded overflow-hidden min-w-[560px]">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
@@ -30,7 +31,7 @@ export default async function AdminUsersPage() {
             {(users ?? []).map(u => (
               <tr key={u.id} className="border-b border-border/30 hover:bg-bg transition-colors">
                 <td className="px-4 py-2.5">
-                  <div className="text-sm font-semibold text-white">{u.org_name}</div>
+                  <div className="text-sm font-semibold text-text">{u.org_name}</div>
                   <div className="text-[10px] text-muted font-mono">{u.id.slice(0, 8)}…</div>
                 </td>
                 <td className="px-4 py-2.5 text-right text-xs text-muted capitalize">{u.role}</td>
@@ -63,6 +64,7 @@ export default async function AdminUsersPage() {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   )
