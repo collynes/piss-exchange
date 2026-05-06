@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { MobileMenu } from './MobileMenu'
+import { ThemePicker } from '@/components/ui/ThemePicker'
 
 export async function Nav() {
   const supabase = await createClient()
@@ -54,6 +55,7 @@ export async function Nav() {
 
       {/* Desktop auth */}
       <div className="hidden md:flex items-center gap-2">
+        <ThemePicker />
         {user ? (
           <div className="flex items-center gap-3">
             <span className="text-muted text-xs truncate max-w-36">{profile?.org_name}</span>

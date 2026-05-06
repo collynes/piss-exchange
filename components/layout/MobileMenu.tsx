@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { ThemePicker } from '@/components/ui/ThemePicker'
 
 interface Props {
   role: string | null
@@ -65,7 +66,11 @@ export function MobileMenu({ role, orgName, isLoggedIn }: Props) {
             </nav>
 
             {/* Footer */}
-            <div className="px-4 py-5 border-t border-border">
+            <div className="px-4 py-5 border-t border-border space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-xs text-muted">Appearance</span>
+                <ThemePicker />
+              </div>
               {isLoggedIn ? (
                 <div className="space-y-3">
                   {orgName && <p className="text-xs text-muted px-1 truncate">{orgName}</p>}

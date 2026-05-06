@@ -56,11 +56,23 @@
   }
 }
 
+/* Dark theme overrides — applied via data-theme="dark" on <html> */
+[data-theme="dark"] {
+  --color-bg:       #131722;
+  --color-surface:  #1e2130;
+  --color-surface2: #2a2e3e;
+  --color-border:   #2d3245;
+  --color-border2:  #3d4466;
+  --color-text:     #d1d4dc;
+  --color-muted:    #787b86;
+}
+
 @layer base {
   body {
-    background-color: #f3f5fb;
-    color: #3d4466;
+    background-color: var(--color-bg);
+    color: var(--color-text);
     -webkit-font-smoothing: antialiased;
     font-variant-numeric: tabular-nums;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
