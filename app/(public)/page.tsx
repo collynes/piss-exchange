@@ -277,18 +277,14 @@ export default async function LandingPage() {
 
       {/* ── FINAL CTA ─────────────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        <div className="relative rounded-3xl overflow-hidden p-10 md:p-12 text-center"
-          style={{ background: 'linear-gradient(135deg, #2962ff 0%, #1a47c8 50%, #0a6655 100%)' }}>
-
-          <div className="absolute inset-0 opacity-20 pointer-events-none"
-            style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="relative rounded-3xl p-10 md:p-12 text-center border border-border2">
 
           <div className="relative">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-white/80 uppercase tracking-widest bg-white/10 border border-white/20 px-4 py-1.5 rounded-full mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-blue uppercase tracking-widest bg-blue/8 border border-blue/20 px-4 py-1.5 rounded-full mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
               Free to join
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
+            <h2 className="text-4xl md:text-5xl font-black text-text tracking-tight mb-4">
               Kenya&apos;s pharma supply chain<br />
               <span style={{
                 background: 'linear-gradient(135deg, #2962ff, #089981)',
@@ -297,21 +293,21 @@ export default async function LandingPage() {
                 backgroundClip: 'text',
               }}>starts here.</span>
             </h2>
-            <p className="text-text text-base max-w-xl mx-auto mb-8 opacity-70">
+            <p className="text-muted text-base max-w-xl mx-auto mb-8">
               Join Batalo Pharma and a growing network of verified pharmaceutical companies on Kenya&apos;s first digital drugs exchange.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/register"
-                className="px-10 py-4 rounded-full font-bold text-text text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 8px 32px rgba(41,98,255,0.35)' }}>
+                className="px-10 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 8px 32px rgba(41,98,255,0.25)' }}>
                 Create Free Account
               </Link>
               <Link href="/login"
-                className="px-10 py-4 rounded-full font-semibold text-muted text-sm border border-border hover:text-text hover:border-border2 transition-all">
+                className="px-10 py-4 rounded-full font-semibold text-muted text-sm border border-border2 hover:text-text transition-all">
                 Sign In
               </Link>
             </div>
-            <p className="text-xs text-muted/40 mt-5">Licensed pharmaceutical entities only. PPB Kenya regulated.</p>
+            <p className="text-xs text-muted/60 mt-5">Licensed pharmaceutical entities only. PPB Kenya regulated.</p>
           </div>
         </div>
       </section>
