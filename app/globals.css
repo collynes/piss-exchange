@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors — light theme */
-  --color-bg:       #f9fafb;
-  --color-surface:  #ffffff;
-  --color-surface2: #f3f4f6;
-  --color-border:   #e5e7eb;
-  --color-border2:  #d1d5db;
-  --color-text:     #111827;
-  --color-muted:    #6b7280;
+  /* Accent colors — fixed, not theme-switched */
   --color-blue:     #2962ff;
   --color-green:    #089981;
   --color-red:      #f23645;
+
+  /* Semantic tokens — values set on :root below, referenced here so Tailwind registers the utilities */
+  --color-bg:       initial;
+  --color-surface:  initial;
+  --color-surface2: initial;
+  --color-border:   initial;
+  --color-border2:  initial;
+  --color-text:     initial;
+  --color-muted:    initial;
 
   /* Font */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -56,7 +58,18 @@
   }
 }
 
-/* Dark theme overrides — applied via data-theme="dark" on <html> */
+/* Light theme (default) */
+:root {
+  --color-bg:       #ffffff;
+  --color-surface:  #ffffff;
+  --color-surface2: #f9fafb;
+  --color-border:   #e5e7eb;
+  --color-border2:  #d1d5db;
+  --color-text:     #09090b;
+  --color-muted:    #52525b;
+}
+
+/* Dark theme */
 [data-theme="dark"] {
   --color-bg:       #131722;
   --color-surface:  #1e2130;
