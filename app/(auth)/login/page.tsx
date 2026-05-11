@@ -45,7 +45,7 @@ function LoginForm() {
             className="w-full bg-bg border border-border rounded-lg px-3 py-2.5 text-sm text-text placeholder:text-muted focus:border-blue focus:outline-none transition-colors" />
         </div>
         <button type="submit" disabled={loading}
-          className="w-full bg-blue hover:bg-blue/90 text-text font-semibold py-2.5 rounded-lg text-sm disabled:opacity-50 transition-colors mt-2">
+          className="w-full bg-blue hover:bg-blue/90 text-white font-semibold py-2.5 rounded-lg text-sm disabled:opacity-50 transition-colors mt-2">
           {loading ? 'Logging in…' : 'Log In'}
         </button>
       </form>
