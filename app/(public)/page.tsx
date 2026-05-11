@@ -133,7 +133,7 @@ export default async function LandingPage() {
             { step: '03', title: 'Trade', desc: 'Buy at ask price instantly or place a bid. Every trade is recorded on-chain.', color: '#2962ff' },
             { step: '04', title: 'Pay via M-Pesa', desc: 'Funds held in escrow. Released to the seller on confirmed delivery.', color: '#089981' },
           ].map((s, i) => (
-            <div key={s.step} className="relative flex flex-col items-center text-center p-6 bg-surface border border-border rounded-2xl hover:border-blue/25 transition-all"
+            <div key={s.step} className="relative flex flex-col items-center text-center p-6 bg-surface rounded-2xl shadow-sm transition-all"
               style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black mb-5"
                 style={{ background: `${s.color}18`, border: `1.5px solid ${s.color}35`, color: s.color }}>
@@ -150,7 +150,7 @@ export default async function LandingPage() {
       <section className="border-y border-border bg-surface/40">
         <div className="max-w-5xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-6">
           {/* Sellers */}
-          <div className="p-8 rounded-2xl border border-border bg-bg hover:border-blue/30 transition-all">
+          <div className="p-8 rounded-2xl bg-surface shadow-sm transition-all">
             <div className="w-2 h-2 rounded-full bg-blue mb-6" />
             <div className="text-xs font-bold text-blue uppercase tracking-widest mb-2">For Sellers</div>
             <h3 className="text-xl font-black text-text mb-3">Reach every pharmacy in Kenya</h3>
@@ -177,7 +177,7 @@ export default async function LandingPage() {
           </div>
 
           {/* Buyers */}
-          <div className="p-8 rounded-2xl border border-border bg-bg hover:border-green/30 transition-all">
+          <div className="p-8 rounded-2xl bg-surface shadow-sm transition-all">
             <div className="w-2 h-2 rounded-full bg-green mb-6" />
             <div className="text-xs font-bold text-green uppercase tracking-widest mb-2">For Buyers</div>
             <h3 className="text-xl font-black text-text mb-3">Buy at the best price, always</h3>
@@ -265,7 +265,7 @@ export default async function LandingPage() {
               { title: 'M-Pesa Native', desc: 'Pay directly from your M-Pesa. No bank transfers, no cheques, no waiting. Works on any phone.', color: '#d8dce6' },
               { title: 'Immutable Trade History', desc: 'Every completed trade is permanently recorded with timestamps, quantities and prices. Full audit trail.', color: '#2962ff' },
             ].map(f => (
-              <div key={f.title} className="p-6 rounded-2xl border border-border bg-bg hover:border-blue/20 transition-all">
+              <div key={f.title} className="p-6 rounded-2xl bg-surface shadow-sm transition-all">
                 <div className="w-1.5 h-1.5 rounded-full mb-4" style={{ background: f.color }} />
                 <div className="text-sm font-bold text-text mb-2">{f.title}</div>
                 <div className="text-xs text-muted leading-relaxed">{f.desc}</div>
@@ -277,7 +277,7 @@ export default async function LandingPage() {
 
       {/* ── FINAL CTA ─────────────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        <div className="relative rounded-3xl p-10 md:p-12 text-center border border-border2">
+        <div className="relative rounded-3xl p-10 md:p-12 text-center bg-surface shadow-sm">
 
           <div className="relative">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-blue uppercase tracking-widest bg-blue/8 border border-blue/20 px-4 py-1.5 rounded-full mb-6">
