@@ -72,7 +72,7 @@ export default async function LandingPage() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 mb-12">
           <Link href="/register"
-            className="px-8 py-4 rounded-full font-bold text-text text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+            className="px-8 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
             style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 28px rgba(41,98,255,0.35)' }}>
             Join the Exchange
           </Link>
