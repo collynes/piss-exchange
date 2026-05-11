@@ -110,7 +110,7 @@ export default function RegisterPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
-          { key: 'org_name', label: 'Organisation Name', placeholder: role === 'seller' ? 'Batalo Pharma Ltd' : 'Nairobi General Hospital', required: true },
+          { key: 'org_name', label: 'Organisation Name', placeholder: role === 'seller' ? 'e.g. ABC Pharma Ltd' : 'e.g. Nairobi General Hospital', required: true },
           { key: 'email', label: 'Email', placeholder: 'you@company.com', type: 'email', required: true },
           { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true },
           { key: 'phone', label: 'Phone', placeholder: '+254700000000', required: false },

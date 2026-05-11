@@ -294,7 +294,7 @@ export default async function LandingPage() {
               }}>starts here.</span>
             </h2>
             <p className="text-muted text-base max-w-xl mx-auto mb-8">
-              Join Batalo Pharma and a growing network of verified pharmaceutical companies on Kenya&apos;s first digital drugs exchange.
+              Join a growing network of verified pharmaceutical companies on Kenya&apos;s first digital drugs exchange.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/register"
