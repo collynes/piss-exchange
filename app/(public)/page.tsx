@@ -217,8 +217,8 @@ export default async function LandingPage() {
             <p className="text-muted mt-2 text-sm">Real prices from verified sellers, right now.</p>
           </div>
 
-          <div className="bg-surface border border-border rounded-2xl overflow-hidden">
-            <div className="grid grid-cols-5 px-5 py-2.5 border-b border-border bg-surface2/50 text-[10px] font-bold text-muted uppercase tracking-wider">
+          <div className="bg-surface rounded-2xl overflow-hidden shadow-sm">
+            <div className="grid grid-cols-5 px-5 py-2.5 bg-surface2/50 text-[10px] font-bold text-muted uppercase tracking-wider">
               <span className="col-span-2">Drug</span>
               <span className="text-right">Category</span>
               <span className="text-right">Form</span>
@@ -226,7 +226,7 @@ export default async function LandingPage() {
             </div>
             {listingRows.map((row, i) => (
               <Link href={`/drug/${row.slug}`} key={i}
-                className="grid grid-cols-5 px-5 py-3.5 border-b border-border/30 hover:bg-blue/5 transition-colors group items-center last:border-0">
+                className="grid grid-cols-5 px-5 py-3.5 hover:bg-blue/5 transition-colors group items-center">
                 <div className="col-span-2">
                   <div className="text-sm font-semibold text-text group-hover:text-blue transition-colors">{row.generic_name}</div>
                   <div className="text-[10px] text-muted">{row.strength}</div>
