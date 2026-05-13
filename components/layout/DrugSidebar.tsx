@@ -2,8 +2,6 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
-const CATEGORIES = ['All', 'Antibiotics', 'Antimalarials', 'Diabetes', 'Cardiovascular', 'Respiratory', 'GI Tract', 'Pain Relief']
-
 interface SidebarDrug {
   slug: string
   generic_name: string
@@ -12,7 +10,12 @@ interface SidebarDrug {
   change_pct: number | null
 }
 
-export function DrugSidebar({ drugs }: { drugs: SidebarDrug[] }) {
+interface DrugSidebarProps {
+  drugs: SidebarDrug[]
+  categories: string[]   // passed from server — derived from DB, never hardcoded
+}
+
+export function DrugSidebar({ drugs, categories }: DrugSidebarProps) {
   const searchParams = useSearchParams()
   const activeCategory = searchParams.get('cat') ?? 'All'
 
@@ -29,7 +32,7 @@ export function DrugSidebar({ drugs }: { drugs: SidebarDrug[] }) {
 
       {/* Categories */}
       <div className="px-1.5 pb-2 space-y-0.5">
-        {CATEGORIES.map(cat => (
+        {categories.map(cat => (
           <Link key={cat}
             href={cat === 'All' ? '/market' : `/market?cat=${cat}`}
             className={`block px-2 py-1 text-xs rounded cursor-pointer transition-colors

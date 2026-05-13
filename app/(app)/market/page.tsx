@@ -79,14 +79,17 @@ export default async function MarketPage({ searchParams }: PageProps) {
   else if (filter === 'losers') filtered = rows.filter(r => r.change_pct < 0).sort((a, b) => a.change_pct - b.change_pct)
   else if (filter === 'active') filtered = [...rows].sort((a, b) => b.deals_today - a.deals_today)
 
-  const CATEGORIES = ['All', 'Antibiotics', 'Antimalarials', 'Diabetes', 'Cardiovascular', 'Respiratory', 'GI Tract', 'Pain Relief']
+  // Derive categories from actual drug data — no hardcoding
+  const CATEGORIES = ['All', ...Array.from(new Set(
+    (drugs ?? []).map(d => d.category).filter((c): c is string => Boolean(c))
+  )).sort()]
 
   return (
     <div className="flex h-[calc(100vh-68px)]">
       {/* Sidebar — desktop only */}
       <div className="hidden md:block w-48 flex-shrink-0">
         <Suspense>
-          <DrugSidebar drugs={sidebarDrugs} />
+          <DrugSidebar drugs={sidebarDrugs} categories={CATEGORIES} />
         </Suspense>
       </div>
 
