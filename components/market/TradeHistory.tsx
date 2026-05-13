@@ -1,40 +1,31 @@
-interface Trade {
-  id: string
-  qty: number
-  price_per_unit: number
-  executed_at: string
-}
-
-interface TradeHistoryProps {
-  trades: Trade[]
-  prevPrice: number | null
-}
+interface Trade { id: string; qty: number; price_per_unit: number; executed_at: string }
+interface TradeHistoryProps { trades: Trade[]; prevPrice: number | null }
 
 export function TradeHistory({ trades, prevPrice }: TradeHistoryProps) {
   return (
-    <div className="border-t border-border flex-shrink-0">
-      <div className="px-4 py-2 text-[10px] font-bold text-muted uppercase tracking-wider border-b border-border">
-        Recent Trades
+    <div className="border-t border-border flex-shrink-0 bg-surface">
+      <div className="flex items-center justify-between px-3 py-1.5 border-b border-border">
+        <span className="text-[11px] font-semibold text-muted uppercase tracking-wider">Recent Trades</span>
+        <div className="grid grid-cols-3 gap-4 text-[10px] text-muted w-52 text-right">
+          <span>Price</span><span>Qty</span><span>Time</span>
+        </div>
       </div>
-      <div className="grid grid-cols-3 text-[10px] text-muted px-4 py-1 border-b border-border/50">
-        <span>Price (KES)</span><span className="text-right">Qty</span><span className="text-right">Time</span>
-      </div>
-      <div className="overflow-y-auto max-h-40">
+      <div className="overflow-y-auto max-h-36">
         {trades.length === 0 && (
-          <div className="text-xs text-muted text-center py-4">No trades yet</div>
+          <div className="text-[12px] text-muted text-center py-4">No trades yet</div>
         )}
         {trades.map((trade, i) => {
-          const prevTrade = trades[i + 1]
-          const isUp = prevTrade
-            ? trade.price_per_unit >= prevTrade.price_per_unit
+          const prev = trades[i + 1]
+          const isUp = prev
+            ? trade.price_per_unit >= prev.price_per_unit
             : trade.price_per_unit >= (prevPrice ?? 0)
           return (
-            <div key={trade.id} className="grid grid-cols-3 text-xs px-4 py-1 border-b border-border/30 hover:bg-surface2">
-              <span className={`tabular-nums font-semibold ${isUp ? 'text-green' : 'text-red'}`}>
-                {Number(trade.price_per_unit).toFixed(2)}
+            <div key={trade.id} className="flex items-center px-3 py-0.5 hover:bg-surface2">
+              <span className={`font-semibold tabular-nums text-[13px] w-24 flex items-center gap-1 ${isUp ? 'text-green' : 'text-red'}`}>
+                {isUp ? '▲' : '▼'} {Number(trade.price_per_unit).toFixed(2)}
               </span>
-              <span className="text-right text-text tabular-nums">{trade.qty.toLocaleString()}</span>
-              <span className="text-right text-muted text-[10px]">
+              <span className="text-text tabular-nums text-[13px] w-20 text-right">{trade.qty.toLocaleString()}</span>
+              <span className="text-muted text-[11px] flex-1 text-right">
                 {new Date(trade.executed_at).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
               </span>
             </div>
