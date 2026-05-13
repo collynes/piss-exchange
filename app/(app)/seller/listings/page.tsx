@@ -24,9 +24,12 @@ export default async function SellerListingsPage() {
         </Link>
       </div>
 
-      <div className="overflow-x-auto">
-      <div className="bg-surface border border-border rounded overflow-hidden min-w-[640px]">
-        <table className="w-full">
+      <div className="overflow-x-auto rounded-xl"
+        style={{
+          background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
+          boxShadow: '0 20px 48px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
+        }}>
+        <table className="w-full min-w-[640px]">
           <thead className="border-b border-border bg-surface2/40">
             <tr>
               {['Drug', 'Brand / Origin', 'Price/unit', 'Qty Rem.', 'Status', 'Expires', ''].map(h => (
@@ -78,7 +81,6 @@ export default async function SellerListingsPage() {
             )}
           </tbody>
         </table>
-      </div>
       </div>
     </div>
   )

@@ -74,7 +74,11 @@ export default async function DashboardPage({
           ] : []
         ).map(link => (
           <Link key={link.href} href={link.href}
-            className="bg-surface border border-border rounded p-4 hover:border-blue/40 transition-colors group">
+            className="rounded-xl p-4 transition-all group hover:scale-[1.02]"
+            style={{
+              background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
+              boxShadow: '0 16px 40px -8px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
+            }}>
             <div className="text-sm font-semibold text-text group-hover:text-blue transition-colors">{link.label}</div>
             <div className="text-xs text-muted mt-0.5">{link.desc}</div>
           </Link>
@@ -87,7 +91,11 @@ export default async function DashboardPage({
           <span className="text-sm font-semibold text-text">Recent Orders</span>
           <Link href="/orders" className="text-xs text-blue hover:underline">All orders →</Link>
         </div>
-        <div className="bg-surface border border-border rounded overflow-hidden">
+        <div className="rounded-xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
+            boxShadow: '0 20px 48px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
+          }}>
           <table className="w-full">
             <thead className="border-b border-border bg-surface2/40">
               <tr>

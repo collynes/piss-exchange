@@ -41,7 +41,13 @@ export default async function AdminPage() {
           { label: "Today's Deals", value: formatNumber(totalDeals) },
           { label: "Today's Turnover", value: formatKES(totalTurnover) },
         ].map(card => (
-          <div key={card.label} className={`bg-surface border rounded p-4 ${card.alert ? 'border-red/40' : 'border-border'}`}>
+          <div key={card.label} className="rounded-xl p-4"
+            style={{
+              background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
+              boxShadow: card.alert
+                ? '0 16px 40px -8px rgba(242,54,69,0.2), 0 0 0 1px rgba(242,54,69,0.25), inset 0 1px 0 rgba(255,255,255,0.06)'
+                : '0 16px 40px -8px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
+            }}>
             <div className="text-xs text-muted uppercase tracking-wider mb-1">{card.label}</div>
             <div className={`text-xl font-bold tabular-nums ${card.alert ? 'text-red' : 'text-text'}`}>{card.value}</div>
           </div>
@@ -56,7 +62,11 @@ export default async function AdminPage() {
           { href: '/admin/settings', label: 'Platform Settings', desc: 'Document requirements, toggles' },
         ].map(link => (
           <Link key={link.href} href={link.href}
-            className="bg-surface border border-border rounded p-5 hover:border-blue/40 transition-colors group">
+            className="rounded-xl p-5 transition-all group hover:scale-[1.02]"
+            style={{
+              background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
+              boxShadow: '0 16px 40px -8px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
+            }}>
             <div className="text-sm font-semibold text-text group-hover:text-blue transition-colors mb-1">{link.label}</div>
             <div className="text-xs text-muted">{link.desc}</div>
           </Link>

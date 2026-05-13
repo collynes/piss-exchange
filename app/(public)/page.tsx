@@ -217,7 +217,11 @@ export default async function LandingPage() {
             <p className="text-muted mt-2 text-sm">Real prices from verified sellers, right now.</p>
           </div>
 
-          <div className="bg-surface rounded-2xl overflow-hidden shadow-sm">
+          <div className="rounded-2xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
+              boxShadow: '0 25px 60px -12px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.08)',
+            }}>
             <div className="grid grid-cols-5 px-5 py-3 bg-surface2 text-xs font-bold text-text uppercase tracking-wider border-b border-border">
               <span className="col-span-2">Drug</span>
               <span className="text-right">Category</span>
