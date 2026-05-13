@@ -4,18 +4,26 @@ import { useEffect, useState } from 'react'
 type Theme = 'light' | 'dark'
 
 export function ThemePicker({ className = '' }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>('light')
+  const [theme, setTheme] = useState<Theme>('dark')
 
   useEffect(() => {
-    const stored = (localStorage.getItem('theme') as Theme) ?? 'light'
+    const stored = (localStorage.getItem('theme') as Theme) ?? 'dark'
     setTheme(stored)
+    if (!localStorage.getItem('theme')) {
+      document.documentElement.removeAttribute('data-theme')
+    }
   }, [])
 
   const toggle = () => {
-    const next: Theme = theme === 'light' ? 'dark' : 'light'
+    const next: Theme = theme === 'dark' ? 'light' : 'dark'
     setTheme(next)
-    document.documentElement.setAttribute('data-theme', next)
-    localStorage.setItem('theme', next)
+    if (next === 'dark') {
+      document.documentElement.removeAttribute('data-theme')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light')
+      localStorage.setItem('theme', 'light')
+    }
   }
 
   return (

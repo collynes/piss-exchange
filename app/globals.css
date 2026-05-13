@@ -58,26 +58,26 @@
   }
 }
 
-/* Light theme (default) */
+/* Dark theme — DEFAULT (TradingView style) */
 :root {
+  --color-bg:       #0f1117;
+  --color-surface:  #1a1d27;
+  --color-surface2: #212433;
+  --color-border:   #2a2d3e;
+  --color-border2:  #363a4f;
+  --color-text:     #d1d4dc;
+  --color-muted:    #787b86;
+}
+
+/* Light theme */
+[data-theme="light"] {
   --color-bg:       #ffffff;
   --color-surface:  #ffffff;
   --color-surface2: #f9fafb;
-  --color-border:   #f4f4f5;
+  --color-border:   #f0f0f0;
   --color-border2:  #e4e4e7;
   --color-text:     #09090b;
   --color-muted:    #52525b;
-}
-
-/* Dark theme */
-[data-theme="dark"] {
-  --color-bg:       #131722;
-  --color-surface:  #1e2130;
-  --color-surface2: #2a2e3e;
-  --color-border:   #2d3245;
-  --color-border2:  #3d4466;
-  --color-text:     #d1d4dc;
-  --color-muted:    #787b86;
 }
 
 @layer base {
@@ -86,6 +86,7 @@
     color: var(--color-text);
     -webkit-font-smoothing: antialiased;
     font-variant-numeric: tabular-nums;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 13px;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 }
