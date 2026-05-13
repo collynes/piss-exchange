@@ -43,7 +43,7 @@ export default async function AdminPage() {
         ].map(card => (
           <div key={card.label} className={`bg-surface border rounded p-4 ${card.alert ? 'border-red/40' : 'border-border'}`}>
             <div className="text-xs text-muted uppercase tracking-wider mb-1">{card.label}</div>
-            <div className={`text-xl font-bold ${card.alert ? 'text-red' : 'text-white'}`}>{card.value}</div>
+            <div className={`text-xl font-bold tabular-nums ${card.alert ? 'text-red' : 'text-text'}`}>{card.value}</div>
           </div>
         ))}
       </div>
