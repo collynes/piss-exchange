@@ -20,7 +20,7 @@ export function DrugStats(props: DrugStatsProps) {
     { label: 'Turnover', value: formatKES(props.turnover_today) },
   ]
   return (
-    <div className="flex items-center gap-6 px-4 py-1.5 border-b border-border bg-surface overflow-x-auto flex-shrink-0">
+    <div className="flex items-center gap-6 px-4 py-1.5 bg-surface2 overflow-x-auto flex-shrink-0">
       {stats.map(s => (
         <div key={s.label} className="flex items-center gap-1.5 flex-shrink-0">
           <span className="text-xs text-muted">{s.label}</span>

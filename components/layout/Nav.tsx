@@ -17,7 +17,7 @@ export async function Nav() {
   }
 
   return (
-    <nav className="flex items-center justify-between px-4 md:px-6 h-10 bg-surface border-b border-border sticky top-0 z-40">
+    <nav className="flex items-center justify-between px-4 md:px-6 h-10 bg-surface sticky top-0 z-40">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 shrink-0">
         <div className="w-6 h-6 rounded flex items-center justify-center text-white font-black text-[10px]"

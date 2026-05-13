@@ -51,7 +51,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
 
       {/* Desktop table — TradingView screener style */}
       <table className="w-full border-collapse hidden md:table">
-        <thead className="sticky top-0 z-10 border-b border-border"
+        <thead className="sticky top-0 z-10"
           style={{ background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)' }}>
           <tr>
             {[

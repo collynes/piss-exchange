@@ -22,14 +22,14 @@ export async function Ticker() {
 
   if (doubled.length === 0) {
     return (
-      <div className="bg-bg border-b border-border h-7 flex items-center px-4">
+      <div className="bg-bg  h-7 flex items-center px-4">
         <span className="text-[11px] text-muted">No trades yet — market opens when first listing is placed</span>
       </div>
     )
   }
 
   return (
-    <div className="bg-bg border-b border-border h-7 overflow-hidden flex items-center">
+    <div className="bg-bg  h-7 overflow-hidden flex items-center">
       <div className="flex animate-ticker whitespace-nowrap">
         {doubled.map((item, i) => {
           const drug = item.drugs

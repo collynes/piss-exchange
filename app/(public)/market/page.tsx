@@ -82,7 +82,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
   const CATEGORIES = ['All', 'Antibiotics', 'Antimalarials', 'Diabetes', 'Cardiovascular', 'Respiratory', 'GI Tract', 'Pain Relief']
 
   return (
-    <div className="flex h-[calc(100vh-56px)]">
+    <div className="flex h-[calc(100vh-68px)]">
       {/* Sidebar — desktop only */}
       <div className="hidden md:block w-48 flex-shrink-0">
         <Suspense>

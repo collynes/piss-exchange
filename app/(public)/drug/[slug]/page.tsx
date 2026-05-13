@@ -43,9 +43,9 @@ export default async function DrugPage({ params }: PageProps) {
   ])
 
   return (
-    <div className="flex flex-col md:h-[calc(100vh-62px)] md:overflow-hidden">
+    <div className="flex flex-col md:h-[calc(100vh-68px)] md:overflow-hidden">
       {/* Drug header */}
-      <div className="px-5 py-3 border-b border-border bg-surface flex items-center justify-between flex-shrink-0">
+      <div className="px-5 py-3 bg-surface flex items-center justify-between flex-shrink-0">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-base font-bold text-text">{drug.generic_name}</h1>
