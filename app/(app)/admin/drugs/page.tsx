@@ -13,10 +13,7 @@ interface Drug {
   active: boolean
 }
 
-const GLASS = {
-  background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-  boxShadow: '0 16px 40px -8px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.05)',
-} as const
+const GLASS = { background: 'var(--color-surface)', boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
 
 const INPUT_CLASS = 'w-full bg-bg/80 rounded-lg px-3 py-2 text-xs text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
 const INPUT_STYLE = { border: '1px solid rgba(255,255,255,0.08)' }
@@ -71,7 +68,7 @@ export default function AdminDrugsPage() {
       </div>
 
       {showForm && (
-        <div className="rounded-xl overflow-hidden" style={GLASS}>
+        <div className="rounded-2xl overflow-hidden" style={GLASS}>
           <div className="px-4 py-3 bg-surface2/50 border-b border-white/5">
             <div className="text-xs font-bold text-muted uppercase tracking-wider">New Drug</div>
           </div>
@@ -116,7 +113,7 @@ export default function AdminDrugsPage() {
         style={{ border: '1px solid rgba(255,255,255,0.07)' }}
       />
 
-      <div className="rounded-xl overflow-hidden" style={GLASS}>
+      <div className="rounded-2xl overflow-hidden" style={GLASS}>
         <table className="w-full min-w-[600px]">
           <thead className="bg-surface2/40">
             <tr>

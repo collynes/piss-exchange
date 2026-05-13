@@ -1,10 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-const GLASS = {
-  background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-  boxShadow: '0 16px 40px -8px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.05)',
-} as const
+const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
 
 interface PageProps {
   searchParams: Promise<{ role?: string; status?: string }>
@@ -64,48 +61,52 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
         })}
       </div>
 
-      <div className="rounded-xl overflow-x-auto" style={GLASS}>
+      <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
         <table className="w-full min-w-[640px]">
-          <thead className="bg-surface2/40">
-            <tr>
+          <thead>
+            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
               {['Organisation', 'Role', 'Phone', 'License', 'Joined', 'Status', 'Actions'].map(h => (
-                <th key={h} className={`px-4 py-2.5 text-xs font-bold text-text uppercase tracking-wider ${h === 'Organisation' ? 'text-left' : 'text-right'}`}>{h}</th>
+                <th key={h} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${h === 'Organisation' ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {(users ?? []).length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-muted text-xs">No users found</td></tr>
+              <tr><td colSpan={7} className="px-5 py-10 text-center text-muted text-sm">No users found</td></tr>
             )}
             {(users ?? []).map((u, i) => (
-              <tr key={u.id} className={`hover:bg-surface2 transition-colors ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
-                <td className="px-4 py-2.5">
-                  <div className="text-sm font-semibold text-text">{u.org_name}</div>
+              <tr key={u.id}
+                className="hover:bg-surface2/30 transition-colors"
+                style={{ borderBottom: i < (users?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                <td className="px-5 py-3.5">
+                  <div className="text-[13px] font-semibold text-text">{u.org_name}</div>
                   <div className="text-xs text-muted font-mono">{u.id.slice(0, 8)}…</div>
                 </td>
-                <td className="px-4 py-2.5 text-right">
-                  <span className={`text-xs font-semibold capitalize px-2 py-0.5 rounded
-                    ${u.role === 'admin' ? 'bg-blue/10 text-blue' : u.role === 'seller' ? 'bg-green/10 text-green' : 'bg-muted/10 text-muted'}`}>
+                <td className="px-5 py-3.5 text-right">
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${
+                    u.role === 'admin' ? 'bg-blue/12 text-blue' : u.role === 'seller' ? 'bg-green/12 text-green' : 'bg-muted/15 text-muted'
+                  }`}>
                     {u.role}
                   </span>
                 </td>
-                <td className="px-4 py-2.5 text-right text-xs text-muted">{u.phone ?? '—'}</td>
-                <td className="px-4 py-2.5 text-right text-xs text-muted">{u.license_no ?? '—'}</td>
-                <td className="px-4 py-2.5 text-right text-xs text-muted">
+                <td className="px-5 py-3.5 text-right text-xs text-muted">{u.phone ?? '—'}</td>
+                <td className="px-5 py-3.5 text-right text-xs text-muted">{u.license_no ?? '—'}</td>
+                <td className="px-5 py-3.5 text-right text-xs text-muted">
                   {new Date(u.created_at!).toLocaleDateString('en-KE')}
                 </td>
-                <td className="px-4 py-2.5 text-right">
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded ${u.verified ? 'bg-green/10 text-green' : 'bg-muted/10 text-muted'}`}>
+                <td className="px-5 py-3.5 text-right">
+                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
+                    u.verified ? 'bg-green/12 text-green' : 'bg-muted/15 text-muted'
+                  }`}>
                     {u.verified ? 'Verified' : 'Pending'}
                   </span>
                 </td>
-                <td className="px-4 py-2.5 text-right">
+                <td className="px-5 py-3.5 text-right">
                   <div className="flex gap-1.5 justify-end">
                     {!u.verified && (
                       <form action={`/api/admin/users/${u.id}/verify`} method="POST">
                         <button type="submit"
-                          className="text-xs px-2.5 py-1 font-semibold text-green rounded transition-colors hover:bg-green/20"
-                          style={{ background: 'rgba(8,153,129,0.1)', border: '1px solid rgba(8,153,129,0.25)' }}>
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/12 text-green hover:bg-green/20 transition-colors">
                           Verify
                         </button>
                       </form>
@@ -113,8 +114,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     {u.verified && (
                       <form action={`/api/admin/users/${u.id}/suspend`} method="POST">
                         <button type="submit"
-                          className="text-xs px-2.5 py-1 font-semibold text-red rounded transition-colors hover:bg-red/20"
-                          style={{ background: 'rgba(242,54,69,0.08)', border: '1px solid rgba(242,54,69,0.2)' }}>
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-red/12 text-red hover:bg-red/20 transition-colors">
                           Suspend
                         </button>
                       </form>

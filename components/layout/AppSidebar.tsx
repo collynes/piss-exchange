@@ -44,7 +44,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
   const isAdmin = role === 'admin'
 
   return (
-    <aside className="hidden md:flex w-56 flex-shrink-0 flex-col bg-surface overflow-y-auto scrollbar-hide"
+    <aside className="hidden md:flex w-[260px] flex-shrink-0 flex-col bg-surface overflow-y-auto scrollbar-hide"
       style={{ borderRight: '1px solid rgba(255,255,255,0.04)' }}>
 
       {/* Branding */}

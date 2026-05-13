@@ -19,10 +19,7 @@ const SETTING_LABELS: Record<string, { label: string; desc: string }> = {
   },
 }
 
-const GLASS = {
-  background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-  boxShadow: '0 16px 40px -8px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.05)',
-} as const
+const GLASS = { background: 'var(--color-surface)', boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Setting[]>([])
@@ -48,7 +45,7 @@ export default function AdminSettingsPage() {
     <div className="max-w-2xl space-y-4">
       <h1 className="text-base font-bold text-text">Platform Settings</h1>
 
-      <div className="rounded-xl overflow-hidden" style={GLASS}>
+      <div className="rounded-2xl overflow-hidden" style={GLASS}>
         {loading ? (
           <div className="px-5 py-8 text-center text-muted text-xs">Loading…</div>
         ) : settings.length === 0 ? (
