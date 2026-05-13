@@ -30,23 +30,23 @@ export default async function OrdersPage() {
       <div className="overflow-x-auto">
       <div className="bg-surface border border-border rounded overflow-hidden min-w-[640px]">
         <table className="w-full">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="px-4 py-2 text-left text-[10.5px] font-semibold text-muted uppercase tracking-wider">Drug</th>
-              <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Qty</th>
-              <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Price/unit</th>
-              <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Total</th>
-              <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Status</th>
-              <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Escrow</th>
-              <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Date</th>
+          <thead className="border-b border-border bg-surface2/40">
+            <tr>
+              <th className="px-4 py-2.5 text-left text-xs font-bold text-text uppercase tracking-wider">Drug</th>
+              <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Qty</th>
+              <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Price/unit</th>
+              <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Total</th>
+              <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Status</th>
+              <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Escrow</th>
+              <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Date</th>
               <th />
             </tr>
           </thead>
           <tbody>
-            {(orders ?? []).map(order => {
+            {(orders ?? []).map((order, i) => {
               const drug = order.drugs as { generic_name: string; slug: string } | null
               return (
-                <tr key={order.id} className="border-b border-border/30 hover:bg-bg transition-colors">
+                <tr key={order.id} className={`hover:bg-surface2 transition-colors ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
                   <td className="px-4 py-2.5">
                     <Link href={`/drug/${drug?.slug}`} className="text-sm text-text hover:text-blue transition-colors">
                       {drug?.generic_name ?? '—'}
@@ -56,7 +56,7 @@ export default async function OrdersPage() {
                   <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">{Number(order.price_per_unit).toFixed(2)}</td>
                   <td className="px-4 py-2.5 text-right text-sm text-text font-semibold tabular-nums">{formatKES(Number(order.total_amount))}</td>
                   <td className="px-4 py-2.5 text-right">
-                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
+                    <span className={`text-xs font-semibold px-1.5 py-0.5 rounded capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
                       {order.status}
                     </span>
                   </td>

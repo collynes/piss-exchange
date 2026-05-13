@@ -20,29 +20,29 @@ export default async function SellerOrdersPage() {
       <div className="overflow-x-auto">
       <div className="bg-surface border border-border rounded overflow-hidden min-w-[600px]">
         <table className="w-full">
-          <thead>
-            <tr className="border-b border-border">
+          <thead className="border-b border-border bg-surface2/40">
+            <tr>
               {['Drug', 'Qty', 'Total', 'Payment', 'Status', 'Date', 'Actions'].map(h => (
-                <th key={h} className={`px-4 py-2 text-[10.5px] font-semibold text-muted uppercase tracking-wider border-b border-border ${h === 'Drug' ? 'text-left' : 'text-right'}`}>{h}</th>
+                <th key={h} className={`px-4 py-2.5 text-xs font-bold text-text uppercase tracking-wider ${h === 'Drug' ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {(orders ?? []).map(order => {
+            {(orders ?? []).map((order, i) => {
               const drug = order.drugs as { generic_name: string } | null
               const payment = (order.payments as { status: string }[] | null)?.[0]
               return (
-                <tr key={order.id} className="border-b border-border/30 hover:bg-bg transition-colors">
+                <tr key={order.id} className={`hover:bg-surface2 transition-colors ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
                   <td className="px-4 py-2.5 text-sm text-text">{drug?.generic_name ?? '—'}</td>
                   <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">{order.qty.toLocaleString()}</td>
                   <td className="px-4 py-2.5 text-right text-sm text-text font-semibold tabular-nums">{formatKES(Number(order.total_amount))}</td>
                   <td className="px-4 py-2.5 text-right">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded capitalize ${payment?.status === 'completed' ? 'bg-green/10 text-green' : 'bg-muted/10 text-muted'}`}>
+                    <span className={`text-xs px-1.5 py-0.5 rounded capitalize ${payment?.status === 'completed' ? 'bg-green/10 text-green' : 'bg-muted/10 text-muted'}`}>
                       {payment?.status ?? '—'}
                     </span>
                   </td>
                   <td className="px-4 py-2.5 text-right">
-                    <span className="text-[10px] text-muted capitalize bg-surface2 px-1.5 py-0.5 rounded">{order.status}</span>
+                    <span className="text-xs text-muted capitalize bg-surface2 px-1.5 py-0.5 rounded">{order.status}</span>
                   </td>
                   <td className="px-4 py-2.5 text-right text-xs text-muted">
                     {new Date(order.created_at as string).toLocaleDateString('en-KE')}
@@ -51,19 +51,19 @@ export default async function SellerOrdersPage() {
                     <div className="flex gap-1 justify-end">
                       {order.status === 'paid' && (
                         <form action={`/api/orders/${order.id}/confirm`} method="POST">
-                          <button type="submit" className="text-[10px] px-2 py-0.5 bg-blue/10 text-blue border border-blue/30 rounded hover:bg-blue/20 transition-colors">
+                          <button type="submit" className="text-xs px-2 py-0.5 bg-blue/10 text-blue border border-blue/30 rounded hover:bg-blue/20 transition-colors">
                             Confirm
                           </button>
                         </form>
                       )}
                       {order.status === 'confirmed' && (
                         <form action={`/api/orders/${order.id}/ship`} method="POST">
-                          <button type="submit" className="text-[10px] px-2 py-0.5 bg-green/10 text-green border border-green/30 rounded hover:bg-green/20 transition-colors">
+                          <button type="submit" className="text-xs px-2 py-0.5 bg-green/10 text-green border border-green/30 rounded hover:bg-green/20 transition-colors">
                             Mark Shipped
                           </button>
                         </form>
                       )}
-                      <Link href={`/orders/${order.id}`} className="text-[10px] text-muted hover:text-text transition-colors px-1">
+                      <Link href={`/orders/${order.id}`} className="text-xs text-muted hover:text-text transition-colors px-1">
                         View
                       </Link>
                     </div>

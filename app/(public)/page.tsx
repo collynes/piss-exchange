@@ -100,7 +100,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── STATS BAR ─────────────────────────────────────────────── */}
-      <section className="border-y border-border bg-surface/60 backdrop-blur-sm">
+      <section className="bg-surface/60 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { value: '71+', label: 'Generic Drugs', color: '#2962ff' },
@@ -110,7 +110,7 @@ export default async function LandingPage() {
           ].map(({ value, label, color }) => (
             <div key={label} className="text-center">
               <div className="text-3xl font-black mb-1" style={{ color }}>{value}</div>
-              <div className="text-xs text-muted font-medium uppercase tracking-wider">{label}</div>
+              <div className="text-sm text-muted font-medium uppercase tracking-wider">{label}</div>
             </div>
           ))}
         </div>
@@ -121,7 +121,7 @@ export default async function LandingPage() {
         <div className="text-center mb-14">
           <div className="inline-block text-xs font-bold text-blue uppercase tracking-widest bg-blue/10 px-3 py-1 rounded-full mb-4">How it works</div>
           <h2 className="text-3xl font-black text-text">From registration to delivery</h2>
-          <p className="text-muted mt-2 text-sm max-w-md mx-auto">Four steps, fully digital, M-Pesa secured.</p>
+          <p className="text-muted mt-2 text-base max-w-md mx-auto">Four steps, fully digital, M-Pesa secured.</p>
         </div>
 
         <div className="grid md:grid-cols-4 gap-4 relative">
@@ -140,14 +140,14 @@ export default async function LandingPage() {
                 {s.step}
               </div>
               <div className="text-sm font-bold text-text mb-2">{s.title}</div>
-              <div className="text-xs text-muted leading-relaxed">{s.desc}</div>
+              <div className="text-sm text-muted leading-relaxed">{s.desc}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── FOR WHO ───────────────────────────────────────────────── */}
-      <section className="border-y border-border bg-surface/40">
+      <section className="bg-surface/40">
         <div className="max-w-5xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-6">
           {/* Sellers */}
           <div className="p-8 rounded-2xl bg-surface shadow-sm transition-all">
@@ -218,7 +218,7 @@ export default async function LandingPage() {
           </div>
 
           <div className="bg-surface rounded-2xl overflow-hidden shadow-sm">
-            <div className="grid grid-cols-5 px-5 py-2.5 bg-surface2/50 text-[10px] font-bold text-muted uppercase tracking-wider">
+            <div className="grid grid-cols-5 px-5 py-3 bg-surface2 text-xs font-bold text-text uppercase tracking-wider border-b border-border">
               <span className="col-span-2">Drug</span>
               <span className="text-right">Category</span>
               <span className="text-right">Form</span>
@@ -226,15 +226,15 @@ export default async function LandingPage() {
             </div>
             {listingRows.map((row, i) => (
               <Link href={`/drug/${row.slug}`} key={i}
-                className="grid grid-cols-5 px-5 py-3.5 hover:bg-blue/5 transition-colors group items-center">
+                className={`grid grid-cols-5 px-5 py-3.5 hover:bg-blue/5 transition-colors group items-center ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
                 <div className="col-span-2">
                   <div className="text-sm font-semibold text-text group-hover:text-blue transition-colors">{row.generic_name}</div>
-                  <div className="text-[10px] text-muted">{row.strength}</div>
+                  <div className="text-xs text-muted">{row.strength}</div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-surface2 text-muted">{row.category}</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-surface2 text-muted">{row.category}</span>
                 </div>
-                <div className="text-right text-xs text-muted">{row.dosage_form}</div>
+                <div className="text-right text-sm text-muted">{row.dosage_form}</div>
                 <div className="text-right text-sm font-bold text-red tabular-nums">{row.price.toFixed(2)}</div>
               </Link>
             ))}
@@ -250,7 +250,7 @@ export default async function LandingPage() {
       )}
 
       {/* ── TRUST FEATURES ────────────────────────────────────────── */}
-      <section className="border-t border-border bg-surface/40">
+      <section className="bg-surface/40">
         <div className="max-w-5xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
             <div className="inline-block text-xs font-bold text-muted uppercase tracking-widest bg-surface2 px-3 py-1 rounded-full mb-4">Why PISS Exchange</div>
@@ -268,7 +268,7 @@ export default async function LandingPage() {
               <div key={f.title} className="p-6 rounded-2xl bg-surface shadow-sm transition-all">
                 <div className="w-1.5 h-1.5 rounded-full mb-4" style={{ background: f.color }} />
                 <div className="text-sm font-bold text-text mb-2">{f.title}</div>
-                <div className="text-xs text-muted leading-relaxed">{f.desc}</div>
+                <div className="text-sm text-muted leading-relaxed">{f.desc}</div>
               </div>
             ))}
           </div>
@@ -313,7 +313,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── FOOTER ────────────────────────────────────────────────── */}
-      <footer className="border-t border-border">
+      <footer>
         <div className="max-w-5xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted/50">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green animate-pulse" />

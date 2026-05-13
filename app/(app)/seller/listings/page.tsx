@@ -27,23 +27,23 @@ export default async function SellerListingsPage() {
       <div className="overflow-x-auto">
       <div className="bg-surface border border-border rounded overflow-hidden min-w-[640px]">
         <table className="w-full">
-          <thead>
-            <tr className="border-b border-border">
+          <thead className="border-b border-border bg-surface2/40">
+            <tr>
               {['Drug', 'Brand / Origin', 'Price/unit', 'Qty Rem.', 'Status', 'Expires', ''].map(h => (
-                <th key={h} className={`px-4 py-2 text-[10.5px] font-semibold text-muted uppercase tracking-wider border-b border-border ${h !== 'Drug' && h !== 'Brand / Origin' && h !== '' ? 'text-right' : 'text-left'}`}>{h}</th>
+                <th key={h} className={`px-4 py-2.5 text-xs font-bold text-text uppercase tracking-wider ${h !== 'Drug' && h !== 'Brand / Origin' && h !== '' ? 'text-right' : 'text-left'}`}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {(listings ?? []).map(l => {
+            {(listings ?? []).map((l, i) => {
               const drug = l.drugs as { generic_name: string; slug: string; strength: string; dosage_form: string } | null
               return (
-                <tr key={l.id} className="border-b border-border/30 hover:bg-bg transition-colors">
+                <tr key={l.id} className={`hover:bg-surface2 transition-colors ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
                   <td className="px-4 py-2.5">
                     <Link href={`/drug/${drug?.slug}`} className="text-sm font-semibold text-text hover:text-blue transition-colors">
                       {drug?.generic_name ?? '—'}
                     </Link>
-                    <div className="text-[10px] text-muted">{drug?.strength} · {drug?.dosage_form}</div>
+                    <div className="text-xs text-muted">{drug?.strength} · {drug?.dosage_form}</div>
                   </td>
                   <td className="px-4 py-2.5 text-sm text-text">
                     {l.brand_name} · <span className="text-muted">{l.origin_country}</span>
@@ -55,7 +55,7 @@ export default async function SellerListingsPage() {
                     {l.qty_remaining.toLocaleString()} / {l.qty_available.toLocaleString()}
                   </td>
                   <td className="px-4 py-2.5 text-right">
-                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded capitalize
+                    <span className={`text-xs font-semibold px-1.5 py-0.5 rounded capitalize
                       ${l.status === 'active' ? 'bg-green/10 text-green'
                         : l.status === 'filled' ? 'bg-blue/10 text-blue'
                         : 'bg-muted/10 text-muted'}`}>

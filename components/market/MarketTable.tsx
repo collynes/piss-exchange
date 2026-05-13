@@ -22,7 +22,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
   return (
     <div className="overflow-auto flex-1">
       {/* Mobile cards */}
-      <div className="md:hidden divide-y divide-border">
+      <div className="md:hidden">
         {rows.map(row => {
           const pct = Number(row.change_pct)
           const isUp = pct >= 0
@@ -31,13 +31,13 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
               className="flex items-center justify-between px-4 py-2.5 hover:bg-surface2 transition-colors">
               <div className="min-w-0 flex-1">
                 <div className="text-[13px] font-semibold text-text truncate">{row.generic_name}</div>
-                <div className="text-[11px] text-muted">{row.strength} · {row.dosage_form}</div>
+                <div className="text-xs text-muted">{row.strength} · {row.dosage_form}</div>
               </div>
               <div className="text-right ml-3 flex-shrink-0">
                 <div className={`text-[13px] font-bold tabular-nums ${isUp ? 'text-green' : 'text-red'}`}>
                   {row.best_ask ? Number(row.best_ask).toFixed(2) : '—'}
                 </div>
-                <div className={`text-[11px] font-semibold ${isUp ? 'text-green' : 'text-red'}`}>
+                <div className={`text-xs font-semibold ${isUp ? 'text-green' : 'text-red'}`}>
                   {isUp ? '▲' : '▼'} {Math.abs(pct).toFixed(2)}%
                 </div>
               </div>
@@ -51,8 +51,8 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
 
       {/* Desktop table — TradingView screener style */}
       <table className="w-full border-collapse hidden md:table">
-        <thead className="sticky top-0 bg-surface z-10">
-          <tr className="border-b border-border">
+        <thead className="sticky top-0 bg-surface z-10 border-b border-border">
+          <tr>
             {[
               { label: 'Drug', align: 'left' },
               { label: 'Last', align: 'right' },
@@ -65,7 +65,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
               { label: '', align: 'right' },
             ].map(h => (
               <th key={h.label}
-                className={`px-3 py-2 text-[11px] font-semibold text-muted uppercase tracking-wider whitespace-nowrap text-${h.align}`}>
+                className={`px-3 py-2.5 text-xs font-bold text-text uppercase tracking-wider whitespace-nowrap text-${h.align}`}>
                 {h.label}
               </th>
             ))}
@@ -81,7 +81,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
                 onClick={() => { window.location.href = `/drug/${row.slug}` }}>
                 <td className="px-3 py-2">
                   <span className="text-[13px] font-semibold text-text">{row.generic_name}</span>
-                  <span className="text-[11px] text-muted ml-2">{row.strength} · {row.dosage_form}</span>
+                  <span className="text-xs text-muted ml-2">{row.strength} · {row.dosage_form}</span>
                 </td>
                 <td className={`px-3 py-2 text-right text-[13px] font-semibold tabular-nums ${isUp ? 'text-green' : 'text-red'}`}>
                   {row.last_price ? Number(row.last_price).toFixed(2) : '—'}
@@ -100,7 +100,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
                 <td className="px-3 py-2 text-right text-[13px] text-muted">{row.seller_count}</td>
                 <td className="px-3 py-2 text-right">
                   <Link href={`/drug/${row.slug}`} onClick={e => e.stopPropagation()}
-                    className="px-2 py-0.5 text-[11px] text-muted hover:text-blue transition-colors">
+                    className="px-2 py-0.5 text-xs text-muted hover:text-blue transition-colors">
                     →
                   </Link>
                 </td>

@@ -92,7 +92,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Mobile category strip */}
-        <div className="md:hidden flex items-center gap-1.5 px-3 py-2 border-b border-border overflow-x-auto scrollbar-hide">
+        <div className="md:hidden flex items-center gap-1.5 px-3 py-2 overflow-x-auto scrollbar-hide">
           {CATEGORIES.map(c => (
             <a key={c}
               href={c === 'All' ? '/market' : `/market?cat=${c}`}
@@ -106,7 +106,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
         </div>
 
         {/* Toolbar */}
-        <div className="px-3 md:px-5 py-2.5 border-b border-border flex items-center justify-between flex-shrink-0 gap-2">
+        <div className="px-3 md:px-5 py-2.5 flex items-center justify-between flex-shrink-0 gap-2">
           <div className="min-w-0">
             <div className="text-sm font-semibold text-text">Market Board</div>
             <div className="text-xs text-muted hidden sm:block">{drugs?.length ?? 0} drugs · Updated every trade</div>
@@ -132,7 +132,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
         <MarketTable rows={filtered} />
 
-        <div className="border-t border-border px-3 md:px-5 py-1.5 flex items-center gap-3 md:gap-5 flex-shrink-0 text-[10.5px] overflow-x-auto">
+        <div className="px-3 md:px-5 py-1.5 flex items-center gap-3 md:gap-5 flex-shrink-0 text-xs overflow-x-auto">
           <span className="text-muted whitespace-nowrap">Drugs: <span className="text-text">{drugs?.length ?? 0}</span></span>
           <span className="text-muted whitespace-nowrap hidden sm:inline">Deals today: <span className="text-text">{formatNumber(totalDeals)}</span></span>
           <span className="text-muted whitespace-nowrap hidden sm:inline">Turnover: <span className="text-text">{formatKES(totalTurnover)}</span></span>

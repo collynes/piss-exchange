@@ -89,29 +89,29 @@ export default async function DashboardPage({
         </div>
         <div className="bg-surface border border-border rounded overflow-hidden">
           <table className="w-full">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-4 py-2 text-left text-[10.5px] font-semibold text-muted uppercase tracking-wider">Drug</th>
-                <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Qty</th>
-                <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Total</th>
-                <th className="px-4 py-2 text-right text-[10.5px] font-semibold text-muted uppercase tracking-wider">Status</th>
+            <thead className="border-b border-border bg-surface2/40">
+              <tr>
+                <th className="px-4 py-2.5 text-left text-xs font-bold text-text uppercase tracking-wider">Drug</th>
+                <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Qty</th>
+                <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Total</th>
+                <th className="px-4 py-2.5 text-right text-xs font-bold text-text uppercase tracking-wider">Status</th>
               </tr>
             </thead>
             <tbody>
-              {(recentOrders ?? []).map(order => {
+              {(recentOrders ?? []).map((order, i) => {
                 const drug = order.drugs as { generic_name: string; slug: string } | null
                 return (
-                  <tr key={order.id} className="border-b border-border/30 hover:bg-bg transition-colors">
+                  <tr key={order.id} className={`hover:bg-surface2 transition-colors ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
                     <td className="px-4 py-2.5">
                       <Link href={`/orders/${order.id}`} className="text-sm text-text hover:text-blue transition-colors">
                         {drug?.generic_name ?? '—'}
                       </Link>
-                      <div className="text-[10px] text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
+                      <div className="text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
                     </td>
                     <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">{order.qty.toLocaleString()}</td>
                     <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums font-semibold">{formatKES(Number(order.total_amount))}</td>
                     <td className="px-4 py-2.5 text-right">
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded capitalize ${ORDER_STATUS_COLOR[order.status] ?? 'text-muted'}`}>
+                      <span className={`text-xs font-semibold px-1.5 py-0.5 rounded capitalize ${ORDER_STATUS_COLOR[order.status] ?? 'text-muted'}`}>
                         {order.status}
                       </span>
                     </td>
