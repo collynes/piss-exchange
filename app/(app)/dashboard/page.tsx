@@ -55,7 +55,9 @@ export default async function DashboardPage({
     .eq('id', user.id)
     .single()
 
-  const isSeller = profile?.role === 'seller' || profile?.role === 'admin'
+  if (profile?.role === 'admin') redirect('/admin')
+
+  const isSeller = profile?.role === 'seller'
 
   const [
     { data: recentOrders },

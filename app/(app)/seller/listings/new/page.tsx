@@ -11,12 +11,9 @@ interface Drug {
   slug: string
 }
 
-const GLASS = {
-  background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-  boxShadow: '0 20px 48px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
-} as const
+const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
 
-const INPUT_CLASS = 'w-full bg-bg/80 rounded-lg px-4 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
+const INPUT_CLASS = 'w-full bg-bg rounded-lg px-3 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
 const INPUT_STYLE = { border: '1px solid rgba(255,255,255,0.08)' }
 
 export default function NewListingPage() {
@@ -76,90 +73,113 @@ export default function NewListingPage() {
     router.push(`/drug/${selectedDrug.slug}`)
   }
 
-  return (
-    <div className="max-w-lg">
-      <h1 className="text-lg font-bold text-text mb-6">List a Drug</h1>
+  const fields: { key: keyof typeof form; label: string; placeholder?: string; type?: string; step?: string; required: boolean }[] = [
+    { key: 'brand_name',     label: 'Brand Name',         placeholder: 'Augmentin',       required: true },
+    { key: 'manufacturer',   label: 'Manufacturer',       placeholder: 'GlaxoSmithKline', required: false },
+    { key: 'origin_country', label: 'Country of Origin',  placeholder: 'UK',              required: true },
+    { key: 'qty_available',  label: 'Quantity Available', placeholder: '5000',  type: 'number',            required: true },
+    { key: 'price_per_unit', label: 'Price / Unit (KES)', placeholder: '45.00', type: 'number', step: '0.01', required: true },
+    { key: 'min_order_qty',  label: 'Minimum Order Qty',  placeholder: '100',   type: 'number',            required: true },
+    { key: 'batch_no',       label: 'Batch Number',       placeholder: 'Optional',        required: false },
+    { key: 'expiry_date',    label: 'Drug Expiry Date',   type: 'date',                   required: false },
+    { key: 'listing_expiry', label: 'Listing Expires On', type: 'date',                   required: false },
+  ]
 
-      {/* Drug search */}
-      <div className="rounded-2xl overflow-hidden mb-4" style={GLASS}>
-        <div className="px-5 py-4 bg-surface2/50 border-b border-white/5">
-          <div className="text-xs font-bold text-muted uppercase tracking-wider">Select Generic Drug</div>
+  return (
+    <div className="max-w-xl">
+
+      {/* Page header */}
+      <div className="mb-6">
+        <h1 className="text-lg font-bold text-text">List a Drug</h1>
+        <p className="text-xs text-muted mt-0.5">Add your stock to the exchange order book</p>
+      </div>
+
+      {/* Step 1 — Drug selection */}
+      <div className="rounded-2xl bg-surface overflow-hidden mb-4" style={CARD}>
+        <div className="flex items-center justify-between px-5 py-3.5"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <h2 className="text-sm font-bold text-text">
+            {selectedDrug ? '1. Generic Drug' : '1. Select Generic Drug'}
+          </h2>
+          {selectedDrug && (
+            <button onClick={() => setSelectedDrug(null)}
+              className="text-xs text-blue hover:underline">
+              Change
+            </button>
+          )}
         </div>
+
         <div className="px-5 py-4">
           {selectedDrug ? (
-            <div className="flex items-center justify-between rounded-xl px-4 py-3"
-              style={{ background: 'rgba(41,98,255,0.08)', border: '1px solid rgba(41,98,255,0.25)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-green flex-shrink-0" />
               <div>
-                <div className="text-sm text-text font-semibold">{selectedDrug.generic_name}</div>
+                <div className="text-[13px] font-semibold text-text">{selectedDrug.generic_name}</div>
                 <div className="text-xs text-muted">{selectedDrug.strength} · {selectedDrug.dosage_form}</div>
               </div>
-              <button onClick={() => setSelectedDrug(null)}
-                className="text-xs text-muted hover:text-text transition-colors px-2 py-1">
-                Change
-              </button>
             </div>
           ) : (
-            <div>
+            <div className="space-y-2">
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search generic name (e.g. Amoxicillin)…"
-                className={INPUT_CLASS + ' mb-2'}
+                className={INPUT_CLASS}
                 style={INPUT_STYLE}
+                autoFocus
               />
               {drugs.length > 0 && (
-                <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
                   {drugs.map((drug, i) => (
-                    <button key={drug.id} onClick={() => { setSelectedDrug(drug); setSearch('') }}
-                      className={`w-full text-left px-4 py-2.5 text-sm hover:bg-surface2 transition-colors ${i > 0 ? 'border-t border-white/5' : ''}`}>
-                      <span className="text-text font-medium">{drug.generic_name}</span>
-                      <span className="text-muted ml-2 text-xs">{drug.strength} · {drug.dosage_form}</span>
+                    <button key={drug.id}
+                      onClick={() => { setSelectedDrug(drug); setSearch('') }}
+                      className="w-full text-left px-4 py-2.5 hover:bg-surface2 transition-colors"
+                      style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                      <span className="text-[13px] font-medium text-text">{drug.generic_name}</span>
+                      <span className="text-xs text-muted ml-2">{drug.strength} · {drug.dosage_form}</span>
                     </button>
                   ))}
                 </div>
+              )}
+              {search.length > 1 && drugs.length === 0 && (
+                <p className="text-xs text-muted px-1">No drugs found for &quot;{search}&quot;</p>
               )}
             </div>
           )}
         </div>
       </div>
 
+      {/* Step 2 — Listing details */}
       {selectedDrug && (
         <form onSubmit={handleSubmit}>
-          <div className="rounded-2xl overflow-hidden mb-4" style={GLASS}>
-            <div className="px-5 py-4 bg-surface2/50 border-b border-white/5">
-              <div className="text-xs font-bold text-muted uppercase tracking-wider">Listing Details</div>
+          <div className="rounded-2xl bg-surface overflow-hidden mb-4" style={CARD}>
+            <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <h2 className="text-sm font-bold text-text">2. Listing Details</h2>
             </div>
             <div className="px-5 py-5 space-y-4">
-              {[
-                { key: 'brand_name', label: 'Brand Name', placeholder: 'Augmentin', required: true },
-                { key: 'manufacturer', label: 'Manufacturer', placeholder: 'GlaxoSmithKline', required: false },
-                { key: 'origin_country', label: 'Country of Origin', placeholder: 'UK', required: true },
-                { key: 'qty_available', label: 'Quantity Available', placeholder: '5000', type: 'number', required: true },
-                { key: 'price_per_unit', label: 'Price per Unit (KES)', placeholder: '45.00', type: 'number', step: '0.01', required: true },
-                { key: 'min_order_qty', label: 'Minimum Order Qty', placeholder: '100', type: 'number', required: true },
-                { key: 'batch_no', label: 'Batch Number', placeholder: 'Optional', required: false },
-                { key: 'expiry_date', label: 'Drug Expiry Date', type: 'date', required: false },
-                { key: 'listing_expiry', label: 'Listing Expires On', type: 'date', required: false },
-              ].map(({ key, label, placeholder, type = 'text', step, required }) => (
-                <div key={key}>
-                  <label className="block text-xs text-muted uppercase tracking-wider mb-2">
-                    {label} {required && <span className="text-red">*</span>}
-                  </label>
-                  <input
-                    type={type}
-                    step={step}
-                    required={required}
-                    placeholder={placeholder}
-                    value={form[key as keyof typeof form]}
-                    onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                    className={INPUT_CLASS}
-                    style={INPUT_STYLE}
-                  />
-                </div>
-              ))}
+              <div className="grid grid-cols-2 gap-4">
+                {fields.map(({ key, label, placeholder, type = 'text', step, required }) => (
+                  <div key={key} className={key === 'brand_name' || key === 'manufacturer' || key === 'origin_country' ? 'col-span-2 sm:col-span-1' : ''}>
+                    <label className="block text-xs font-medium text-muted mb-1.5">
+                      {label}{required && <span className="text-red ml-0.5">*</span>}
+                    </label>
+                    <input
+                      type={type}
+                      step={step}
+                      required={required}
+                      placeholder={placeholder}
+                      value={form[key as keyof typeof form]}
+                      onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+                      className={INPUT_CLASS}
+                      style={INPUT_STYLE}
+                    />
+                  </div>
+                ))}
+              </div>
 
               {form.qty_available && form.price_per_unit && (
-                <div className="flex justify-between items-center py-3 px-4 rounded-xl bg-bg/60" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex justify-between items-center py-3 px-4 rounded-lg"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <span className="text-xs text-muted">Total listing value</span>
                   <span className="text-sm font-bold text-text tabular-nums">
                     KES {(Number(form.qty_available) * Number(form.price_per_unit)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -167,11 +187,16 @@ export default function NewListingPage() {
                 </div>
               )}
 
-              {error && <div className="bg-red/8 rounded-lg px-4 py-3 text-xs text-red">{error}</div>}
+              {error && (
+                <div className="px-4 py-3 rounded-lg text-xs text-red"
+                  style={{ background: 'rgba(242,54,69,0.08)', border: '1px solid rgba(242,54,69,0.2)' }}>
+                  {error}
+                </div>
+              )}
 
               <button type="submit" disabled={loading}
-                className="w-full font-bold py-3 rounded-xl text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40 mt-2"
-                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 20px rgba(41,98,255,0.25)' }}>
+                className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 disabled:opacity-40"
+                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)' }}>
                 {loading ? 'Listing…' : 'List Drug on Exchange'}
               </button>
             </div>

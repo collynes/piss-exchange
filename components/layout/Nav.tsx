@@ -29,29 +29,14 @@ export async function Nav() {
         </span>
       </Link>
 
-      {/* Desktop links */}
-      <div className="hidden md:flex items-center gap-0">
-        <Link href="/market" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
-          Market
-        </Link>
-        {user && (
-          <>
-            <Link href="/dashboard" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
-              Dashboard
-            </Link>
-            {(profile?.role === 'seller' || profile?.role === 'admin') && (
-              <Link href="/seller/listings/new" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
-                + List Drug
-              </Link>
-            )}
-            {profile?.role === 'admin' && (
-              <Link href="/admin" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
-                Admin
-              </Link>
-            )}
-          </>
-        )}
-      </div>
+      {/* Desktop links — only shown when NOT logged in; sidebar handles nav for auth'd users */}
+      {!user && (
+        <div className="hidden md:flex items-center gap-0">
+          <Link href="/market" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
+            Market
+          </Link>
+        </div>
+      )}
 
       {/* Desktop auth */}
       <div className="hidden md:flex items-center gap-2">
