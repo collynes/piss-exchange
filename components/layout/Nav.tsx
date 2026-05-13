@@ -17,35 +17,35 @@ export async function Nav() {
   }
 
   return (
-    <nav className="flex items-center justify-between px-4 md:px-6 h-14 bg-surface border-b border-border sticky top-0 z-40 backdrop-blur-sm bg-surface/95">
+    <nav className="flex items-center justify-between px-4 md:px-6 h-10 bg-surface border-b border-border sticky top-0 z-40">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2.5 shrink-0">
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black text-[11px] shadow-sm"
+      <Link href="/" className="flex items-center gap-2 shrink-0">
+        <div className="w-6 h-6 rounded flex items-center justify-center text-white font-black text-[10px]"
           style={{ background: 'linear-gradient(135deg, #2962ff, #089981)' }}>
           DH
         </div>
-        <span className="text-text font-bold text-sm tracking-tight">
+        <span className="text-text font-bold text-[13px] tracking-tight">
           PISS<span className="text-blue">.</span>Exchange
         </span>
       </Link>
 
       {/* Desktop links */}
-      <div className="hidden md:flex items-center gap-0.5">
-        <Link href="/market" className="px-3.5 py-2 text-muted text-sm rounded-lg hover:text-text hover:bg-surface2 transition-colors">
+      <div className="hidden md:flex items-center gap-0">
+        <Link href="/market" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
           Market
         </Link>
         {user && (
           <>
-            <Link href="/dashboard" className="px-3.5 py-2 text-muted text-sm rounded-lg hover:text-text hover:bg-surface2 transition-colors">
+            <Link href="/dashboard" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
               Dashboard
             </Link>
             {(profile?.role === 'seller' || profile?.role === 'admin') && (
-              <Link href="/seller/listings/new" className="px-3.5 py-2 text-muted text-sm rounded-lg hover:text-text hover:bg-surface2 transition-colors">
+              <Link href="/seller/listings/new" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
                 + List Drug
               </Link>
             )}
             {profile?.role === 'admin' && (
-              <Link href="/admin" className="px-3.5 py-2 text-muted text-sm rounded-lg hover:text-text hover:bg-surface2 transition-colors">
+              <Link href="/admin" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
                 Admin
               </Link>
             )}
@@ -60,17 +60,17 @@ export async function Nav() {
           <div className="flex items-center gap-3">
             <span className="text-muted text-xs truncate max-w-36">{profile?.org_name}</span>
             <form action="/auth/signout" method="POST">
-              <button className="px-3 py-1.5 text-xs border border-border rounded-lg text-muted hover:text-text hover:border-border2 transition-colors">
+              <button className="px-2.5 py-1 text-xs border border-border rounded text-muted hover:text-text transition-colors">
                 Log Out
               </button>
             </form>
           </div>
         ) : (
           <>
-            <Link href="/login" className="px-3.5 py-2 text-sm text-muted hover:text-text transition-colors">
+            <Link href="/login" className="px-3 py-1.5 text-[13px] text-muted hover:text-text transition-colors">
               Log In
             </Link>
-            <Link href="/register" className="px-4 py-2 text-sm bg-blue text-white font-semibold rounded-lg hover:bg-blue/90 transition-colors shadow-sm">
+            <Link href="/register" className="px-3 py-1.5 text-[13px] bg-blue text-white font-semibold rounded hover:bg-blue/90 transition-colors">
               Join Exchange
             </Link>
           </>
