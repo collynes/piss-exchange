@@ -51,9 +51,8 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
 
       {/* Desktop table — TradingView screener style */}
       <table className="w-full border-collapse hidden md:table">
-        <thead className="sticky top-0 z-10"
-          style={{ background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)' }}>
-          <tr>
+        <thead className="sticky top-0 z-10 bg-surface">
+          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             {[
               { label: 'Drug', align: 'left' },
               { label: 'Last', align: 'right' },
@@ -66,7 +65,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
               { label: '', align: 'right' },
             ].map(h => (
               <th key={h.label}
-                className={`px-3 py-2.5 text-xs font-bold text-text uppercase tracking-wider whitespace-nowrap text-${h.align}`}>
+                className={`px-3 py-2.5 text-[11px] font-bold text-muted uppercase tracking-wider whitespace-nowrap text-${h.align}`}>
                 {h.label}
               </th>
             ))}
@@ -78,7 +77,8 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
             const isUp = pct >= 0
             return (
               <tr key={row.drug_id}
-                className={`hover:bg-surface2 cursor-pointer transition-colors ${i % 2 === 0 ? '' : 'bg-surface2/30'}`}
+                className="hover:bg-surface2/40 cursor-pointer transition-colors"
+                style={{ borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}
                 onClick={() => { window.location.href = `/drug/${row.slug}` }}>
                 <td className="px-3 py-2">
                   <span className="text-[13px] font-semibold text-text">{row.generic_name}</span>
