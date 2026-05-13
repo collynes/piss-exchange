@@ -1,22 +1,18 @@
 import { formatNumber, formatKES } from '@/lib/utils'
 
 interface DrugStatsProps {
-  last_price: number | null
-  prev_price: number | null
-  change_pct: number
-  volume_today: number
-  vwap: number | null
-  deals_today: number
-  turnover_today: number
+  last_price: number | null; prev_price: number | null; change_pct: number
+  volume_today: number; vwap: number | null; deals_today: number; turnover_today: number
 }
 
 export function DrugStats(props: DrugStatsProps) {
+  const isUp = props.change_pct >= 0
   const stats = [
     { label: 'Prev Close', value: props.prev_price ? Number(props.prev_price).toFixed(2) : '—' },
     {
       label: 'Change',
-      value: `${props.change_pct > 0 ? '+' : ''}${Number(props.change_pct).toFixed(2)}%`,
-      className: props.change_pct > 0 ? 'text-green' : props.change_pct < 0 ? 'text-red' : 'text-text',
+      value: `${isUp ? '+' : ''}${Number(props.change_pct).toFixed(2)}%`,
+      className: isUp ? 'text-green' : 'text-red',
     },
     { label: 'Volume', value: formatNumber(props.volume_today) },
     { label: 'Deals', value: formatNumber(props.deals_today) },
@@ -24,11 +20,11 @@ export function DrugStats(props: DrugStatsProps) {
     { label: 'Turnover', value: formatKES(props.turnover_today) },
   ]
   return (
-    <div className="flex gap-6 px-4 py-2 border-b border-border bg-surface overflow-x-auto flex-shrink-0">
+    <div className="flex items-center gap-6 px-4 py-1.5 border-b border-border bg-surface overflow-x-auto flex-shrink-0">
       {stats.map(s => (
-        <div key={s.label} className="flex-shrink-0">
-          <div className="text-[10px] text-muted uppercase tracking-wider">{s.label}</div>
-          <div className={`text-xs font-semibold mt-0.5 tabular-nums ${s.className ?? 'text-white'}`}>{s.value}</div>
+        <div key={s.label} className="flex items-center gap-1.5 flex-shrink-0">
+          <span className="text-[11px] text-muted">{s.label}</span>
+          <span className={`text-[13px] font-semibold tabular-nums ${s.className ?? 'text-text'}`}>{s.value}</span>
         </div>
       ))}
     </div>
