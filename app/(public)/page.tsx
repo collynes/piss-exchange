@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 
-export const revalidate = 60
-
 export default async function LandingPage() {
   const supabase = await createClient()
 
-  const [{ data: stats }, { data: topDrugs }] = await Promise.all([
+  const [{ data: { user } }, { data: stats }, { data: topDrugs }] = await Promise.all([
+    supabase.auth.getUser(),
     supabase.from('drugs').select('id', { count: 'exact', head: true }),
     supabase
       .from('listings')
@@ -71,11 +70,19 @@ export default async function LandingPage() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 mb-12">
-          <Link href="/register"
-            className="px-8 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 28px rgba(41,98,255,0.35)' }}>
-            Join the Exchange
-          </Link>
+          {user ? (
+            <Link href="/dashboard"
+              className="px-8 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+              style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 28px rgba(41,98,255,0.35)' }}>
+              Go to Dashboard
+            </Link>
+          ) : (
+            <Link href="/register"
+              className="px-8 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+              style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 28px rgba(41,98,255,0.35)' }}>
+              Join the Exchange
+            </Link>
+          )}
           <Link href="/market"
             className="px-8 py-4 rounded-full font-semibold text-text text-sm tracking-wide border border-border bg-surface hover:bg-surface2 hover:border-border2 transition-all">
             Browse Live Market
@@ -170,9 +177,9 @@ export default async function LandingPage() {
                 </li>
               ))}
             </ul>
-            <Link href="/register"
+            <Link href={user ? '/seller/listings/new' : '/register'}
               className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-blue hover:gap-3 transition-all">
-              Start selling
+              {user ? 'List a drug' : 'Start selling'}
             </Link>
           </div>
 
@@ -197,9 +204,9 @@ export default async function LandingPage() {
                 </li>
               ))}
             </ul>
-            <Link href="/register"
+            <Link href={user ? '/market' : '/register'}
               className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-green hover:gap-3 transition-all">
-              Start buying
+              {user ? 'Browse market' : 'Start buying'}
             </Link>
           </div>
         </div>
@@ -301,15 +308,25 @@ export default async function LandingPage() {
               Join a growing network of verified pharmaceutical companies on Kenya&apos;s first digital drugs exchange.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/register"
-                className="px-10 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
-                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 8px 32px rgba(41,98,255,0.25)' }}>
-                Create Free Account
-              </Link>
-              <Link href="/login"
-                className="px-10 py-4 rounded-full font-semibold text-muted text-sm border border-border2 hover:text-text transition-all">
-                Sign In
-              </Link>
+              {user ? (
+                <Link href="/dashboard"
+                  className="px-10 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+                  style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 8px 32px rgba(41,98,255,0.25)' }}>
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/register"
+                    className="px-10 py-4 rounded-full font-bold text-white text-sm tracking-wide transition-all hover:scale-105 active:scale-95"
+                    style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 8px 32px rgba(41,98,255,0.25)' }}>
+                    Create Free Account
+                  </Link>
+                  <Link href="/login"
+                    className="px-10 py-4 rounded-full font-semibold text-muted text-sm border border-border2 hover:text-text transition-all">
+                    Sign In
+                  </Link>
+                </>
+              )}
             </div>
             <p className="text-xs text-muted/60 mt-5">Licensed pharmaceutical entities only. PPB Kenya regulated.</p>
           </div>
@@ -326,8 +343,14 @@ export default async function LandingPage() {
           </div>
           <div className="flex gap-5">
             <Link href="/market" className="hover:text-muted transition-colors">Market</Link>
-            <Link href="/register" className="hover:text-muted transition-colors">Register</Link>
-            <Link href="/login" className="hover:text-muted transition-colors">Sign In</Link>
+            {user ? (
+              <Link href="/dashboard" className="hover:text-muted transition-colors">Dashboard</Link>
+            ) : (
+              <>
+                <Link href="/register" className="hover:text-muted transition-colors">Register</Link>
+                <Link href="/login" className="hover:text-muted transition-colors">Sign In</Link>
+              </>
+            )}
           </div>
           <span>2026 DawaHub</span>
         </div>

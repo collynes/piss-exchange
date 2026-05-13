@@ -20,7 +20,9 @@ export function TradeHistory({ trades, prevPrice }: TradeHistoryProps) {
             ? trade.price_per_unit >= prev.price_per_unit
             : trade.price_per_unit >= (prevPrice ?? 0)
           return (
-            <div key={trade.id} className={`flex items-center px-3 py-1 hover:bg-surface2 ${i % 2 === 1 ? 'bg-surface2/20' : ''}`}>
+            <div key={trade.id}
+              className="flex items-center px-3 py-1 hover:bg-surface2/40 transition-colors"
+              style={{ borderBottom: i < trades.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
               <span className={`font-semibold tabular-nums text-sm w-24 flex items-center gap-1 ${isUp ? 'text-green' : 'text-red'}`}>
                 {isUp ? '▲' : '▼'} {Number(trade.price_per_unit).toFixed(2)}
               </span>
