@@ -1,4 +1,3 @@
-import { Ticker } from '@/components/layout/Ticker'
 import { Nav } from '@/components/layout/Nav'
 import { AppSidebar } from '@/components/layout/AppSidebar'
 import { createClient } from '@/lib/supabase/server'
@@ -14,10 +13,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <>
-      <Ticker />
+    <div data-theme="light">
       <Nav />
-      <div className="flex" style={{ height: 'calc(100vh - 68px)' }}>
+      <div className="flex" style={{ height: 'calc(100vh - 64px)' }}>
         <AppSidebar role={role} />
         <main className="flex-1 overflow-auto bg-bg">
           <div className="px-6 py-6">
@@ -25,6 +23,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </div>
         </main>
       </div>
-    </>
+    </div>
   )
 }

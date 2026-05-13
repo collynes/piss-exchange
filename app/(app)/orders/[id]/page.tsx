@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
 
 const STATUS_STEPS = ['pending', 'paid', 'confirmed', 'shipped', 'delivered']
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -64,7 +64,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
       {/* Status stepper */}
       <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
           <h2 className="text-sm font-bold text-text">Order Status</h2>
         </div>
         <div className="px-5 py-5">
@@ -89,14 +89,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
       {/* Order details */}
       <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
           <h2 className="text-sm font-bold text-text">Order Details</h2>
         </div>
         <table className="w-full">
           <tbody>
             {orderRows.map(({ label, value, bold }, i) => (
               <tr key={label}
-                style={{ borderBottom: i < orderRows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                style={{ borderBottom: i < orderRows.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                 <td className="px-5 py-3 text-xs text-muted uppercase tracking-wider w-1/3">{label}</td>
                 <td className={`px-5 py-3 text-right text-[13px] ${bold ? 'font-bold text-text text-base' : 'text-text'}`}>{value}</td>
               </tr>
@@ -108,14 +108,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Payment */}
       {payment && (
         <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-          <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
             <h2 className="text-sm font-bold text-text">Payment</h2>
           </div>
           <table className="w-full">
             <tbody>
               {paymentRows.map(({ label, value }, i) => (
                 <tr key={label}
-                  style={{ borderBottom: i < paymentRows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                  style={{ borderBottom: i < paymentRows.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <td className="px-5 py-3 text-xs text-muted uppercase tracking-wider w-1/3">{label}</td>
                   <td className="px-5 py-3 text-right text-[13px] text-text capitalize">{value}</td>
                 </tr>
@@ -128,15 +128,15 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Confirm delivery */}
       {order.status === 'shipped' && isBuyer && (
         <div className="rounded-2xl px-5 py-4" style={{
-          background: 'rgba(8,153,129,0.06)',
-          border: '1px solid rgba(8,153,129,0.2)',
+          background: 'rgba(40,199,111,.06)',
+          border: '1px solid rgba(40,199,111,.2)',
         }}>
           <div className="text-sm font-bold text-text mb-0.5">Your order has been shipped</div>
           <div className="text-xs text-muted mb-4">Confirm receipt to release payment to the seller.</div>
           <form action={`/api/orders/${id}/confirm-delivery`} method="POST">
             <button type="submit"
               className="px-5 py-2.5 font-bold text-sm text-white rounded-xl transition-all hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #089981, #05705f)' }}>
+              style={{ background: 'linear-gradient(135deg, #28c76f, #20a85a)' }}>
               Confirm Delivery & Release Payment
             </button>
           </form>

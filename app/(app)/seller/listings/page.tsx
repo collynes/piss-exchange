@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 export default async function SellerListingsPage() {
   const supabase = await createClient()
@@ -22,7 +22,8 @@ export default async function SellerListingsPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-lg font-bold text-text">My Listings</h1>
         <Link href="/seller/listings/new"
-          className="px-3 py-1.5 bg-blue text-white text-xs font-semibold rounded hover:bg-blue/90 transition-colors">
+          className="px-3 py-1.5 text-white text-xs font-semibold rounded-lg hover:opacity-90 transition-all"
+          style={{ background: '#7367f0' }}>
           + List Drug
         </Link>
       </div>
@@ -30,7 +31,7 @@ export default async function SellerListingsPage() {
       <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
         <table className="w-full min-w-[640px]">
           <thead>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               {['Drug', 'Brand / Origin', 'Price/unit', 'Qty Rem.', 'Status', 'Expires', ''].map((h, i) => (
                 <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i > 1 && h !== '' ? 'text-right' : 'text-left'}`}>{h}</th>
               ))}
@@ -40,8 +41,8 @@ export default async function SellerListingsPage() {
             {(listings ?? []).map((l, i) => {
               const drug = l.drugs as { generic_name: string; slug: string; strength: string; dosage_form: string } | null
               return (
-                <tr key={l.id} className="hover:bg-surface2/30 transition-colors"
-                  style={{ borderBottom: i < (listings?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                <tr key={l.id} className="hover:bg-surface2 transition-colors"
+                  style={{ borderBottom: i < (listings?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <td className="px-5 py-3.5">
                     <Link href={`/drug/${drug?.slug}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
                       {drug?.generic_name ?? '—'}
@@ -59,9 +60,9 @@ export default async function SellerListingsPage() {
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize
-                      ${l.status === 'active' ? 'bg-green/12 text-green'
-                        : l.status === 'filled' ? 'bg-blue/12 text-blue'
-                        : 'bg-muted/12 text-muted'}`}>
+                      ${l.status === 'active' ? 'bg-green/10 text-green'
+                        : l.status === 'filled' ? 'bg-blue/10 text-blue'
+                        : 'bg-muted/10 text-muted'}`}>
                       {l.status}
                     </span>
                   </td>

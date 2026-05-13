@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { MobileMenu } from './MobileMenu'
 import { ThemePicker } from '@/components/ui/ThemePicker'
 
 export async function Nav() {
@@ -17,57 +16,53 @@ export async function Nav() {
   }
 
   return (
-    <nav className="flex items-center justify-between px-4 md:px-6 h-10 bg-surface sticky top-0 z-40">
-      {/* Logo */}
+    <nav className="flex items-center justify-between px-6 h-16 bg-surface sticky top-0 z-40"
+      style={{ borderBottom: '1px solid rgba(47,43,61,.1)', boxShadow: '0 2px 6px rgba(47,43,61,.06)' }}>
+      {/* Logo — shown only on non-app pages (public) */}
       <Link href="/" className="flex items-center gap-2 shrink-0">
-        <div className="w-6 h-6 rounded flex items-center justify-center text-white font-black text-[10px]"
-          style={{ background: 'linear-gradient(135deg, #2962ff, #089981)' }}>
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black text-[11px]"
+          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
           DH
         </div>
-        <span className="text-text font-bold text-[13px] tracking-tight">
+        <span className="font-bold text-[14px] tracking-tight text-text">
           PISS<span className="text-blue">.</span>Exchange
         </span>
       </Link>
 
-      {/* Desktop links — only shown when NOT logged in; sidebar handles nav for auth'd users */}
-      {!user && (
-        <div className="hidden md:flex items-center gap-0">
-          <Link href="/market" className="px-3 py-1.5 text-muted text-[13px] hover:text-text transition-colors">
-            Market
-          </Link>
-        </div>
-      )}
-
       {/* Desktop auth */}
-      <div className="hidden md:flex items-center gap-2">
+      <div className="hidden md:flex items-center gap-3">
         <ThemePicker />
         {user ? (
-          <div className="flex items-center gap-3">
-            <span className="text-muted text-xs truncate max-w-36">{profile?.org_name}</span>
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden sm:block">
+              <div className="text-[13px] font-semibold text-text leading-tight">{profile?.org_name}</div>
+              <div className="text-[11px] text-muted capitalize">{profile?.role}</div>
+            </div>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0"
+              style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
+              {profile?.org_name?.[0]?.toUpperCase() ?? 'U'}
+            </div>
             <form action="/auth/signout" method="POST">
-              <button className="px-2.5 py-1 text-xs border border-border rounded text-muted hover:text-text transition-colors">
+              <button className="px-3 py-1.5 text-xs font-semibold rounded-lg text-muted hover:text-text transition-colors"
+                style={{ border: '1px solid rgba(47,43,61,.15)' }}>
                 Log Out
               </button>
             </form>
           </div>
         ) : (
-          <>
-            <Link href="/login" className="px-3 py-1.5 text-[13px] text-muted hover:text-text transition-colors">
+          <div className="flex items-center gap-2">
+            <Link href="/login"
+              className="px-3 py-1.5 text-[13px] text-muted hover:text-text transition-colors">
               Log In
             </Link>
-            <Link href="/register" className="px-3 py-1.5 text-[13px] bg-blue text-white font-semibold rounded hover:bg-blue/90 transition-colors">
+            <Link href="/register"
+              className="px-4 py-1.5 text-[13px] font-semibold text-white rounded-lg transition-colors hover:opacity-90"
+              style={{ background: '#7367f0' }}>
               Join Exchange
             </Link>
-          </>
+          </div>
         )}
       </div>
-
-      {/* Mobile hamburger */}
-      <MobileMenu
-        role={profile?.role ?? null}
-        orgName={profile?.org_name ?? null}
-        isLoggedIn={!!user}
-      />
     </nav>
   )
 }

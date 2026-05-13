@@ -1,12 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  /* Accent colors — fixed, not theme-switched */
-  --color-blue:     #2962ff;
-  --color-green:    #089981;
-  --color-red:      #f23645;
-
-  /* Semantic tokens — values set on :root below, referenced here so Tailwind registers the utilities */
+  /* All tokens registered — values set per-theme below */
+  --color-blue:     initial;
+  --color-green:    initial;
+  --color-red:      initial;
+  --color-orange:   initial;
   --color-bg:       initial;
   --color-surface:  initial;
   --color-surface2: initial;
@@ -15,10 +14,8 @@
   --color-text:     initial;
   --color-muted:    initial;
 
-  /* Font */
   --font-sans: 'Inter', system-ui, sans-serif;
 
-  /* Ticker animation */
   --animate-ticker: ticker 36s linear infinite;
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 9s ease-in-out infinite;
@@ -58,8 +55,12 @@
   }
 }
 
-/* Dark theme — DEFAULT (TradingView style) */
+/* Dark theme — DEFAULT (landing page / public routes) */
 :root {
+  --color-blue:     #2962ff;
+  --color-green:    #089981;
+  --color-red:      #f23645;
+  --color-orange:   #ff9f43;
   --color-bg:       #0f1117;
   --color-surface:  #1a1d27;
   --color-surface2: #212433;
@@ -69,15 +70,19 @@
   --color-muted:    #787b86;
 }
 
-/* Light theme */
+/* Light / Sneat theme — applied to (app) internal pages via data-theme="light" */
 [data-theme="light"] {
-  --color-bg:       #ffffff;
+  --color-blue:     #7367f0;
+  --color-green:    #28c76f;
+  --color-red:      #ea5455;
+  --color-orange:   #ff9f43;
+  --color-bg:       #f8f7fa;
   --color-surface:  #ffffff;
-  --color-surface2: #f9fafb;
-  --color-border:   #f0f0f0;
-  --color-border2:  #e4e4e7;
-  --color-text:     #09090b;
-  --color-muted:    #52525b;
+  --color-surface2: #f8f7fa;
+  --color-border:   rgba(47,43,61,.12);
+  --color-border2:  rgba(47,43,61,.2);
+  --color-text:     #433e5e;
+  --color-muted:    #8f8b9e;
 }
 
 @layer base {

@@ -5,16 +5,16 @@ import { formatKES } from '@/lib/utils'
 import { Package, Inbox, DollarSign, TrendingUp, Plus, ArrowRight } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-muted/15 text-muted',
-  paid:      'bg-blue/12 text-blue',
-  confirmed: 'bg-blue/12 text-blue',
-  shipped:   'bg-green/12 text-green',
-  delivered: 'bg-green/15 text-green',
-  cancelled: 'bg-red/12 text-red',
-  disputed:  'bg-red/12 text-red',
+  pending:   'bg-orange/10 text-orange',
+  paid:      'bg-blue/10 text-blue',
+  confirmed: 'bg-blue/10 text-blue',
+  shipped:   'bg-orange/10 text-orange',
+  delivered: 'bg-green/10 text-green',
+  cancelled: 'bg-red/10 text-red',
+  disputed:  'bg-red/10 text-red',
 }
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 function StatCard({
   label, value, sub, Icon, color,
@@ -67,11 +67,9 @@ export default async function SellerDashboardPage() {
       {/* Welcome banner */}
       <div className="rounded-2xl p-6 flex items-center justify-between overflow-hidden relative"
         style={{
-          background: 'linear-gradient(135deg, rgba(8,153,129,0.15) 0%, rgba(41,98,255,0.08) 100%)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: 'linear-gradient(135deg, rgba(115,103,240,.08) 0%, rgba(40,199,111,.06) 100%)',
+          border: '1px solid rgba(47,43,61,.1)',
         }}>
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{ backgroundImage: 'linear-gradient(#d1d4dc 1px, transparent 1px), linear-gradient(90deg, #d1d4dc 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
         <div className="relative">
           <div className="flex items-center gap-2 mb-1">
             <div className="text-xl font-black text-text">{profile?.org_name}</div>
@@ -86,8 +84,8 @@ export default async function SellerDashboardPage() {
           )}
         </div>
         <Link href="/seller/listings/new"
-          className="relative hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white flex-shrink-0 transition-all hover:scale-105"
-          style={{ background: 'linear-gradient(135deg, #089981, #05705f)', boxShadow: '0 4px 16px rgba(8,153,129,0.4)' }}>
+          className="relative hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white flex-shrink-0 transition-all hover:opacity-90"
+          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)', boxShadow: '0 4px 16px rgba(115,103,240,.4)' }}>
           <Plus className="w-4 h-4" /> List Drug
         </Link>
       </div>
@@ -99,14 +97,14 @@ export default async function SellerDashboardPage() {
           value={String(activeListings)}
           sub="currently live"
           Icon={Package}
-          color={{ bg: 'rgba(8,153,129,0.15)', text: '#089981' }}
+          color={{ bg: 'rgba(40,199,111,.15)', text: '#28c76f' }}
         />
         <StatCard
           label="Pending Orders"
           value={String(pendingCount ?? 0)}
           sub="need action"
           Icon={Inbox}
-          color={{ bg: 'rgba(242,54,69,0.12)', text: '#f23645' }}
+          color={{ bg: 'rgba(234,84,85,.12)', text: '#ea5455' }}
         />
         <StatCard
           label="Total Revenue"
@@ -131,7 +129,7 @@ export default async function SellerDashboardPage() {
           <div className="rounded-2xl overflow-hidden bg-surface" style={CARD}>
             <table className="w-full">
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
                   <th className="px-5 py-3 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Drug</th>
                   <th className="px-5 py-3 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Total</th>
                   <th className="px-5 py-3 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Status</th>
@@ -146,8 +144,8 @@ export default async function SellerDashboardPage() {
                   const drug = order.drugs as { generic_name: string; slug: string } | null
                   return (
                     <tr key={order.id}
-                      className="hover:bg-surface2/40 transition-colors"
-                      style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                      className="hover:bg-surface2 transition-colors"
+                      style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                       <td className="px-5 py-3">
                         <div className="text-[13px] font-semibold text-text">{drug?.generic_name ?? '—'}</div>
                         <div className="text-[11px] text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
@@ -182,7 +180,7 @@ export default async function SellerDashboardPage() {
             </Link>
           </div>
           <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-            <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               <div className="text-[11px] font-bold text-muted uppercase tracking-wider">Stock</div>
               <span className="text-xs font-bold text-green">{activeListings} active</span>
             </div>
@@ -191,7 +189,7 @@ export default async function SellerDashboardPage() {
                 <div className="text-muted text-xs mb-3">No active listings</div>
                 <Link href="/seller/listings/new"
                   className="text-xs font-bold text-white px-3 py-1.5 rounded-lg inline-flex items-center gap-1"
-                  style={{ background: 'linear-gradient(135deg, #089981, #05705f)' }}>
+                  style={{ background: 'linear-gradient(135deg, #28c76f, #20a85a)' }}>
                   <Plus className="w-3 h-3" /> List a Drug
                 </Link>
               </div>
@@ -200,8 +198,8 @@ export default async function SellerDashboardPage() {
               const drug = l.drugs as { generic_name: string } | null
               const pct = l.qty_available > 0 ? Math.round((l.qty_remaining / l.qty_available) * 100) : 0
               return (
-                <div key={l.id} className="px-5 py-3 hover:bg-surface2/30 transition-colors"
-                  style={{ borderBottom: i < Math.min((listings?.length ?? 0), 5) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                <div key={l.id} className="px-5 py-3 hover:bg-surface2 transition-colors"
+                  style={{ borderBottom: i < Math.min((listings?.length ?? 0), 5) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <div className="flex justify-between items-start mb-1.5">
                     <div className="text-[13px] font-semibold text-text truncate flex-1 pr-2">{drug?.generic_name ?? '—'}</div>
                     <div className="text-xs font-bold text-red tabular-nums flex-shrink-0">
@@ -218,7 +216,7 @@ export default async function SellerDashboardPage() {
               )
             })}
             {(listings ?? []).length > 0 && (
-              <div className="px-5 py-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className="px-5 py-3" style={{ borderTop: '1px solid rgba(47,43,61,.08)' }}>
                 <Link href="/seller/listings/new"
                   className="flex items-center gap-2 text-xs font-semibold text-blue hover:underline">
                   <Plus className="w-3 h-3" /> Add new listing
@@ -235,8 +233,8 @@ export default async function SellerDashboardPage() {
         <h2 className="text-sm font-bold text-text mb-3">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
-            { href: '/seller/listings/new', label: 'List a Drug', desc: 'Add stock to the exchange', Icon: Plus, color: '#089981' },
-            { href: '/seller/listings', label: 'My Listings', desc: 'Manage active listings', Icon: Package, color: '#2962ff' },
+            { href: '/seller/listings/new', label: 'List a Drug', desc: 'Add stock to the exchange', Icon: Plus, color: '#28c76f' },
+            { href: '/seller/listings', label: 'My Listings', desc: 'Manage active listings', Icon: Package, color: '#7367f0' },
             { href: '/seller/orders', label: 'Incoming Orders', desc: 'Confirm and ship', Icon: Inbox, color: '#7c3aed' },
           ].map(({ href, label, desc, Icon, color }) => (
             <Link key={href} href={href}

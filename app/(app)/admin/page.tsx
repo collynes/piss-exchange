@@ -4,16 +4,16 @@ import { createClient } from '@/lib/supabase/server'
 import { formatKES, formatNumber } from '@/lib/utils'
 import { Users, Package, ShoppingBag, AlertCircle, ArrowRight } from 'lucide-react'
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-muted/15 text-muted',
-  paid:      'bg-blue/12 text-blue',
-  confirmed: 'bg-blue/12 text-blue',
-  shipped:   'bg-green/12 text-green',
-  delivered: 'bg-green/15 text-green',
-  cancelled: 'bg-red/12 text-red',
-  disputed:  'bg-red/12 text-red',
+  pending:   'bg-orange/10 text-orange',
+  paid:      'bg-blue/10 text-blue',
+  confirmed: 'bg-blue/10 text-blue',
+  shipped:   'bg-orange/10 text-orange',
+  delivered: 'bg-green/10 text-green',
+  cancelled: 'bg-red/10 text-red',
+  disputed:  'bg-red/10 text-red',
 }
 
 function StatCard({
@@ -109,14 +109,14 @@ export default async function AdminPage() {
           value={formatNumber(userCount ?? 0)}
           sub="registered accounts"
           Icon={Users}
-          color={{ bg: 'rgba(41,98,255,0.15)', text: '#2962ff' }}
+          color={{ bg: 'rgba(115,103,240,.15)', text: '#7367f0' }}
         />
         <StatCard
           label="Pending KYC"
           value={formatNumber(pendingCount ?? 0)}
           sub="need verification"
           Icon={AlertCircle}
-          color={{ bg: 'rgba(242,54,69,0.12)', text: '#f23645' }}
+          color={{ bg: 'rgba(234,84,85,.12)', text: '#ea5455' }}
           alert={(pendingCount ?? 0) > 0}
         />
         <StatCard
@@ -124,7 +124,7 @@ export default async function AdminPage() {
           value={formatNumber(listingCount ?? 0)}
           sub="live on exchange"
           Icon={Package}
-          color={{ bg: 'rgba(8,153,129,0.15)', text: '#089981' }}
+          color={{ bg: 'rgba(40,199,111,.15)', text: '#28c76f' }}
         />
         <StatCard
           label="Total Orders"
@@ -141,11 +141,11 @@ export default async function AdminPage() {
         {/* Pending verifications */}
         <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
           <div className="flex items-center justify-between px-5 py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-bold text-text">Pending Verification</h2>
               {(pendingCount ?? 0) > 0 && (
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red/12 text-red">{pendingCount}</span>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red/10 text-red">{pendingCount}</span>
               )}
             </div>
             <Link href="/admin/users" className="text-xs text-blue flex items-center gap-1 hover:underline">
@@ -154,7 +154,7 @@ export default async function AdminPage() {
           </div>
           <table className="w-full">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
                 <th className="px-5 py-2.5 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Organisation</th>
                 <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Role</th>
                 <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider"></th>
@@ -166,8 +166,8 @@ export default async function AdminPage() {
               )}
               {(pendingUsers ?? []).map((u, i) => (
                 <tr key={u.id}
-                  className="hover:bg-surface2/30 transition-colors"
-                  style={{ borderBottom: i < (pendingUsers?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                  className="hover:bg-surface2 transition-colors"
+                  style={{ borderBottom: i < (pendingUsers?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <td className="px-5 py-3">
                     <div className="text-[13px] font-semibold text-text">{u.org_name}</div>
                     <div className="text-xs text-muted">{u.license_no ?? 'No license on file'}</div>
@@ -178,7 +178,7 @@ export default async function AdminPage() {
                   <td className="px-5 py-3 text-right">
                     <form action={`/api/admin/users/${u.id}/verify`} method="POST" className="inline">
                       <button type="submit"
-                        className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/12 text-green hover:bg-green/20 transition-colors">
+                        className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/10 text-green hover:bg-green/20 transition-colors">
                         Verify
                       </button>
                     </form>
@@ -192,7 +192,7 @@ export default async function AdminPage() {
         {/* Recent orders */}
         <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
           <div className="flex items-center justify-between px-5 py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
             <h2 className="text-sm font-bold text-text">Recent Orders</h2>
             <Link href="/admin/orders" className="text-xs text-blue flex items-center gap-1 hover:underline">
               All orders <ArrowRight className="w-3 h-3" />
@@ -200,7 +200,7 @@ export default async function AdminPage() {
           </div>
           <table className="w-full">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
                 <th className="px-5 py-2.5 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Drug</th>
                 <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Total</th>
                 <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Status</th>
@@ -214,8 +214,8 @@ export default async function AdminPage() {
                 const drug = order.drugs as { generic_name: string } | null
                 return (
                   <tr key={order.id}
-                    className="hover:bg-surface2/30 transition-colors"
-                    style={{ borderBottom: i < (recentOrders?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                    className="hover:bg-surface2 transition-colors"
+                    style={{ borderBottom: i < (recentOrders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                     <td className="px-5 py-3">
                       <Link href={`/orders/${order.id}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
                         {drug?.generic_name ?? '—'}
@@ -242,7 +242,7 @@ export default async function AdminPage() {
       {/* Recent trades */}
       <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
         <div className="flex items-center justify-between px-5 py-3.5"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
           <h2 className="text-sm font-bold text-text">Recent Trades</h2>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
@@ -252,7 +252,7 @@ export default async function AdminPage() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[500px]">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
                 {['Drug', 'Qty', 'Price/unit', 'Total', 'Time'].map((h, i) => (
                   <th key={i} className={`px-5 py-2.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
                 ))}
@@ -266,8 +266,8 @@ export default async function AdminPage() {
                 const drug = trade.drugs as { generic_name: string } | null
                 return (
                   <tr key={trade.id}
-                    className="hover:bg-surface2/30 transition-colors"
-                    style={{ borderBottom: i < (recentTrades?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                    className="hover:bg-surface2 transition-colors"
+                    style={{ borderBottom: i < (recentTrades?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                     <td className="px-5 py-3 text-[13px] font-semibold text-text">{drug?.generic_name ?? '—'}</td>
                     <td className="px-5 py-3 text-right text-[13px] text-text tabular-nums">{trade.qty.toLocaleString()}</td>
                     <td className="px-5 py-3 text-right text-[13px] text-text tabular-nums">{Number(trade.price_per_unit).toFixed(2)}</td>

@@ -15,9 +15,9 @@ interface Drug {
 
 type FormState = { generic_name: string; slug: string; atc_code: string; dosage_form: string; strength: string; category: string }
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 const INPUT_CLASS = 'w-full bg-bg rounded-lg px-3 py-2 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
-const INPUT_STYLE = { border: '1px solid rgba(255,255,255,0.1)' }
+const INPUT_STYLE = { border: '1px solid rgba(47,43,61,.15)' }
 
 const FORM_FIELDS: { key: keyof FormState; label: string; placeholder: string; required: boolean }[] = [
   { key: 'generic_name', label: 'Generic Name',   placeholder: 'Amoxicillin / Clavulanic Acid', required: true  },
@@ -38,13 +38,13 @@ function drugToForm(d: Drug): FormState {
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-4"
-      style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+      style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
       onClick={onClose}>
       <div className="w-full max-w-xl rounded-2xl bg-surface overflow-hidden"
         style={CARD}
         onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-3.5"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
           <h2 className="text-sm font-bold text-text">{title}</h2>
           <button onClick={onClose} className="text-muted hover:text-text transition-colors text-lg leading-none">✕</button>
         </div>
@@ -142,14 +142,14 @@ export default function AdminDrugsPage() {
       </div>
       {error && (
         <div className="px-4 py-2.5 rounded-lg text-xs text-red mb-4"
-          style={{ background: 'rgba(242,54,69,0.08)', border: '1px solid rgba(242,54,69,0.2)' }}>
+          style={{ background: 'rgba(234,84,85,.08)', border: '1px solid rgba(234,84,85,.2)' }}>
           {error}
         </div>
       )}
       <div className="flex gap-2">
         <button type="submit" disabled={saving}
           className="px-4 py-2 text-sm font-bold text-white rounded-lg disabled:opacity-40 transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)' }}>
+          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
           {saving ? 'Saving…' : submitLabel}
         </button>
       </div>
@@ -167,7 +167,7 @@ export default function AdminDrugsPage() {
         </div>
         <button onClick={openAdd}
           className="px-3 py-1.5 text-xs font-bold text-white rounded-lg transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)' }}>
+          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
           + Add Drug
         </button>
       </div>
@@ -177,21 +177,21 @@ export default function AdminDrugsPage() {
 
         {/* Card header with search */}
         <div className="flex items-center justify-between px-5 py-3.5"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
           <span className="text-sm font-bold text-text">All Drugs</span>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search name or category…"
             className="bg-bg rounded-lg px-3 py-1.5 text-xs text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/40 transition-all w-52"
-            style={{ border: '1px solid rgba(255,255,255,0.07)' }}
+            style={{ border: '1px solid rgba(47,43,61,.12)' }}
           />
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full min-w-[700px]">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
                 {['Drug', 'Form', 'Strength', 'Category', 'ATC', 'Status', 'Actions'].map((h, i) => (
                   <th key={h}
                     className={`px-4 py-3 text-[11px] font-semibold text-muted uppercase tracking-wider whitespace-nowrap
@@ -208,8 +208,8 @@ export default function AdminDrugsPage() {
                 <tr><td colSpan={7} className="px-5 py-10 text-center text-muted text-sm">No results</td></tr>
               ) : filtered.map((drug, i) => (
                 <tr key={drug.id}
-                  className="hover:bg-surface2/30 transition-colors"
-                  style={{ borderBottom: i < filtered.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                  className="hover:bg-surface2 transition-colors"
+                  style={{ borderBottom: i < filtered.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
 
                   {/* Drug name + slug */}
                   <td className="px-4 py-3">
@@ -291,7 +291,7 @@ export default function AdminDrugsPage() {
                   ['Status',       viewDrug.active ? 'Active' : 'Inactive'],
                 ].map(([label, value], i, arr) => (
                   <tr key={label as string}
-                    style={{ borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.05)' : undefined }}>
+                    style={{ borderBottom: i < arr.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                     <td className="py-2.5 text-xs text-muted uppercase tracking-wider w-1/3">{label}</td>
                     <td className={`py-2.5 text-[13px] text-right font-medium ${label === 'Status' ? (viewDrug.active ? 'text-green' : 'text-muted') : 'text-text'}`}>
                       {value}
@@ -303,12 +303,12 @@ export default function AdminDrugsPage() {
             <div className="mt-4 flex gap-2">
               <button onClick={() => { setViewDrug(null); openEdit(viewDrug) }}
                 className="px-4 py-2 text-xs font-bold text-white rounded-lg hover:opacity-90 transition-all"
-                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)' }}>
+                style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
                 Edit Drug
               </button>
               <button onClick={() => setViewDrug(null)}
                 className="px-4 py-2 text-xs font-semibold text-muted rounded-lg hover:text-text transition-colors"
-                style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+                style={{ border: '1px solid rgba(47,43,61,.15)' }}>
                 Close
               </button>
             </div>
@@ -327,12 +327,12 @@ export default function AdminDrugsPage() {
             <div className="flex gap-2">
               <button onClick={handleDelete} disabled={deleting}
                 className="px-4 py-2 text-xs font-bold text-white rounded-lg disabled:opacity-40 transition-all hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #f23645, #c42030)' }}>
+                style={{ background: 'linear-gradient(135deg, #ea5455, #c42030)' }}>
                 {deleting ? 'Deleting…' : 'Yes, Delete'}
               </button>
               <button onClick={() => setDeleteDrug(null)}
                 className="px-4 py-2 text-xs font-semibold text-muted rounded-lg hover:text-text transition-colors"
-                style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+                style={{ border: '1px solid rgba(47,43,61,.15)' }}>
                 Cancel
               </button>
             </div>

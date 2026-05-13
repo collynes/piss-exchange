@@ -5,16 +5,16 @@ import { formatKES } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-muted/15 text-muted',
-  paid:      'bg-blue/12 text-blue',
-  confirmed: 'bg-blue/12 text-blue',
-  shipped:   'bg-green/12 text-green',
-  delivered: 'bg-green/15 text-green',
-  cancelled: 'bg-red/12 text-red',
-  disputed:  'bg-red/12 text-red',
+  pending:   'bg-orange/10 text-orange',
+  paid:      'bg-blue/10 text-blue',
+  confirmed: 'bg-blue/10 text-blue',
+  shipped:   'bg-orange/10 text-orange',
+  delivered: 'bg-green/10 text-green',
+  cancelled: 'bg-red/10 text-red',
+  disputed:  'bg-red/10 text-red',
 }
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 export default async function SellerOrdersPage() {
   const supabase = await createClient()
@@ -37,7 +37,7 @@ export default async function SellerOrdersPage() {
       <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
         <table className="w-full min-w-[640px]">
           <thead>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               {['Drug', 'Qty', 'Total', 'Payment', 'Status', 'Date', ''].map((h, i) => (
                 <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
@@ -49,8 +49,8 @@ export default async function SellerOrdersPage() {
               const payment = (order.payments as { status: string }[] | null)?.[0]
               return (
                 <tr key={order.id}
-                  className="hover:bg-surface2/30 transition-colors"
-                  style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                  className="hover:bg-surface2 transition-colors"
+                  style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <td className="px-5 py-3.5">
                     <div className="text-[13px] font-semibold text-text">{drug?.generic_name ?? '—'}</div>
                     <div className="text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
@@ -59,7 +59,7 @@ export default async function SellerOrdersPage() {
                   <td className="px-5 py-3.5 text-right text-[13px] font-bold text-text tabular-nums">{formatKES(Number(order.total_amount))}</td>
                   <td className="px-5 py-3.5 text-right">
                     <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${
-                      payment?.status === 'completed' ? 'bg-green/12 text-green' : 'bg-muted/15 text-muted'
+                      payment?.status === 'completed' ? 'bg-green/10 text-green' : 'bg-muted/15 text-muted'
                     }`}>
                       {payment?.status ?? 'unpaid'}
                     </span>
@@ -77,7 +77,7 @@ export default async function SellerOrdersPage() {
                       {order.status === 'paid' && (
                         <form action={`/api/orders/${order.id}/confirm`} method="POST" className="inline">
                           <button type="submit"
-                            className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue/12 text-blue hover:bg-blue/20 transition-colors">
+                            className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue/10 text-blue hover:bg-blue/20 transition-colors">
                             Confirm
                           </button>
                         </form>
@@ -85,7 +85,7 @@ export default async function SellerOrdersPage() {
                       {order.status === 'confirmed' && (
                         <form action={`/api/orders/${order.id}/ship`} method="POST" className="inline">
                           <button type="submit"
-                            className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/12 text-green hover:bg-green/20 transition-colors">
+                            className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/10 text-green hover:bg-green/20 transition-colors">
                             Ship
                           </button>
                         </form>

@@ -11,10 +11,10 @@ interface Drug {
   slug: string
 }
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 const INPUT_CLASS = 'w-full bg-bg rounded-lg px-3 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
-const INPUT_STYLE = { border: '1px solid rgba(255,255,255,0.08)' }
+const INPUT_STYLE = { border: '1px solid rgba(47,43,61,.15)' }
 
 export default function NewListingPage() {
   const router = useRouter()
@@ -97,7 +97,7 @@ export default function NewListingPage() {
       {/* Step 1 — Drug selection */}
       <div className="rounded-2xl bg-surface overflow-hidden mb-4" style={CARD}>
         <div className="flex items-center justify-between px-5 py-3.5"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
           <h2 className="text-sm font-bold text-text">
             {selectedDrug ? '1. Generic Drug' : '1. Select Generic Drug'}
           </h2>
@@ -129,12 +129,12 @@ export default function NewListingPage() {
                 autoFocus
               />
               {drugs.length > 0 && (
-                <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(47,43,61,.12)' }}>
                   {drugs.map((drug, i) => (
                     <button key={drug.id}
                       onClick={() => { setSelectedDrug(drug); setSearch('') }}
                       className="w-full text-left px-4 py-2.5 hover:bg-surface2 transition-colors"
-                      style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                      style={{ borderTop: i > 0 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                       <span className="text-[13px] font-medium text-text">{drug.generic_name}</span>
                       <span className="text-xs text-muted ml-2">{drug.strength} · {drug.dosage_form}</span>
                     </button>
@@ -153,7 +153,7 @@ export default function NewListingPage() {
       {selectedDrug && (
         <form onSubmit={handleSubmit}>
           <div className="rounded-2xl bg-surface overflow-hidden mb-4" style={CARD}>
-            <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               <h2 className="text-sm font-bold text-text">2. Listing Details</h2>
             </div>
             <div className="px-5 py-5 space-y-4">
@@ -179,7 +179,7 @@ export default function NewListingPage() {
 
               {form.qty_available && form.price_per_unit && (
                 <div className="flex justify-between items-center py-3 px-4 rounded-lg"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  style={{ background: 'rgba(115,103,240,.04)', border: '1px solid rgba(115,103,240,.12)' }}>
                   <span className="text-xs text-muted">Total listing value</span>
                   <span className="text-sm font-bold text-text tabular-nums">
                     KES {(Number(form.qty_available) * Number(form.price_per_unit)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -189,14 +189,14 @@ export default function NewListingPage() {
 
               {error && (
                 <div className="px-4 py-3 rounded-lg text-xs text-red"
-                  style={{ background: 'rgba(242,54,69,0.08)', border: '1px solid rgba(242,54,69,0.2)' }}>
+                  style={{ background: 'rgba(234,84,85,.08)', border: '1px solid rgba(234,84,85,.2)' }}>
                   {error}
                 </div>
               )}
 
               <button type="submit" disabled={loading}
                 className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 disabled:opacity-40"
-                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)' }}>
+                style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
                 {loading ? 'Listing…' : 'List Drug on Exchange'}
               </button>
             </div>

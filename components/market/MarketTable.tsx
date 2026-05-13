@@ -49,10 +49,10 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
         )}
       </div>
 
-      {/* Desktop table — TradingView screener style */}
+      {/* Desktop table */}
       <table className="w-full border-collapse hidden md:table">
-        <thead className="sticky top-0 z-10 bg-surface">
-          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <thead className="sticky top-0 z-10 bg-surface2">
+          <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
             {[
               { label: 'Drug', align: 'left' },
               { label: 'Last', align: 'right' },
@@ -77,8 +77,8 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
             const isUp = pct >= 0
             return (
               <tr key={row.drug_id}
-                className="hover:bg-surface2/40 cursor-pointer transition-colors"
-                style={{ borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}
+                className="hover:bg-surface2 cursor-pointer transition-colors"
+                style={{ borderBottom: i < rows.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}
                 onClick={() => { window.location.href = `/drug/${row.slug}` }}>
                 <td className="px-3 py-2">
                   <span className="text-[13px] font-semibold text-text">{row.generic_name}</span>

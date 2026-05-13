@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 interface PageProps {
   searchParams: Promise<{ role?: string; status?: string }>
@@ -53,7 +53,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           return (
             <a key={f.label} href={f.href}
               className={`text-xs px-3 py-1 rounded-full transition-colors ${
-                isActive ? 'bg-blue/15 text-blue font-semibold' : 'text-muted hover:text-text bg-surface2/50'
+                isActive ? 'bg-blue/10 text-blue font-semibold' : 'text-muted hover:text-text bg-surface2'
               }`}>
               {f.label}
             </a>
@@ -64,7 +64,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
       <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
         <table className="w-full min-w-[640px]">
           <thead>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               {['Organisation', 'Role', 'Phone', 'License', 'Joined', 'Status', 'Actions'].map(h => (
                 <th key={h} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${h === 'Organisation' ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
@@ -76,15 +76,15 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
             )}
             {(users ?? []).map((u, i) => (
               <tr key={u.id}
-                className="hover:bg-surface2/30 transition-colors"
-                style={{ borderBottom: i < (users?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                className="hover:bg-surface2 transition-colors"
+                style={{ borderBottom: i < (users?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                 <td className="px-5 py-3.5">
                   <div className="text-[13px] font-semibold text-text">{u.org_name}</div>
                   <div className="text-xs text-muted font-mono">{u.id.slice(0, 8)}…</div>
                 </td>
                 <td className="px-5 py-3.5 text-right">
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${
-                    u.role === 'admin' ? 'bg-blue/12 text-blue' : u.role === 'seller' ? 'bg-green/12 text-green' : 'bg-muted/15 text-muted'
+                    u.role === 'admin' ? 'bg-blue/10 text-blue' : u.role === 'seller' ? 'bg-green/10 text-green' : 'bg-muted/15 text-muted'
                   }`}>
                     {u.role}
                   </span>
@@ -96,7 +96,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 </td>
                 <td className="px-5 py-3.5 text-right">
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
-                    u.verified ? 'bg-green/12 text-green' : 'bg-muted/15 text-muted'
+                    u.verified ? 'bg-green/10 text-green' : 'bg-muted/15 text-muted'
                   }`}>
                     {u.verified ? 'Verified' : 'Pending'}
                   </span>
@@ -106,7 +106,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     {!u.verified && (
                       <form action={`/api/admin/users/${u.id}/verify`} method="POST">
                         <button type="submit"
-                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/12 text-green hover:bg-green/20 transition-colors">
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/10 text-green hover:bg-green/20 transition-colors">
                           Verify
                         </button>
                       </form>
@@ -114,7 +114,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     {u.verified && (
                       <form action={`/api/admin/users/${u.id}/suspend`} method="POST">
                         <button type="submit"
-                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-red/12 text-red hover:bg-red/20 transition-colors">
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-red/10 text-red hover:bg-red/20 transition-colors">
                           Suspend
                         </button>
                       </form>

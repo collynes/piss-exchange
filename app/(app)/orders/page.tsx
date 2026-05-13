@@ -5,17 +5,17 @@ import { formatKES } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-muted/15 text-muted',
-  paid:      'bg-blue/12 text-blue',
-  confirmed: 'bg-blue/12 text-blue',
-  shipped:   'bg-green/12 text-green',
-  delivered: 'bg-green/15 text-green',
-  cancelled: 'bg-red/12 text-red',
-  disputed:  'bg-red/12 text-red',
+  pending:   'bg-orange/10 text-orange',
+  paid:      'bg-blue/10 text-blue',
+  confirmed: 'bg-blue/10 text-blue',
+  shipped:   'bg-orange/10 text-orange',
+  delivered: 'bg-green/10 text-green',
+  cancelled: 'bg-red/10 text-red',
+  disputed:  'bg-red/10 text-red',
 }
 
 const CARD = {
-  boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)',
+  boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)',
 } as const
 
 export default async function OrdersPage() {
@@ -39,7 +39,7 @@ export default async function OrdersPage() {
       <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
         <table className="w-full min-w-[640px]">
           <thead>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               {['Drug', 'Qty', 'Price/unit', 'Total', 'Status', 'Escrow', 'Date', ''].map((h, i) => (
                 <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
@@ -50,8 +50,8 @@ export default async function OrdersPage() {
               const drug = order.drugs as { generic_name: string; slug: string } | null
               return (
                 <tr key={order.id}
-                  className="hover:bg-surface2/30 transition-colors"
-                  style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                  className="hover:bg-surface2 transition-colors"
+                  style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <td className="px-5 py-3.5">
                     <Link href={`/drug/${drug?.slug}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
                       {drug?.generic_name ?? '—'}

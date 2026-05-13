@@ -8,16 +8,16 @@ import {
 } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-muted/15 text-muted',
-  paid:      'bg-blue/12 text-blue',
-  confirmed: 'bg-blue/12 text-blue',
-  shipped:   'bg-green/12 text-green',
-  delivered: 'bg-green/15 text-green',
-  cancelled: 'bg-red/12 text-red',
-  disputed:  'bg-red/12 text-red',
+  pending:   'bg-orange/10 text-orange',
+  paid:      'bg-blue/10 text-blue',
+  confirmed: 'bg-blue/10 text-blue',
+  shipped:   'bg-orange/10 text-orange',
+  delivered: 'bg-green/10 text-green',
+  cancelled: 'bg-red/10 text-red',
+  disputed:  'bg-red/10 text-red',
 }
 
-const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 function StatCard({
   label, value, sub, Icon, color,
@@ -105,14 +105,14 @@ export default async function DashboardPage({
         </div>
         <Link href="/market"
           className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)' }}>
+          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
           Browse Market <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 
       {registered && (
         <div className="flex items-start gap-3 px-4 py-3 rounded-xl"
-          style={{ background: 'rgba(8,153,129,0.08)', border: '1px solid rgba(8,153,129,0.2)' }}>
+          style={{ background: 'rgba(40,199,111,.08)', border: '1px solid rgba(40,199,111,.2)' }}>
           <CheckCircle className="w-4 h-4 text-green mt-0.5 flex-shrink-0" />
           <div>
             <div className="text-sm font-semibold text-green">Account created successfully</div>
@@ -123,9 +123,9 @@ export default async function DashboardPage({
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Total Orders" value={String(totalOrders ?? 0)} sub="all time" Icon={ShoppingBag} color={{ bg: 'rgba(41,98,255,0.15)', text: '#2962ff' }} />
-        <StatCard label="Pending" value={String(pendingOrders ?? 0)} sub="awaiting action" Icon={Clock} color={{ bg: 'rgba(242,54,69,0.12)', text: '#f23645' }} />
-        <StatCard label="Delivered" value={String(deliveredOrders ?? 0)} sub="completed orders" Icon={CheckCircle} color={{ bg: 'rgba(8,153,129,0.15)', text: '#089981' }} />
+        <StatCard label="Total Orders" value={String(totalOrders ?? 0)} sub="all time" Icon={ShoppingBag} color={{ bg: 'rgba(115,103,240,.15)', text: '#7367f0' }} />
+        <StatCard label="Pending" value={String(pendingOrders ?? 0)} sub="awaiting action" Icon={Clock} color={{ bg: 'rgba(234,84,85,.12)', text: '#ea5455' }} />
+        <StatCard label="Delivered" value={String(deliveredOrders ?? 0)} sub="completed orders" Icon={CheckCircle} color={{ bg: 'rgba(40,199,111,.15)', text: '#28c76f' }} />
         <StatCard label="Total Spent" value={formatKES(totalSpend)} sub="delivered orders" Icon={DollarSign} color={{ bg: 'rgba(124,58,237,0.15)', text: '#a78bfa' }} />
       </div>
 
@@ -135,7 +135,7 @@ export default async function DashboardPage({
         {/* Recent orders */}
         <div className={`rounded-2xl bg-surface overflow-hidden ${isSeller ? 'lg:col-span-2' : ''}`} style={CARD}>
           <div className="flex items-center justify-between px-5 py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
             <h2 className="text-sm font-bold text-text">Recent Orders</h2>
             <Link href="/orders" className="text-xs text-blue flex items-center gap-1 hover:underline">
               All orders <ArrowRight className="w-3 h-3" />
@@ -143,7 +143,7 @@ export default async function DashboardPage({
           </div>
           <table className="w-full">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
                 <th className="px-5 py-2.5 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Drug</th>
                 <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Total</th>
                 <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Status</th>
@@ -163,8 +163,8 @@ export default async function DashboardPage({
                 const drug = order.drugs as { generic_name: string; slug: string } | null
                 return (
                   <tr key={order.id}
-                    className="hover:bg-surface2/40 transition-colors"
-                    style={{ borderBottom: i < (recentOrders?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                    className="hover:bg-surface2 transition-colors"
+                    style={{ borderBottom: i < (recentOrders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                     <td className="px-5 py-3">
                       <div className="text-[13px] font-semibold text-text">{drug?.generic_name ?? '—'}</div>
                       <div className="text-[11px] text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
@@ -193,14 +193,14 @@ export default async function DashboardPage({
         {isSeller && (
           <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
             <div className="flex items-center justify-between px-5 py-3.5"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               <h2 className="text-sm font-bold text-text">Active Listings</h2>
               <Link href="/seller/listings" className="text-xs text-blue flex items-center gap-1 hover:underline">
                 All <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
             <div className="flex items-center justify-between px-5 py-2.5"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
               <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Stock</span>
               <span className="text-xs font-bold text-blue">{activeListings ?? 0} active</span>
             </div>
@@ -209,7 +209,7 @@ export default async function DashboardPage({
                 <div className="text-muted text-xs mb-3">No active listings</div>
                 <Link href="/seller/listings/new"
                   className="text-xs font-bold text-white px-3 py-1.5 rounded-lg inline-flex items-center gap-1"
-                  style={{ background: 'linear-gradient(135deg, #089981, #05705f)' }}>
+                  style={{ background: 'linear-gradient(135deg, #28c76f, #20a85a)' }}>
                   <Plus className="w-3 h-3" /> List a Drug
                 </Link>
               </div>
@@ -218,8 +218,8 @@ export default async function DashboardPage({
               const drug = l.drugs as { generic_name: string } | null
               const pct = l.qty_available > 0 ? Math.round((l.qty_remaining / l.qty_available) * 100) : 0
               return (
-                <div key={l.id} className="px-5 py-3 hover:bg-surface2/30 transition-colors"
-                  style={{ borderBottom: i < (listings?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                <div key={l.id} className="px-5 py-3 hover:bg-surface2 transition-colors"
+                  style={{ borderBottom: i < (listings?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <div className="flex justify-between items-start mb-1.5">
                     <div className="text-[13px] font-semibold text-text truncate flex-1 pr-2">{drug?.generic_name ?? '—'}</div>
                     <div className="text-xs font-bold text-red tabular-nums flex-shrink-0">
@@ -236,7 +236,7 @@ export default async function DashboardPage({
               )
             })}
             {(listings ?? []).length > 0 && (
-              <div className="px-5 py-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className="px-5 py-3" style={{ borderTop: '1px solid rgba(47,43,61,.08)' }}>
                 <Link href="/seller/listings/new"
                   className="flex items-center gap-2 text-xs font-semibold text-blue hover:underline">
                   <Plus className="w-3 h-3" /> Add new listing
@@ -249,7 +249,7 @@ export default async function DashboardPage({
 
       {/* Quick links — plain text links, no card boxes */}
       <div className="flex items-center gap-6 pt-2"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        style={{ borderTop: '1px solid rgba(47,43,61,.08)' }}>
         <span className="text-xs text-muted">Quick links</span>
         <Link href="/market" className="flex items-center gap-1.5 text-xs text-muted hover:text-text transition-colors">
           <TrendingUp className="w-3.5 h-3.5" /> Browse Market
