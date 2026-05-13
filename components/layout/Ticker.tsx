@@ -22,26 +22,30 @@ export async function Ticker() {
 
   if (doubled.length === 0) {
     return (
-      <div className="bg-surface border-b border-border h-8 flex items-center px-4">
-        <span className="text-xs text-muted">No trades yet — market opens when first listing is placed</span>
+      <div className="bg-bg border-b border-border h-7 flex items-center px-4">
+        <span className="text-[11px] text-muted">No trades yet — market opens when first listing is placed</span>
       </div>
     )
   }
 
   return (
-    <div className="bg-surface border-b border-border h-8 overflow-hidden flex items-center">
+    <div className="bg-bg border-b border-border h-7 overflow-hidden flex items-center">
       <div className="flex animate-ticker whitespace-nowrap">
         {doubled.map((item, i) => {
           const drug = item.drugs
           if (!drug) return null
           const pct = Number(item.change_pct ?? 0)
+          const isUp = pct >= 0
           return (
-            <div key={i} className="inline-flex items-center gap-2 px-5 border-r border-border h-8 text-xs shrink-0">
-              <span className="text-muted">{drug.generic_name} {drug.strength}</span>
-              <span className="text-text font-semibold">
-                {item.last_price ? `KES ${Number(item.last_price).toFixed(2)}` : '—'}
+            <div key={i} className="inline-flex items-center gap-2 px-4 h-7 text-[11px] shrink-0">
+              <span className="text-muted font-medium">{drug.generic_name} {drug.strength}</span>
+              <span className="text-text font-semibold tabular-nums">
+                {item.last_price ? Number(item.last_price).toFixed(2) : '—'}
               </span>
-              <span className={changeClass(pct)}>{formatChange(pct)}</span>
+              <span className={`font-semibold tabular-nums ${isUp ? 'text-green' : 'text-red'}`}>
+                {isUp ? '▲' : '▼'} {Math.abs(pct).toFixed(2)}%
+              </span>
+              <span className="text-border2 text-[8px]">●</span>
             </div>
           )
         })}
