@@ -2,6 +2,9 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
+import { ArrowRight } from 'lucide-react'
+
+const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
 
 export default async function SellerListingsPage() {
   const supabase = await createClient()
@@ -24,16 +27,12 @@ export default async function SellerListingsPage() {
         </Link>
       </div>
 
-      <div className="overflow-x-auto rounded-xl"
-        style={{
-          background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-          boxShadow: '0 20px 48px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
-        }}>
+      <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
         <table className="w-full min-w-[640px]">
-          <thead className="border-b border-border bg-surface2/40">
-            <tr>
-              {['Drug', 'Brand / Origin', 'Price/unit', 'Qty Rem.', 'Status', 'Expires', ''].map(h => (
-                <th key={h} className={`px-4 py-2.5 text-xs font-bold text-text uppercase tracking-wider ${h !== 'Drug' && h !== 'Brand / Origin' && h !== '' ? 'text-right' : 'text-left'}`}>{h}</th>
+          <thead>
+            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              {['Drug', 'Brand / Origin', 'Price/unit', 'Qty Rem.', 'Status', 'Expires', ''].map((h, i) => (
+                <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i > 1 && h !== '' ? 'text-right' : 'text-left'}`}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -41,41 +40,44 @@ export default async function SellerListingsPage() {
             {(listings ?? []).map((l, i) => {
               const drug = l.drugs as { generic_name: string; slug: string; strength: string; dosage_form: string } | null
               return (
-                <tr key={l.id} className={`hover:bg-surface2 transition-colors ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
-                  <td className="px-4 py-2.5">
-                    <Link href={`/drug/${drug?.slug}`} className="text-sm font-semibold text-text hover:text-blue transition-colors">
+                <tr key={l.id} className="hover:bg-surface2/30 transition-colors"
+                  style={{ borderBottom: i < (listings?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                  <td className="px-5 py-3.5">
+                    <Link href={`/drug/${drug?.slug}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
                       {drug?.generic_name ?? '—'}
                     </Link>
                     <div className="text-xs text-muted">{drug?.strength} · {drug?.dosage_form}</div>
                   </td>
-                  <td className="px-4 py-2.5 text-sm text-text">
+                  <td className="px-5 py-3.5 text-[13px] text-text">
                     {l.brand_name} · <span className="text-muted">{l.origin_country}</span>
                   </td>
-                  <td className="px-4 py-2.5 text-right text-sm text-red font-semibold tabular-nums">
+                  <td className="px-5 py-3.5 text-right text-[13px] text-red font-bold tabular-nums">
                     {formatKES(Number(l.price_per_unit))}
                   </td>
-                  <td className="px-4 py-2.5 text-right text-sm text-text tabular-nums">
+                  <td className="px-5 py-3.5 text-right text-[13px] text-text tabular-nums">
                     {l.qty_remaining.toLocaleString()} / {l.qty_available.toLocaleString()}
                   </td>
-                  <td className="px-4 py-2.5 text-right">
-                    <span className={`text-xs font-semibold px-1.5 py-0.5 rounded capitalize
-                      ${l.status === 'active' ? 'bg-green/10 text-green'
-                        : l.status === 'filled' ? 'bg-blue/10 text-blue'
-                        : 'bg-muted/10 text-muted'}`}>
+                  <td className="px-5 py-3.5 text-right">
+                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize
+                      ${l.status === 'active' ? 'bg-green/12 text-green'
+                        : l.status === 'filled' ? 'bg-blue/12 text-blue'
+                        : 'bg-muted/12 text-muted'}`}>
                       {l.status}
                     </span>
                   </td>
-                  <td className="px-4 py-2.5 text-right text-xs text-muted">
+                  <td className="px-5 py-3.5 text-right text-xs text-muted">
                     {l.listing_expiry ? new Date(l.listing_expiry).toLocaleDateString('en-KE') : '—'}
                   </td>
-                  <td className="px-4 py-2.5 text-right">
-                    <Link href={`/drug/${drug?.slug}`} className="text-sm text-muted hover:text-text transition-colors">→</Link>
+                  <td className="px-5 py-3.5 text-right">
+                    <Link href={`/drug/${drug?.slug}`} className="text-muted hover:text-text transition-colors inline-flex">
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
                   </td>
                 </tr>
               )
             })}
             {(listings ?? []).length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-6 text-center text-muted text-sm">
+              <tr><td colSpan={7} className="px-5 py-10 text-center text-muted text-sm">
                 No listings yet. <Link href="/seller/listings/new" className="text-blue hover:underline">List your first drug →</Link>
               </td></tr>
             )}
