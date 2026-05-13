@@ -19,7 +19,7 @@ const SETTING_LABELS: Record<string, { label: string; desc: string }> = {
   },
 }
 
-const GLASS = { background: 'var(--color-surface)', boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
+const GLASS = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Setting[]>([])
@@ -55,7 +55,7 @@ export default function AdminSettingsPage() {
           const isOn = setting.value === 'true'
           return (
             <div key={setting.key}
-              className={`flex items-center justify-between px-5 py-4 hover:bg-surface2/30 transition-colors ${i > 0 ? 'border-t border-white/5' : ''}`}>
+              className={`flex items-center justify-between px-5 py-4 hover:bg-surface2 transition-colors ${i > 0 ? 'border-t border-border' : ''}`}>
               <div className="flex-1 min-w-0 pr-4">
                 <div className="text-sm font-semibold text-text">{meta?.label ?? setting.key}</div>
                 <div className="text-xs text-muted mt-0.5">{meta?.desc}</div>

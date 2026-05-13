@@ -22,7 +22,7 @@ export function TradeHistory({ trades, prevPrice }: TradeHistoryProps) {
           return (
             <div key={trade.id}
               className="flex items-center px-3 py-1 hover:bg-surface2/40 transition-colors"
-              style={{ borderBottom: i < trades.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+              style={{ borderBottom: i < trades.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
               <span className={`font-semibold tabular-nums text-sm w-24 flex items-center gap-1 ${isUp ? 'text-green' : 'text-red'}`}>
                 {isUp ? '▲' : '▼'} {Number(trade.price_per_unit).toFixed(2)}
               </span>
