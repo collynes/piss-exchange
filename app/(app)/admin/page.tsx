@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatKES, formatNumber } from '@/lib/utils'
-import { Users, Package, ShoppingBag, TrendingUp, AlertCircle, ArrowRight } from 'lucide-react'
+import { Users, Package, ShoppingBag, AlertCircle, ArrowRight } from 'lucide-react'
 
 const CARD = { boxShadow: '0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04)' } as const
 
@@ -80,10 +80,26 @@ export default async function AdminPage() {
   return (
     <div className="max-w-5xl space-y-6">
 
-      {/* Welcome */}
-      <div>
-        <h1 className="text-lg font-bold text-text">Admin Overview</h1>
-        <div className="text-xs text-muted mt-0.5">Platform management and monitoring</div>
+      {/* Page header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-lg font-bold text-text">Admin Overview</h1>
+          <p className="text-xs text-muted mt-0.5">Platform management and monitoring</p>
+        </div>
+        {/* Today's trading — inline, no card */}
+        <div className="text-right hidden sm:block">
+          <div className="text-[10px] font-semibold text-muted uppercase tracking-widest">Today</div>
+          <div className="flex items-center gap-4 mt-1">
+            <div>
+              <span className="text-xs text-muted">Deals </span>
+              <span className="text-sm font-bold text-text tabular-nums">{formatNumber(totalDeals)}</span>
+            </div>
+            <div>
+              <span className="text-xs text-muted">Turnover </span>
+              <span className="text-sm font-bold text-green tabular-nums">{formatKES(totalTurnover)}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Stat cards */}
@@ -119,29 +135,13 @@ export default async function AdminPage() {
         />
       </div>
 
-      {/* Today's trading summary */}
-      <div className="rounded-2xl px-5 py-3.5 bg-surface flex items-center gap-8 overflow-x-auto" style={CARD}>
-        <div>
-          <div className="text-[10px] font-bold text-muted uppercase tracking-widest mb-0.5">Today&apos;s Deals</div>
-          <div className="text-sm font-black text-text tabular-nums">{formatNumber(totalDeals)}</div>
-        </div>
-        <div className="w-px h-8 bg-white/5 flex-shrink-0" />
-        <div>
-          <div className="text-[10px] font-bold text-muted uppercase tracking-widest mb-0.5">Today&apos;s Turnover</div>
-          <div className="text-sm font-black text-green tabular-nums">{formatKES(totalTurnover)}</div>
-        </div>
-        <div className="ml-auto flex-shrink-0">
-          <Link href="/market" className="text-xs text-blue flex items-center gap-1 hover:underline">
-            View Market <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
-
+      {/* Tables row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Pending verifications */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
+        <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
+          <div className="flex items-center justify-between px-5 py-3.5"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-bold text-text">Pending Verification</h2>
               {(pendingCount ?? 0) > 0 && (
@@ -152,111 +152,109 @@ export default async function AdminPage() {
               All users <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <div className="rounded-2xl overflow-hidden bg-surface" style={CARD}>
-            <table className="w-full">
-              <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <th className="px-5 py-3 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Organisation</th>
-                  <th className="px-5 py-3 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Role</th>
-                  <th className="px-5 py-3 text-right text-[11px] font-bold text-muted uppercase tracking-wider"></th>
+          <table className="w-full">
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <th className="px-5 py-2.5 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Organisation</th>
+                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Role</th>
+                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {(pendingUsers ?? []).length === 0 && (
+                <tr><td colSpan={3} className="px-5 py-8 text-center text-muted text-sm">No pending verifications</td></tr>
+              )}
+              {(pendingUsers ?? []).map((u, i) => (
+                <tr key={u.id}
+                  className="hover:bg-surface2/30 transition-colors"
+                  style={{ borderBottom: i < (pendingUsers?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                  <td className="px-5 py-3">
+                    <div className="text-[13px] font-semibold text-text">{u.org_name}</div>
+                    <div className="text-xs text-muted">{u.license_no ?? 'No license on file'}</div>
+                  </td>
+                  <td className="px-5 py-3 text-right">
+                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-muted/15 text-muted capitalize">{u.role}</span>
+                  </td>
+                  <td className="px-5 py-3 text-right">
+                    <form action={`/api/admin/users/${u.id}/verify`} method="POST" className="inline">
+                      <button type="submit"
+                        className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/12 text-green hover:bg-green/20 transition-colors">
+                        Verify
+                      </button>
+                    </form>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {(pendingUsers ?? []).length === 0 && (
-                  <tr><td colSpan={3} className="px-5 py-8 text-center text-muted text-sm">No pending verifications</td></tr>
-                )}
-                {(pendingUsers ?? []).map((u, i) => (
-                  <tr key={u.id}
-                    className="hover:bg-surface2/30 transition-colors"
-                    style={{ borderBottom: i < (pendingUsers?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
-                    <td className="px-5 py-3">
-                      <div className="text-[13px] font-semibold text-text">{u.org_name}</div>
-                      <div className="text-xs text-muted">{u.license_no ?? 'No license on file'}</div>
-                    </td>
-                    <td className="px-5 py-3 text-right">
-                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-muted/15 text-muted capitalize">{u.role}</span>
-                    </td>
-                    <td className="px-5 py-3 text-right">
-                      <form action={`/api/admin/users/${u.id}/verify`} method="POST" className="inline">
-                        <button type="submit"
-                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/12 text-green hover:bg-green/20 transition-colors">
-                          Verify
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         {/* Recent orders */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
+        <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
+          <div className="flex items-center justify-between px-5 py-3.5"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             <h2 className="text-sm font-bold text-text">Recent Orders</h2>
             <Link href="/admin/orders" className="text-xs text-blue flex items-center gap-1 hover:underline">
               All orders <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <div className="rounded-2xl overflow-hidden bg-surface" style={CARD}>
-            <table className="w-full">
-              <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <th className="px-5 py-3 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Drug</th>
-                  <th className="px-5 py-3 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Total</th>
-                  <th className="px-5 py-3 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(recentOrders ?? []).length === 0 && (
-                  <tr><td colSpan={3} className="px-5 py-8 text-center text-muted text-sm">No orders yet</td></tr>
-                )}
-                {(recentOrders ?? []).map((order, i) => {
-                  const drug = order.drugs as { generic_name: string } | null
-                  return (
-                    <tr key={order.id}
-                      className="hover:bg-surface2/30 transition-colors"
-                      style={{ borderBottom: i < (recentOrders?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
-                      <td className="px-5 py-3">
-                        <Link href={`/orders/${order.id}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
-                          {drug?.generic_name ?? '—'}
-                        </Link>
-                        <div className="text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
-                      </td>
-                      <td className="px-5 py-3 text-right text-[13px] font-bold text-text tabular-nums">
-                        {formatKES(Number(order.total_amount))}
-                      </td>
-                      <td className="px-5 py-3 text-right">
-                        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+          <table className="w-full">
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                <th className="px-5 py-2.5 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Drug</th>
+                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Total</th>
+                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(recentOrders ?? []).length === 0 && (
+                <tr><td colSpan={3} className="px-5 py-8 text-center text-muted text-sm">No orders yet</td></tr>
+              )}
+              {(recentOrders ?? []).map((order, i) => {
+                const drug = order.drugs as { generic_name: string } | null
+                return (
+                  <tr key={order.id}
+                    className="hover:bg-surface2/30 transition-colors"
+                    style={{ borderBottom: i < (recentOrders?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}>
+                    <td className="px-5 py-3">
+                      <Link href={`/orders/${order.id}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
+                        {drug?.generic_name ?? '—'}
+                      </Link>
+                      <div className="text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
+                    </td>
+                    <td className="px-5 py-3 text-right text-[13px] font-bold text-text tabular-nums">
+                      {formatKES(Number(order.total_amount))}
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
+                        {order.status}
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
 
       </div>
 
       {/* Recent trades */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
+      <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
+        <div className="flex items-center justify-between px-5 py-3.5"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
           <h2 className="text-sm font-bold text-text">Recent Trades</h2>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
             <span className="text-xs text-muted">Live</span>
           </div>
         </div>
-        <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
-          <table className="w-full min-w-[540px]">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[500px]">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                 {['Drug', 'Qty', 'Price/unit', 'Total', 'Time'].map((h, i) => (
-                  <th key={i} className={`px-5 py-3 text-[11px] font-bold text-muted uppercase tracking-wider ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                  <th key={i} className={`px-5 py-2.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
                 ))}
               </tr>
             </thead>
