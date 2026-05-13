@@ -69,7 +69,7 @@ export default async function SellerListingsPage() {
                     {l.listing_expiry ? new Date(l.listing_expiry).toLocaleDateString('en-KE') : '—'}
                   </td>
                   <td className="px-4 py-2.5 text-right">
-                    <Link href={`/drug/${drug?.slug}`} className="text-xs text-blue hover:underline">View</Link>
+                    <Link href={`/drug/${drug?.slug}`} className="text-sm text-muted hover:text-text transition-colors">→</Link>
                   </td>
                 </tr>
               )

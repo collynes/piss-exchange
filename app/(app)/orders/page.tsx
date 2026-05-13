@@ -66,7 +66,7 @@ export default async function OrdersPage() {
                   <td className="px-4 py-2.5 text-right text-xs text-muted capitalize">{order.escrow_status}</td>
                   <td className="px-4 py-2.5 text-right text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</td>
                   <td className="px-4 py-2.5 text-right">
-                    <Link href={`/orders/${order.id}`} className="text-xs text-blue hover:underline">View</Link>
+                    <Link href={`/orders/${order.id}`} className="text-sm text-muted hover:text-text transition-colors">→</Link>
                   </td>
                 </tr>
               )

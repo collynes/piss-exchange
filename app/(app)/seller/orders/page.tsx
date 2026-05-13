@@ -66,8 +66,8 @@ export default async function SellerOrdersPage() {
                           </button>
                         </form>
                       )}
-                      <Link href={`/orders/${order.id}`} className="text-xs text-muted hover:text-text transition-colors px-1">
-                        View
+                      <Link href={`/orders/${order.id}`} className="text-sm text-muted hover:text-text transition-colors px-1">
+                        →
                       </Link>
                     </div>
                   </td>

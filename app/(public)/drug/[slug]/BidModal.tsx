@@ -9,6 +9,14 @@ interface BidModalProps {
   onClose: () => void
 }
 
+const GLASS = {
+  background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
+  boxShadow: '0 32px 80px -16px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.08)',
+} as const
+
+const INPUT_CLASS = 'w-full bg-bg/80 rounded-lg px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
+const INPUT_STYLE = { border: '1px solid rgba(255,255,255,0.08)' }
+
 export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
   const router = useRouter()
   const [price, setPrice] = useState('')
@@ -16,6 +24,8 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
   const [days, setDays] = useState('7')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const total = Number(price) * Number(qty)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,44 +47,50 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
       status: 'open',
     })
 
-    if (bidErr) {
-      setError(bidErr.message)
-      setLoading(false)
-      return
-    }
-
+    if (bidErr) { setError(bidErr.message); setLoading(false); return }
     onClose()
     router.refresh()
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface border border-border2 rounded w-full max-w-sm" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <h2 className="text-text font-semibold text-sm">Place Bid — {drugName}</h2>
-          <button onClick={onClose} className="text-muted hover:text-text text-lg leading-none">×</button>
-        </div>
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="rounded-2xl w-full max-w-sm overflow-hidden" style={GLASS} onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 bg-surface2/50 border-b border-white/5">
           <div>
-            <label className="block text-xs text-muted uppercase tracking-wider mb-1">
-              Bid Price (KES/unit) <span className="text-red">*</span>
-            </label>
-            <input type="number" step="0.01" min="0.01" required value={price} onChange={e => setPrice(e.target.value)}
-              placeholder="0.00"
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text placeholder:text-muted focus:border-blue transition-colors" />
+            <div className="text-sm font-bold text-text">Place Bid</div>
+            <div className="text-xs text-muted mt-0.5">{drugName}</div>
           </div>
+          <button onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-full bg-surface2 text-muted hover:text-text transition-colors text-base leading-none">
+            ×
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="px-5 py-5 space-y-4">
           <div>
-            <label className="block text-xs text-muted uppercase tracking-wider mb-1">
+            <label className="block text-xs text-muted uppercase tracking-wider mb-2">
+              Bid Price (KES / unit) <span className="text-red">*</span>
+            </label>
+            <input type="number" step="0.01" min="0.01" required value={price}
+              onChange={e => setPrice(e.target.value)} placeholder="0.00"
+              className={INPUT_CLASS} style={INPUT_STYLE} />
+          </div>
+
+          <div>
+            <label className="block text-xs text-muted uppercase tracking-wider mb-2">
               Quantity <span className="text-red">*</span>
             </label>
-            <input type="number" min="1" required value={qty} onChange={e => setQty(e.target.value)}
-              placeholder="100"
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text placeholder:text-muted focus:border-blue transition-colors" />
+            <input type="number" min="1" required value={qty}
+              onChange={e => setQty(e.target.value)} placeholder="100"
+              className={INPUT_CLASS} style={INPUT_STYLE} />
           </div>
+
           <div>
-            <label className="block text-xs text-muted uppercase tracking-wider mb-1">Valid for (days)</label>
+            <label className="block text-xs text-muted uppercase tracking-wider mb-2">Valid for</label>
             <select value={days} onChange={e => setDays(e.target.value)}
-              className="w-full bg-bg border border-border2 rounded px-3 py-2 text-sm text-text focus:border-blue transition-colors">
+              className={INPUT_CLASS} style={INPUT_STYLE}>
               <option value="1">1 day</option>
               <option value="3">3 days</option>
               <option value="7">7 days</option>
@@ -84,19 +100,20 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
           </div>
 
           {price && qty && (
-            <div className="bg-bg rounded p-2 flex justify-between text-xs">
-              <span className="text-muted">Total bid value</span>
-              <span className="text-green font-semibold">KES {(Number(price) * Number(qty)).toFixed(2)}</span>
+            <div className="flex justify-between items-center py-3 px-4 rounded-xl bg-bg/60" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+              <span className="text-xs text-muted">Total bid value</span>
+              <span className="text-lg font-black text-green tabular-nums">KES {total.toFixed(2)}</span>
             </div>
           )}
 
-          {error && <div className="text-red text-xs">{error}</div>}
+          {error && <div className="text-red text-xs bg-red/8 rounded-lg px-3 py-2">{error}</div>}
 
           <button type="submit" disabled={loading}
-            className="w-full bg-green text-white font-semibold py-2.5 rounded text-sm hover:bg-green/90 transition-colors disabled:opacity-50">
+            className="w-full font-bold py-3 rounded-xl text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40"
+            style={{ background: 'linear-gradient(135deg, #089981, #05705f)', boxShadow: '0 0 20px rgba(8,153,129,0.25)' }}>
             {loading ? 'Placing bid…' : 'Place Bid'}
           </button>
-          <p className="text-[10px] text-muted text-center">Your bid appears in the order book. Seller can accept it directly.</p>
+          <p className="text-xs text-muted text-center">Your bid appears in the live order book. A seller can accept it directly.</p>
         </form>
       </div>
     </div>
