@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { formatChange, changeClass } from '@/lib/utils'
 
 type MarketRow = {
   drug_id: string
@@ -22,15 +21,15 @@ export async function Ticker() {
 
   if (doubled.length === 0) {
     return (
-      <div className="bg-bg  h-7 flex items-center px-4">
-        <span className="text-[11px] text-muted">No trades yet — market opens when first listing is placed</span>
+      <div className="bg-menu-theme border-bottom px-4 py-2">
+        <span className="small text-muted">No trades yet — market opens when first listing is placed</span>
       </div>
     )
   }
 
   return (
-    <div className="bg-bg  h-7 overflow-hidden flex items-center">
-      <div className="flex animate-ticker whitespace-nowrap">
+    <div className="bg-menu-theme border-bottom overflow-hidden py-2">
+      <div className="d-flex ticker-track">
         {doubled.map((item, i) => {
           const drug = item.drugs
           if (!drug) return null
@@ -38,14 +37,14 @@ export async function Ticker() {
           const isUp = pct >= 0
           return (
             <div key={i} className="inline-flex items-center gap-2 px-4 h-7 text-[11px] shrink-0">
-              <span className="text-muted font-medium">{drug.generic_name} {drug.strength}</span>
-              <span className="text-text font-semibold tabular-nums">
+              <span className="text-muted fw-medium">{drug.generic_name} {drug.strength}</span>
+              <span className="text-heading fw-semibold">
                 {item.last_price ? Number(item.last_price).toFixed(2) : '—'}
               </span>
-              <span className={`font-semibold tabular-nums ${isUp ? 'text-green' : 'text-red'}`}>
+              <span className={`fw-semibold ${isUp ? 'text-success' : 'text-danger'}`}>
                 {isUp ? '▲' : '▼'} {Math.abs(pct).toFixed(2)}%
               </span>
-              <span className="text-border2 text-[8px]">●</span>
+              <span className="text-muted">•</span>
             </div>
           )
         })}

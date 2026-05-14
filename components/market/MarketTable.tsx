@@ -20,7 +20,7 @@ interface MarketRow {
 
 export function MarketTable({ rows }: { rows: MarketRow[] }) {
   return (
-    <div className="overflow-auto flex-1">
+    <div className="table-responsive flex-1">
       {/* Mobile cards */}
       <div className="md:hidden">
         {rows.map(row => {
@@ -28,31 +28,31 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
           const isUp = pct >= 0
           return (
             <Link key={row.drug_id} href={`/drug/${row.slug}`}
-              className="flex items-center justify-between px-4 py-2.5 hover:bg-surface2 transition-colors">
+              className="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
               <div className="min-w-0 flex-1">
-                <div className="text-[13px] font-semibold text-text truncate">{row.generic_name}</div>
-                <div className="text-xs text-muted">{row.strength} · {row.dosage_form}</div>
+                <div className="fw-semibold text-heading text-truncate">{row.generic_name}</div>
+                <small className="text-muted">{row.strength} · {row.dosage_form}</small>
               </div>
-              <div className="text-right ml-3 flex-shrink-0">
-                <div className={`text-[13px] font-bold tabular-nums ${isUp ? 'text-green' : 'text-red'}`}>
+              <div className="text-end ms-3 flex-shrink-0">
+                <div className={`fw-bold ${isUp ? 'text-success' : 'text-danger'}`}>
                   {row.best_ask ? Number(row.best_ask).toFixed(2) : '—'}
                 </div>
-                <div className={`text-xs font-semibold ${isUp ? 'text-green' : 'text-red'}`}>
+                <small className={`fw-semibold ${isUp ? 'text-success' : 'text-danger'}`}>
                   {isUp ? '▲' : '▼'} {Math.abs(pct).toFixed(2)}%
-                </div>
+                </small>
               </div>
             </Link>
           )
         })}
         {rows.length === 0 && (
-          <div className="px-4 py-8 text-center text-muted text-[13px]">No drugs listed yet.</div>
+          <div className="p-4 text-center text-muted">No drugs listed yet.</div>
         )}
       </div>
 
       {/* Desktop table */}
-      <table className="w-full border-collapse hidden md:table">
-        <thead className="sticky top-0 z-10 bg-surface2">
-          <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
+      <table className="table table-hover card-table mb-0 d-none d-md-table">
+        <thead className="table-light sticky-top">
+          <tr>
             {[
               { label: 'Drug', align: 'left' },
               { label: 'Last', align: 'right' },
@@ -65,7 +65,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
               { label: '', align: 'right' },
             ].map(h => (
               <th key={h.label}
-                className={`px-3 py-2.5 text-[11px] font-bold text-muted uppercase tracking-wider whitespace-nowrap text-${h.align}`}>
+                className={`text-uppercase text-nowrap ${h.align === 'right' ? 'text-end' : ''}`}>
                 {h.label}
               </th>
             ))}
@@ -77,39 +77,38 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
             const isUp = pct >= 0
             return (
               <tr key={row.drug_id}
-                className="hover:bg-surface2 cursor-pointer transition-colors"
-                style={{ borderBottom: i < rows.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}
+                className="cursor-pointer"
                 onClick={() => { window.location.href = `/drug/${row.slug}` }}>
-                <td className="px-3 py-2">
-                  <span className="text-[13px] font-semibold text-text">{row.generic_name}</span>
-                  <span className="text-xs text-muted ml-2">{row.strength} · {row.dosage_form}</span>
+                <td>
+                  <span className="fw-semibold text-heading">{row.generic_name}</span>
+                  <small className="text-muted ms-2">{row.strength} · {row.dosage_form}</small>
                 </td>
-                <td className={`px-3 py-2 text-right text-[13px] font-semibold tabular-nums ${isUp ? 'text-green' : 'text-red'}`}>
+                <td className={`text-end fw-semibold ${isUp ? 'text-success' : 'text-danger'}`}>
                   {row.last_price ? Number(row.last_price).toFixed(2) : '—'}
                 </td>
-                <td className={`px-3 py-2 text-right text-[13px] font-semibold tabular-nums ${isUp ? 'text-green' : 'text-red'}`}>
+                <td className={`text-end fw-semibold ${isUp ? 'text-success' : 'text-danger'}`}>
                   {isUp ? '+' : ''}{pct.toFixed(2)}%
                 </td>
-                <td className="px-3 py-2 text-right text-[13px] text-red tabular-nums font-medium">
+                <td className="text-end text-danger fw-medium">
                   {row.best_ask ? Number(row.best_ask).toFixed(2) : '—'}
                 </td>
-                <td className="px-3 py-2 text-right text-[13px] text-green tabular-nums font-medium">
+                <td className="text-end text-success fw-medium">
                   {row.best_bid ? Number(row.best_bid).toFixed(2) : '—'}
                 </td>
-                <td className="px-3 py-2 text-right text-[13px] text-text tabular-nums">{formatNumber(row.volume_today)}</td>
-                <td className="px-3 py-2 text-right text-[13px] text-text tabular-nums">{row.deals_today}</td>
-                <td className="px-3 py-2 text-right text-[13px] text-muted">{row.seller_count}</td>
-                <td className="px-3 py-2 text-right">
+                <td className="text-end">{formatNumber(row.volume_today)}</td>
+                <td className="text-end">{row.deals_today}</td>
+                <td className="text-end text-muted">{row.seller_count}</td>
+                <td className="text-end">
                   <Link href={`/drug/${row.slug}`} onClick={e => e.stopPropagation()}
-                    className="px-2 py-0.5 text-xs text-muted hover:text-blue transition-colors">
-                    →
+                    className="btn btn-sm btn-icon btn-text-secondary rounded-pill">
+                    <i className="bx bx-chevron-right" />
                   </Link>
                 </td>
               </tr>
             )
           })}
           {rows.length === 0 && (
-            <tr><td colSpan={9} className="px-4 py-8 text-center text-muted text-[13px]">No drugs listed yet.</td></tr>
+            <tr><td colSpan={9} className="p-4 text-center text-muted">No drugs listed yet.</td></tr>
           )}
         </tbody>
       </table>

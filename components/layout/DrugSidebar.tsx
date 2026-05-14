@@ -20,54 +20,56 @@ export function DrugSidebar({ drugs, categories }: DrugSidebarProps) {
   const activeCategory = searchParams.get('cat') ?? 'All'
 
   return (
-    <div className="bg-surface flex flex-col overflow-hidden h-full">
+    <div className="card h-100 drug-sidebar">
       {/* Search */}
-      <div className="px-2 pt-2 pb-1.5">
+      <div className="p-4 pb-3 flex-shrink-0">
         <input
           type="text"
           placeholder="Search drug…"
-          className="w-full bg-surface2 rounded px-2.5 py-1.5 text-xs text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/40 transition-all"
+          className="form-control form-control-sm"
         />
       </div>
 
       {/* Categories */}
-      <div className="px-1.5 pb-2 space-y-0.5">
+      <div className="px-4 pb-3 border-bottom flex-shrink-0">
+        <div className="d-flex flex-wrap gap-2">
         {categories.map(cat => (
           <Link key={cat}
             href={cat === 'All' ? '/market' : `/market?cat=${cat}`}
-            className={`block px-2 py-1 text-xs rounded cursor-pointer transition-colors
+            className={`btn btn-sm
               ${activeCategory === cat
-                ? 'bg-blue/15 text-blue font-semibold'
-                : 'text-muted hover:text-text hover:bg-surface2'
+                ? 'btn-primary'
+                : 'btn-outline-secondary'
               }`}
           >
             {cat}
           </Link>
         ))}
+        </div>
       </div>
 
       {/* Drug list */}
-      <div className="overflow-y-auto flex-1 scrollbar-hide">
-        <div className="px-2 py-1.5 text-xs font-bold text-muted uppercase tracking-wider">
+      <div className="p-4 pt-3 overflow-auto flex-grow-1">
+        <div className="small fw-semibold text-muted text-uppercase mb-2">
           Top Movers
         </div>
         {drugs.map(drug => (
           <Link key={drug.slug} href={`/drug/${drug.slug}`}
-            className="flex justify-between items-center px-2.5 py-1.5 hover:bg-surface2 cursor-pointer transition-colors rounded mx-1">
-            <div className="min-w-0 flex-1">
-              <div className="text-xs font-semibold text-text leading-tight truncate">
+            className="drug-sidebar-link d-flex justify-content-between align-items-center rounded px-2 py-2 text-decoration-none">
+            <div className="min-w-0 flex-grow-1">
+              <div className="small fw-semibold text-heading text-truncate">
                 {drug.generic_name.split('/')[0].trim()}
               </div>
-              <div className="text-xs text-muted">{drug.dosage_form}</div>
+              <small className="text-muted">{drug.dosage_form}</small>
             </div>
-            <div className="text-right ml-2 flex-shrink-0">
-              <div className="text-xs font-semibold text-text">
+            <div className="text-end ms-2 flex-shrink-0">
+              <div className="small fw-semibold text-heading">
                 {drug.last_price ? Number(drug.last_price).toFixed(2) : '—'}
               </div>
-              <div className={`text-xs ${Number(drug.change_pct) >= 0 ? 'text-green' : 'text-red'}`}>
+              <small className={Number(drug.change_pct) >= 0 ? 'text-success' : 'text-danger'}>
                 {Number(drug.change_pct) > 0 ? '▲' : Number(drug.change_pct) < 0 ? '▼' : ''}
                 {Math.abs(Number(drug.change_pct)).toFixed(1)}%
-              </div>
+              </small>
             </div>
           </Link>
         ))}

@@ -48,29 +48,28 @@ export default function NewListingPage() {
     if (!selectedDrug) { setError('Select a drug first'); return }
     setLoading(true)
     setError(null)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setError('Not logged in'); setLoading(false); return }
 
     const qty = Number(form.qty_available)
-    const { error: err } = await supabase.from('listings').insert({
-      drug_id: selectedDrug.id,
-      seller_id: user.id,
-      brand_name: form.brand_name,
-      manufacturer: form.manufacturer || null,
-      origin_country: form.origin_country,
-      qty_available: qty,
-      qty_remaining: qty,
-      price_per_unit: Number(form.price_per_unit),
-      min_order_qty: Number(form.min_order_qty),
-      batch_no: form.batch_no || null,
-      expiry_date: form.expiry_date || null,
-      listing_expiry: form.listing_expiry || null,
-      status: 'active',
+    const res = await fetch('/api/listings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        drugId: selectedDrug.id,
+        brandName: form.brand_name,
+        manufacturer: form.manufacturer,
+        originCountry: form.origin_country,
+        qtyAvailable: qty,
+        pricePerUnit: Number(form.price_per_unit),
+        minOrderQty: Number(form.min_order_qty),
+        batchNo: form.batch_no,
+        expiryDate: form.expiry_date,
+        listingExpiry: form.listing_expiry,
+      }),
     })
 
-    if (err) { setError(err.message); setLoading(false); return }
-    router.push(`/drug/${selectedDrug.slug}`)
+    const body = await res.json().catch(() => ({}))
+    if (!res.ok) { setError(body.error ?? 'Listing failed'); setLoading(false); return }
+    router.push(`/drug/${body.slug ?? selectedDrug.slug}`)
   }
 
   const fields: { key: keyof typeof form; label: string; placeholder?: string; type?: string; step?: string; required: boolean }[] = [

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
 
-export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -15,7 +16,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   if (order.status !== 'confirmed') return NextResponse.json({ error: 'Order must be confirmed before shipping' }, { status: 400 })
 
-  const { error } = await supabase.from('orders')
+  const adminSupabase = createAdminClient()
+  const { error } = await adminSupabase.from('orders')
     .update({ status: 'shipped', updated_at: new Date().toISOString() })
     .eq('id', id)
     .eq('seller_id', user.id)
@@ -24,5 +26,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
 
   captureServerEvent(user.id, { event: 'order_shipped', props: { order_id: id } })
 
-  return NextResponse.redirect(new URL(`/seller/orders`, process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'))
+  return NextResponse.redirect(new URL('/seller/orders', request.url))
 }

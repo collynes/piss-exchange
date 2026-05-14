@@ -1,22 +1,30 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import type { Ask } from '@/components/market/OrderBook'
 
 interface BuyModalProps {
   ask: Ask
-  drugId: string
   drugName: string
   onClose: () => void
 }
 
 const GLASS = {
-  background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-  boxShadow: '0 32px 80px -16px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.08)',
+  background: 'var(--bs-card-bg, #fff)',
+  border: '1px solid var(--bs-border-color, rgba(47,43,61,.14))',
+  boxShadow: '0 18px 48px -20px rgba(47,43,61,.35)',
 } as const
 
-export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
+function DetailRow({ label, value, valueClass = 'text-text' }: { label: string; value: string; valueClass?: string }) {
+  return (
+    <div className="flex justify-between items-center py-1.5">
+      <span className="text-xs text-muted">{label}</span>
+      <span className={`text-sm font-medium ${valueClass}`}>{value}</span>
+    </div>
+  )
+}
+
+export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
   const router = useRouter()
   const [qty, setQty] = useState(ask.min_order_qty)
   const [phone, setPhone] = useState('')
@@ -37,28 +45,23 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
   const handlePay = async () => {
     setLoading(true)
     setError(null)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setError('You must be logged in'); setLoading(false); return }
+    const orderRes = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ listingId: ask.id, qty }),
+    })
 
-    const { data: order, error: orderErr } = await supabase.from('orders').insert({
-      listing_id: ask.id,
-      drug_id: drugId,
-      buyer_id: user.id,
-      seller_id: ask.seller_id,
-      qty,
-      price_per_unit: ask.price_per_unit,
-      total_amount: total,
-      status: 'pending',
-      escrow_status: 'holding',
-    }).select().single()
-
-    if (orderErr || !order) { setError(orderErr?.message ?? 'Order failed'); setLoading(false); return }
+    const order = await orderRes.json().catch(() => ({}))
+    if (!orderRes.ok || !order.orderId) {
+      setError(order.error ?? 'Order failed')
+      setLoading(false)
+      return
+    }
 
     const res = await fetch('/api/mpesa/stk-push', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: order.id, phone, amount: total }),
+      body: JSON.stringify({ orderId: order.orderId, phone }),
     })
 
     if (!res.ok) {
@@ -69,29 +72,23 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
     }
 
     onClose()
-    router.push(`/orders/${order.id}`)
+    router.push(`/orders/${order.orderId}`)
   }
-
-  const Row = ({ label, value, valueClass = 'text-text' }: { label: string; value: string; valueClass?: string }) => (
-    <div className="flex justify-between items-center py-1.5">
-      <span className="text-xs text-muted">{label}</span>
-      <span className={`text-sm font-medium ${valueClass}`}>{value}</span>
-    </div>
-  )
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="rounded-2xl w-full max-w-sm overflow-hidden" style={GLASS} onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 bg-surface2/50 border-b border-white/5">
+        <div className="flex items-center justify-between px-5 py-4 bg-surface2 border-b border-border">
           <div>
-            <div className="text-sm font-bold text-text">
-              {step === 'confirm' ? `Buy ${ask.brand_name}` : 'Pay via M-Pesa'}
+            <div className="text-xs font-semibold text-muted uppercase tracking-wider">
+              {step === 'confirm' ? 'Buy' : 'Pay via M-Pesa'}
             </div>
-            <div className="text-xs text-muted mt-0.5">
-              {step === 'confirm' ? drugName : `KES ${total.toFixed(2)} due`}
+            <div className="text-2xl font-bold text-text leading-tight mt-1">
+              {step === 'confirm' ? ask.brand_name : `KES ${total.toFixed(2)}`}
             </div>
+            <div className="text-xs text-muted mt-0.5">{step === 'confirm' ? drugName : 'Amount due'}</div>
           </div>
           <button onClick={onClose}
             className="w-7 h-7 flex items-center justify-center rounded-full bg-surface2 text-muted hover:text-text transition-colors text-base leading-none">
@@ -104,16 +101,16 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
             <>
               {/* Drug detail rows */}
               <div className="space-y-0 mb-5">
-                <Row label="Drug" value={drugName} />
-                <Row label="Brand" value={`${ask.brand_name} · ${ask.origin_country}`} />
-                <Row label="Price / unit" value={`KES ${Number(ask.price_per_unit).toFixed(2)}`} valueClass="text-red font-semibold" />
-                <Row label="Available" value={`${ask.qty_remaining.toLocaleString()} units`} />
+                <DetailRow label="Drug" value={drugName} />
+                <DetailRow label="Brand" value={`${ask.brand_name} · ${ask.origin_country}`} />
+                <DetailRow label="Price / unit" value={`KES ${Number(ask.price_per_unit).toFixed(2)}`} valueClass="text-red font-semibold" />
+                <DetailRow label="Available" value={`${ask.qty_remaining.toLocaleString()} units`} />
               </div>
 
               {/* Qty input */}
               <div className="mb-5">
                 <label className="block text-xs text-muted uppercase tracking-wider mb-2">
-                  Quantity <span className="text-muted/60 normal-case tracking-normal">(min {ask.min_order_qty})</span>
+                  Quantity <span className="text-muted normal-case tracking-normal">(min {ask.min_order_qty})</span>
                 </label>
                 <input
                   type="number"
@@ -122,7 +119,7 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
                   value={qty}
                   onChange={e => setQty(Number(e.target.value))}
                   className="w-full bg-bg/80 rounded-lg px-4 py-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all"
-                  style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                  style={{ border: '1px solid var(--bs-border-color, rgba(47,43,61,.14))' }}
                 />
               </div>
 
@@ -135,15 +132,15 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
               </div>
 
               <button onClick={handleConfirm}
-                className="w-full font-bold py-3 rounded-xl text-sm text-white transition-all hover:opacity-90 active:scale-[0.98]"
-                style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 20px rgba(41,98,255,0.3)' }}>
+                className="w-full font-bold py-3 rounded-xl text-sm text-white bg-blue transition-all hover:opacity-90 active:scale-[0.98]"
+                style={{ boxShadow: '0 0.5rem 1rem rgba(var(--bs-primary-rgb), .22)' }}>
                 Confirm Order →
               </button>
             </>
           ) : (
             <>
               {/* Total summary */}
-              <div className="flex justify-between items-center py-3 mb-5 rounded-xl px-4 bg-bg/60" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex justify-between items-center py-3 mb-5 rounded-xl px-4 bg-bg" style={{ border: '1px solid var(--bs-border-color, rgba(47,43,61,.14))' }}>
                 <span className="text-xs text-muted">Total to pay</span>
                 <span className="text-2xl font-black text-text tabular-nums">KES {total.toFixed(2)}</span>
               </div>
@@ -159,7 +156,7 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   className="w-full bg-bg/80 rounded-lg px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-green/50 transition-all"
-                  style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                  style={{ border: '1px solid var(--bs-border-color, rgba(47,43,61,.14))' }}
                 />
                 <p className="text-xs text-muted mt-2">You&apos;ll receive a push notification to confirm.</p>
               </div>
@@ -167,8 +164,8 @@ export function BuyModal({ ask, drugId, drugName, onClose }: BuyModalProps) {
               {error && <div className="text-red text-xs mb-4 bg-red/8 rounded-lg px-3 py-2">{error}</div>}
 
               <button onClick={handlePay} disabled={loading || !phone}
-                className="w-full font-bold py-3 rounded-xl text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40"
-                style={{ background: 'linear-gradient(135deg, #089981, #05705f)', boxShadow: '0 0 20px rgba(8,153,129,0.25)' }}>
+                className="w-full font-bold py-3 rounded-xl text-sm text-white bg-blue transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40"
+                style={{ boxShadow: '0 0.5rem 1rem rgba(var(--bs-primary-rgb), .22)' }}>
                 {loading ? 'Sending request…' : 'Pay with M-Pesa'}
               </button>
               <p className="text-xs text-muted text-center mt-3">Funds held in escrow until delivery confirmed</p>

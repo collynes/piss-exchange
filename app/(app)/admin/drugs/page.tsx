@@ -40,8 +40,8 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
     <div className="fixed inset-0 z-[200] flex items-center justify-center px-4"
       style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
       onClick={onClose}>
-      <div className="w-full max-w-xl rounded-2xl bg-surface overflow-hidden"
-        style={CARD}
+      <div className="w-full max-w-xl rounded-2xl overflow-hidden"
+        style={{ ...CARD, background: '#fff', color: '#2b3340' }}
         onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-3.5"
           style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
@@ -51,6 +51,57 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
         {children}
       </div>
     </div>
+  )
+}
+
+function DrugForm({
+  form,
+  setForm,
+  saving,
+  error,
+  onSubmit,
+  submitLabel,
+}: {
+  form: FormState
+  setForm: React.Dispatch<React.SetStateAction<FormState>>
+  saving: boolean
+  error: string | null
+  onSubmit: (e: React.FormEvent) => void
+  submitLabel: string
+}) {
+  return (
+    <form onSubmit={onSubmit} className="px-5 py-5">
+      <div className="grid grid-cols-2 gap-4 mb-5">
+        {FORM_FIELDS.map(({ key, label, placeholder, required }) => (
+          <div key={key} className={key === 'generic_name' ? 'col-span-2' : ''}>
+            <label className="block text-xs font-medium text-muted mb-1.5">
+              {label}{required && <span className="text-red ml-0.5">*</span>}
+            </label>
+            <input
+              required={required}
+              placeholder={placeholder}
+              value={form[key]}
+              onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+              className={INPUT_CLASS}
+              style={INPUT_STYLE}
+            />
+          </div>
+        ))}
+      </div>
+      {error && (
+        <div className="px-4 py-2.5 rounded-lg text-xs text-red mb-4"
+          style={{ background: 'rgba(234,84,85,.08)', border: '1px solid rgba(234,84,85,.2)' }}>
+          {error}
+        </div>
+      )}
+      <div className="flex gap-2">
+        <button type="submit" disabled={saving}
+          className="px-4 py-2 text-sm font-bold text-white rounded-lg disabled:opacity-40 transition-all hover:opacity-90"
+          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
+          {saving ? 'Saving…' : submitLabel}
+        </button>
+      </div>
+    </form>
   )
 }
 
@@ -120,42 +171,6 @@ export default function AdminDrugsPage() {
     d.category?.toLowerCase().includes(search.toLowerCase())
   )
 
-  /* shared drug form body */
-  const DrugForm = ({ onSubmit, submitLabel }: { onSubmit: (e: React.FormEvent) => void; submitLabel: string }) => (
-    <form onSubmit={onSubmit} className="px-5 py-5">
-      <div className="grid grid-cols-2 gap-4 mb-5">
-        {FORM_FIELDS.map(({ key, label, placeholder, required }) => (
-          <div key={key} className={key === 'generic_name' ? 'col-span-2' : ''}>
-            <label className="block text-xs font-medium text-muted mb-1.5">
-              {label}{required && <span className="text-red ml-0.5">*</span>}
-            </label>
-            <input
-              required={required}
-              placeholder={placeholder}
-              value={form[key]}
-              onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-              className={INPUT_CLASS}
-              style={INPUT_STYLE}
-            />
-          </div>
-        ))}
-      </div>
-      {error && (
-        <div className="px-4 py-2.5 rounded-lg text-xs text-red mb-4"
-          style={{ background: 'rgba(234,84,85,.08)', border: '1px solid rgba(234,84,85,.2)' }}>
-          {error}
-        </div>
-      )}
-      <div className="flex gap-2">
-        <button type="submit" disabled={saving}
-          className="px-4 py-2 text-sm font-bold text-white rounded-lg disabled:opacity-40 transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
-          {saving ? 'Saving…' : submitLabel}
-        </button>
-      </div>
-    </form>
-  )
-
   return (
     <div className="max-w-5xl space-y-5">
 
@@ -189,8 +204,8 @@ export default function AdminDrugsPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px]">
-            <thead>
+          <table className="table table-hover mb-0">
+            <thead className="table-light">
               <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
                 {['Drug', 'Form', 'Strength', 'Category', 'ATC', 'Status', 'Actions'].map((h, i) => (
                   <th key={h}
@@ -230,7 +245,7 @@ export default function AdminDrugsPage() {
                       onClick={() => toggleActive(drug.id, drug.active)}
                       className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full transition-colors ${
                         drug.active
-                          ? 'bg-green/10 text-green hover:bg-red/10 hover:text-red'
+                          ? 'bg-label-success text-success hover:bg-red/10 hover:text-red'
                           : 'bg-muted/10 text-muted hover:bg-green/10 hover:text-green'
                       }`}>
                       {drug.active ? 'Active' : 'Inactive'}
@@ -264,14 +279,28 @@ export default function AdminDrugsPage() {
       {/* ── Add Modal ──────────────────────────────────────── */}
       {addOpen && (
         <Modal title="Add New Drug" onClose={() => setAddOpen(false)}>
-          <DrugForm onSubmit={handleAdd} submitLabel="Add Drug" />
+          <DrugForm
+            form={form}
+            setForm={setForm}
+            saving={saving}
+            error={error}
+            onSubmit={handleAdd}
+            submitLabel="Add Drug"
+          />
         </Modal>
       )}
 
       {/* ── Edit Modal ─────────────────────────────────────── */}
       {editDrug && (
         <Modal title={`Edit — ${editDrug.generic_name}`} onClose={() => setEditDrug(null)}>
-          <DrugForm onSubmit={handleEdit} submitLabel="Save Changes" />
+          <DrugForm
+            form={form}
+            setForm={setForm}
+            saving={saving}
+            error={error}
+            onSubmit={handleEdit}
+            submitLabel="Save Changes"
+          />
         </Modal>
       )}
 
@@ -279,7 +308,7 @@ export default function AdminDrugsPage() {
       {viewDrug && (
         <Modal title="Drug Details" onClose={() => setViewDrug(null)}>
           <div className="px-5 py-5">
-            <table className="w-full">
+            <table className="table table-hover mb-0">
               <tbody>
                 {[
                   ['Generic Name', viewDrug.generic_name],

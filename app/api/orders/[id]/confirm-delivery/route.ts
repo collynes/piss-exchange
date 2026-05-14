@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import { createClient as createUserClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
-export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const adminSupabase = createAdminClient()
   const { id } = await params
   const supabase = await createUserClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -61,5 +57,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
 
   captureServerEvent(user.id, { event: 'order_delivered', props: { order_id: id } })
 
-  return NextResponse.redirect(new URL(`/orders/${id}`, process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'))
+  return NextResponse.redirect(new URL(`/orders/${id}`, request.url))
 }

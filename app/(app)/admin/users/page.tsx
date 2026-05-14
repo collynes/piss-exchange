@@ -53,7 +53,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           return (
             <a key={f.label} href={f.href}
               className={`text-xs px-3 py-1 rounded-full transition-colors ${
-                isActive ? 'bg-blue/10 text-blue font-semibold' : 'text-muted hover:text-text bg-surface2'
+                isActive ? 'bg-label-primary text-primary font-semibold' : 'text-muted hover:text-text bg-surface2'
               }`}>
               {f.label}
             </a>
@@ -62,8 +62,8 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
       </div>
 
       <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
-        <table className="w-full min-w-[640px]">
-          <thead>
+        <table className="table table-hover mb-0">
+          <thead className="table-light">
             <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               {['Organisation', 'Role', 'Phone', 'License', 'Joined', 'Status', 'Actions'].map(h => (
                 <th key={h} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${h === 'Organisation' ? 'text-left' : 'text-right'}`}>{h}</th>
@@ -83,8 +83,8 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                   <div className="text-xs text-muted font-mono">{u.id.slice(0, 8)}…</div>
                 </td>
                 <td className="px-5 py-3.5 text-right">
-                  <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${
-                    u.role === 'admin' ? 'bg-blue/10 text-blue' : u.role === 'seller' ? 'bg-green/10 text-green' : 'bg-muted/15 text-muted'
+                  <span className={`badge rounded-pill text-capitalize ${
+                    u.role === 'admin' ? 'bg-label-primary text-primary' : u.role === 'seller' ? 'bg-label-success text-success' : 'bg-label-secondary text-muted'
                   }`}>
                     {u.role}
                   </span>
@@ -96,7 +96,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 </td>
                 <td className="px-5 py-3.5 text-right">
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
-                    u.verified ? 'bg-green/10 text-green' : 'bg-muted/15 text-muted'
+                    u.verified ? 'bg-label-success text-success' : 'bg-label-secondary text-muted'
                   }`}>
                     {u.verified ? 'Verified' : 'Pending'}
                   </span>
@@ -106,7 +106,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     {!u.verified && (
                       <form action={`/api/admin/users/${u.id}/verify`} method="POST">
                         <button type="submit"
-                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/10 text-green hover:bg-green/20 transition-colors">
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-success text-success hover:bg-green/20 transition-colors">
                           Verify
                         </button>
                       </form>
@@ -114,7 +114,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     {u.verified && (
                       <form action={`/api/admin/users/${u.id}/suspend`} method="POST">
                         <button type="submit"
-                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-red/10 text-red hover:bg-red/20 transition-colors">
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-danger text-danger hover:bg-red/20 transition-colors">
                           Suspend
                         </button>
                       </form>

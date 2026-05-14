@@ -29,8 +29,8 @@ export default async function SellerListingsPage() {
       </div>
 
       <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
-        <table className="w-full min-w-[640px]">
-          <thead>
+        <table className="table table-hover mb-0">
+          <thead className="table-light">
             <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               {['Drug', 'Brand / Origin', 'Price/unit', 'Qty Rem.', 'Status', 'Expires', ''].map((h, i) => (
                 <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i > 1 && h !== '' ? 'text-right' : 'text-left'}`}>{h}</th>
@@ -59,9 +59,9 @@ export default async function SellerListingsPage() {
                     {l.qty_remaining.toLocaleString()} / {l.qty_available.toLocaleString()}
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize
-                      ${l.status === 'active' ? 'bg-green/10 text-green'
-                        : l.status === 'filled' ? 'bg-blue/10 text-blue'
+                    <span className={`badge rounded-pill text-capitalize
+                      ${l.status === 'active' ? 'bg-label-success text-success'
+                        : l.status === 'filled' ? 'bg-label-primary text-primary'
                         : 'bg-muted/10 text-muted'}`}>
                       {l.status}
                     </span>

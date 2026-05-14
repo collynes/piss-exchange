@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
-
 export default async function ProfilePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -23,39 +21,42 @@ export default async function ProfilePage() {
   ]
 
   return (
-    <div className="max-w-lg">
-      <div className="mb-6">
-        <h1 className="text-lg font-bold text-text">My Profile</h1>
-        <p className="text-xs text-muted mt-0.5">Account details and verification status</p>
+    <div className="row g-4">
+      <div className="col-12">
+        <h4 className="mb-1">My Profile</h4>
+        <p className="text-muted mb-0">Account details and verification status</p>
       </div>
 
-      <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-        <div className="flex items-center justify-between px-5 py-3.5"
-          style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
-          <h2 className="text-sm font-bold text-text">Account</h2>
+      <div className="col-xl-6 col-lg-8">
+      <div className="card">
+        <div className="card-header d-flex align-items-center justify-content-between">
+          <h5 className="mb-0">Account</h5>
           {profile?.verified
-            ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/10 text-green">Verified</span>
-            : <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-muted/15 text-muted">Pending Verification</span>
+            ? <span className="badge bg-label-success text-success">Verified</span>
+            : <span className="badge bg-label-secondary text-muted">Pending Verification</span>
           }
         </div>
 
-        <table className="w-full">
+        <div className="table-responsive">
+        <table className="table mb-0">
           <tbody>
-            {rows.map(({ label, value }, i) => (
-              <tr key={label}
-                style={{ borderBottom: i < rows.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
-                <td className="px-5 py-3 text-xs text-muted uppercase tracking-wider w-1/3">{label}</td>
-                <td className="px-5 py-3 text-[13px] text-text capitalize text-right">{value}</td>
+            {rows.map(({ label, value }) => (
+              <tr key={label}>
+                <td className="text-uppercase small fw-semibold text-muted w-25">{label}</td>
+                <td className="text-end fw-medium text-heading text-capitalize">{value}</td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
+      </div>
       </div>
 
       {!profile?.verified && (
-        <div className="mt-4 px-4 py-3 rounded-xl text-xs text-muted"
-          style={{ background: 'rgba(115,103,240,.06)', border: '1px solid rgba(115,103,240,.15)' }}>
-          Your account is pending admin verification. You will receive an email when approved.
+        <div className="col-xl-6 col-lg-8">
+          <div className="alert alert-primary mb-0">
+            Your account is pending admin verification. You will receive an email when approved.
+          </div>
         </div>
       )}
     </div>

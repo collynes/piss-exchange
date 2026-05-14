@@ -4,16 +4,14 @@ import { createClient } from '@/lib/supabase/server'
 import { formatKES, formatNumber } from '@/lib/utils'
 import { Users, Package, ShoppingBag, AlertCircle, ArrowRight } from 'lucide-react'
 
-const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
-
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-orange/10 text-orange',
-  paid:      'bg-blue/10 text-blue',
-  confirmed: 'bg-blue/10 text-blue',
-  shipped:   'bg-orange/10 text-orange',
-  delivered: 'bg-green/10 text-green',
-  cancelled: 'bg-red/10 text-red',
-  disputed:  'bg-red/10 text-red',
+  pending:   'bg-label-warning text-warning',
+  paid:      'bg-label-primary text-primary',
+  confirmed: 'bg-label-primary text-primary',
+  shipped:   'bg-label-warning text-warning',
+  delivered: 'bg-label-success text-success',
+  cancelled: 'bg-label-danger text-danger',
+  disputed:  'bg-label-danger text-danger',
 }
 
 function StatCard({
@@ -23,15 +21,17 @@ function StatCard({
   Icon: React.ElementType; color: { bg: string; text: string }; alert?: boolean
 }) {
   return (
-    <div className="rounded-2xl p-5 bg-surface" style={CARD}>
-      <div className="flex items-start justify-between mb-3">
-        <div className="text-xs font-semibold text-muted uppercase tracking-wider">{label}</div>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: color.bg }}>
-          <Icon className="w-4 h-4" style={{ color: color.text }} />
+    <div className="card h-100">
+      <div className="card-body">
+        <div className="d-flex align-items-start justify-content-between mb-3">
+          <span className="small fw-semibold text-muted text-uppercase">{label}</span>
+          <span className="avatar-initial rounded bg-label-primary">
+            <Icon className="w-4 h-4" style={{ color: color.text }} />
+          </span>
         </div>
+        <h4 className={`mb-1 ${alert ? 'text-danger' : ''}`}>{value}</h4>
+        {sub && <small className="text-muted">{sub}</small>}
       </div>
-      <div className={`text-2xl font-black tabular-nums ${alert ? 'text-red' : 'text-text'}`}>{value}</div>
-      {sub && <div className="text-xs text-muted mt-1">{sub}</div>}
     </div>
   )
 }
@@ -78,32 +78,33 @@ export default async function AdminPage() {
   const totalDeals = totals?.reduce((s, r) => s + (r.deals_today ?? 0), 0) ?? 0
 
   return (
-    <div className="max-w-5xl space-y-6">
+    <div className="d-flex flex-column gap-4">
 
       {/* Page header */}
-      <div className="flex items-start justify-between">
+      <div className="d-flex align-items-start justify-content-between">
         <div>
-          <h1 className="text-lg font-bold text-text">Admin Overview</h1>
-          <p className="text-xs text-muted mt-0.5">Platform management and monitoring</p>
+          <h4 className="mb-1">Admin Overview</h4>
+          <p className="text-muted mb-0">Platform management and monitoring</p>
         </div>
         {/* Today's trading — inline, no card */}
-        <div className="text-right hidden sm:block">
-          <div className="text-[10px] font-semibold text-muted uppercase tracking-widest">Today</div>
-          <div className="flex items-center gap-4 mt-1">
+        <div className="text-end d-none d-sm-block">
+          <div className="small fw-semibold text-muted text-uppercase">Today</div>
+          <div className="d-flex align-items-center gap-4 mt-1">
             <div>
-              <span className="text-xs text-muted">Deals </span>
-              <span className="text-sm font-bold text-text tabular-nums">{formatNumber(totalDeals)}</span>
+              <span className="small text-muted">Deals </span>
+              <span className="fw-bold text-heading">{formatNumber(totalDeals)}</span>
             </div>
             <div>
-              <span className="text-xs text-muted">Turnover </span>
-              <span className="text-sm font-bold text-green tabular-nums">{formatKES(totalTurnover)}</span>
+              <span className="small text-muted">Turnover </span>
+              <span className="fw-bold text-success">{formatKES(totalTurnover)}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="row g-4">
+        <div className="col-6 col-md-3">
         <StatCard
           label="Total Users"
           value={formatNumber(userCount ?? 0)}
@@ -111,6 +112,8 @@ export default async function AdminPage() {
           Icon={Users}
           color={{ bg: 'rgba(115,103,240,.15)', text: '#7367f0' }}
         />
+        </div>
+        <div className="col-6 col-md-3">
         <StatCard
           label="Pending KYC"
           value={formatNumber(pendingCount ?? 0)}
@@ -119,6 +122,8 @@ export default async function AdminPage() {
           color={{ bg: 'rgba(234,84,85,.12)', text: '#ea5455' }}
           alert={(pendingCount ?? 0) > 0}
         />
+        </div>
+        <div className="col-6 col-md-3">
         <StatCard
           label="Active Listings"
           value={formatNumber(listingCount ?? 0)}
@@ -126,6 +131,8 @@ export default async function AdminPage() {
           Icon={Package}
           color={{ bg: 'rgba(40,199,111,.15)', text: '#28c76f' }}
         />
+        </div>
+        <div className="col-6 col-md-3">
         <StatCard
           label="Total Orders"
           value={formatNumber(orderCount ?? 0)}
@@ -133,52 +140,52 @@ export default async function AdminPage() {
           Icon={ShoppingBag}
           color={{ bg: 'rgba(124,58,237,0.15)', text: '#a78bfa' }}
         />
+        </div>
       </div>
 
       {/* Tables row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="row g-4">
 
         {/* Pending verifications */}
-        <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-          <div className="flex items-center justify-between px-5 py-3.5"
-            style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-text">Pending Verification</h2>
+        <div className="col-lg-6">
+        <div className="card">
+          <div className="card-header d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center gap-2">
+              <h5 className="mb-0">Pending Verification</h5>
               {(pendingCount ?? 0) > 0 && (
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red/10 text-red">{pendingCount}</span>
+                <span className="badge rounded-pill bg-label-danger text-danger">{pendingCount}</span>
               )}
             </div>
-            <Link href="/admin/users" className="text-xs text-blue flex items-center gap-1 hover:underline">
+            <Link href="/admin/users" className="btn btn-sm btn-text-primary d-inline-flex align-items-center gap-1">
               All users <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <table className="w-full">
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
-                <th className="px-5 py-2.5 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Organisation</th>
-                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Role</th>
-                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider"></th>
+          <div className="table-responsive">
+          <table className="table table-hover mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>Organisation</th>
+                <th className="text-end">Role</th>
+                <th />
               </tr>
             </thead>
             <tbody>
               {(pendingUsers ?? []).length === 0 && (
-                <tr><td colSpan={3} className="px-5 py-8 text-center text-muted text-sm">No pending verifications</td></tr>
+                <tr><td colSpan={3} className="p-5 text-center text-muted">No pending verifications</td></tr>
               )}
               {(pendingUsers ?? []).map((u, i) => (
-                <tr key={u.id}
-                  className="hover:bg-surface2 transition-colors"
-                  style={{ borderBottom: i < (pendingUsers?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
-                  <td className="px-5 py-3">
-                    <div className="text-[13px] font-semibold text-text">{u.org_name}</div>
-                    <div className="text-xs text-muted">{u.license_no ?? 'No license on file'}</div>
+                <tr key={u.id}>
+                  <td>
+                    <div className="fw-semibold text-heading">{u.org_name}</div>
+                    <small className="text-muted">{u.license_no ?? 'No license on file'}</small>
                   </td>
-                  <td className="px-5 py-3 text-right">
-                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-muted/15 text-muted capitalize">{u.role}</span>
+                  <td className="text-end">
+                    <span className="badge rounded-pill bg-label-secondary text-muted text-capitalize">{u.role}</span>
                   </td>
-                  <td className="px-5 py-3 text-right">
+                  <td className="text-end">
                     <form action={`/api/admin/users/${u.id}/verify`} method="POST" className="inline">
                       <button type="submit"
-                        className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-green/10 text-green hover:bg-green/20 transition-colors">
+                        className="btn btn-sm btn-primary">
                         Verify
                       </button>
                     </form>
@@ -187,46 +194,47 @@ export default async function AdminPage() {
               ))}
             </tbody>
           </table>
+          </div>
+        </div>
         </div>
 
         {/* Recent orders */}
-        <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-          <div className="flex items-center justify-between px-5 py-3.5"
-            style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
-            <h2 className="text-sm font-bold text-text">Recent Orders</h2>
-            <Link href="/admin/orders" className="text-xs text-blue flex items-center gap-1 hover:underline">
+        <div className="col-lg-6">
+        <div className="card">
+          <div className="card-header d-flex align-items-center justify-content-between">
+            <h5 className="mb-0">Recent Orders</h5>
+            <Link href="/admin/orders" className="btn btn-sm btn-text-primary d-inline-flex align-items-center gap-1">
               All orders <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <table className="w-full">
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
-                <th className="px-5 py-2.5 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Drug</th>
-                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Total</th>
-                <th className="px-5 py-2.5 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Status</th>
+          <div className="table-responsive">
+          <table className="table table-hover mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>Drug</th>
+                <th className="text-end">Total</th>
+                <th className="text-end">Status</th>
               </tr>
             </thead>
             <tbody>
               {(recentOrders ?? []).length === 0 && (
-                <tr><td colSpan={3} className="px-5 py-8 text-center text-muted text-sm">No orders yet</td></tr>
+                <tr><td colSpan={3} className="p-5 text-center text-muted">No orders yet</td></tr>
               )}
               {(recentOrders ?? []).map((order, i) => {
                 const drug = order.drugs as { generic_name: string } | null
                 return (
-                  <tr key={order.id}
-                    className="hover:bg-surface2 transition-colors"
-                    style={{ borderBottom: i < (recentOrders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
-                    <td className="px-5 py-3">
-                      <Link href={`/orders/${order.id}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
+                  <tr key={order.id}>
+                    <td>
+                      <Link href={`/orders/${order.id}`} className="fw-semibold text-heading">
                         {drug?.generic_name ?? '—'}
                       </Link>
-                      <div className="text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</div>
+                      <small className="d-block text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</small>
                     </td>
-                    <td className="px-5 py-3 text-right text-[13px] font-bold text-text tabular-nums">
+                    <td className="text-end fw-bold">
                       {formatKES(Number(order.total_amount))}
                     </td>
-                    <td className="px-5 py-3 text-right">
-                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
+                    <td className="text-end">
+                      <span className={`badge rounded-pill text-capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
                         {order.status}
                       </span>
                     </td>
@@ -235,46 +243,45 @@ export default async function AdminPage() {
               })}
             </tbody>
           </table>
+          </div>
+        </div>
         </div>
 
       </div>
 
       {/* Recent trades */}
-      <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-        <div className="flex items-center justify-between px-5 py-3.5"
-          style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
-          <h2 className="text-sm font-bold text-text">Recent Trades</h2>
-          <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
-            <span className="text-xs text-muted">Live</span>
+      <div className="card">
+        <div className="card-header d-flex align-items-center justify-content-between">
+          <h5 className="mb-0">Recent Trades</h5>
+          <div className="d-flex align-items-center gap-2">
+            <span className="badge badge-dot bg-success" />
+            <small className="text-muted">Live</small>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[500px]">
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(47,43,61,.06)' }}>
+        <div className="table-responsive">
+          <table className="table table-hover mb-0">
+            <thead className="table-light">
+              <tr>
                 {['Drug', 'Qty', 'Price/unit', 'Total', 'Time'].map((h, i) => (
-                  <th key={i} className={`px-5 py-2.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                  <th key={i} className={i === 0 ? '' : 'text-end'}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {(recentTrades ?? []).length === 0 && (
-                <tr><td colSpan={5} className="px-5 py-8 text-center text-muted text-sm">No trades yet</td></tr>
+                <tr><td colSpan={5} className="p-5 text-center text-muted">No trades yet</td></tr>
               )}
               {(recentTrades ?? []).map((trade, i) => {
                 const drug = trade.drugs as { generic_name: string } | null
                 return (
-                  <tr key={trade.id}
-                    className="hover:bg-surface2 transition-colors"
-                    style={{ borderBottom: i < (recentTrades?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
-                    <td className="px-5 py-3 text-[13px] font-semibold text-text">{drug?.generic_name ?? '—'}</td>
-                    <td className="px-5 py-3 text-right text-[13px] text-text tabular-nums">{trade.qty.toLocaleString()}</td>
-                    <td className="px-5 py-3 text-right text-[13px] text-text tabular-nums">{Number(trade.price_per_unit).toFixed(2)}</td>
-                    <td className="px-5 py-3 text-right text-[13px] font-bold text-green tabular-nums">
+                  <tr key={trade.id}>
+                    <td className="fw-semibold text-heading">{drug?.generic_name ?? '—'}</td>
+                    <td className="text-end">{trade.qty.toLocaleString()}</td>
+                    <td className="text-end">{Number(trade.price_per_unit).toFixed(2)}</td>
+                    <td className="text-end fw-bold text-success">
                       {formatKES(trade.qty * Number(trade.price_per_unit))}
                     </td>
-                    <td className="px-5 py-3 text-right text-xs text-muted">
+                    <td className="text-end text-muted">
                       {new Date(trade.executed_at as string).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
