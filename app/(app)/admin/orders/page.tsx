@@ -7,13 +7,13 @@ import { ArrowRight } from 'lucide-react'
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-orange/10 text-orange',
-  paid:      'bg-blue/10 text-blue',
-  confirmed: 'bg-blue/10 text-blue',
-  shipped:   'bg-orange/10 text-orange',
-  delivered: 'bg-green/10 text-green',
-  cancelled: 'bg-red/10 text-red',
-  disputed:  'bg-red/10 text-red',
+  pending:   'bg-label-warning text-warning',
+  paid:      'bg-label-primary text-primary',
+  confirmed: 'bg-label-primary text-primary',
+  shipped:   'bg-label-warning text-warning',
+  delivered: 'bg-label-success text-success',
+  cancelled: 'bg-label-danger text-danger',
+  disputed:  'bg-label-danger text-danger',
 }
 
 export default async function AdminOrdersPage() {
@@ -43,8 +43,8 @@ export default async function AdminOrdersPage() {
       </div>
 
       <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
-        <table className="w-full min-w-[700px]">
-          <thead>
+        <table className="table table-hover mb-0">
+          <thead className="table-light">
             <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
               {['Drug', 'Buyer', 'Seller', 'Qty', 'Total', 'Status', 'Escrow', 'Date', ''].map((h, i) => (
                 <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i < 3 ? 'text-left' : 'text-right'}`}>{h}</th>
@@ -69,7 +69,7 @@ export default async function AdminOrdersPage() {
                   <td className="px-5 py-3.5 text-right text-[13px] text-text tabular-nums">{order.qty.toLocaleString()}</td>
                   <td className="px-5 py-3.5 text-right text-[13px] font-bold text-text tabular-nums">{formatKES(Number(order.total_amount))}</td>
                   <td className="px-5 py-3.5 text-right">
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
+                    <span className={`badge rounded-pill text-capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
                       {order.status}
                     </span>
                   </td>

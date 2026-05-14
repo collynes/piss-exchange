@@ -6,13 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 
 type Role = 'buyer' | 'seller'
 
-const GLASS = {
-  background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-  boxShadow: '0 32px 80px -16px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.07)',
-} as const
-
-const INPUT_CLASS = 'w-full bg-bg/80 rounded-lg px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
-const INPUT_STYLE = { border: '1px solid rgba(255,255,255,0.08)' }
+const INPUT_CLASS = 'form-control'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -57,64 +51,55 @@ export default function RegisterPage() {
   }
 
   if (step === 1) return (
-    <div className="rounded-2xl overflow-hidden" style={GLASS}>
-      <div className="px-8 py-6 bg-surface2/50 border-b border-white/5">
-        <h1 className="text-text font-bold text-xl">Join the Exchange</h1>
-        <p className="text-muted text-sm mt-1">Choose your role to get started</p>
-      </div>
-      <div className="px-8 py-6 space-y-3">
+    <div className="card">
+      <div className="card-body">
+        <h4 className="mb-1">Join the Exchange</h4>
+        <p className="text-muted mb-6">Choose your role to get started</p>
         {(['seller', 'buyer'] as Role[]).map(r => (
           <button key={r} onClick={() => handleRoleSelect(r)}
-            className="w-full flex items-center justify-between px-5 py-4 rounded-xl transition-all text-left group hover:scale-[1.01] active:scale-[0.99]"
-            style={{
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.border = '1px solid rgba(41,98,255,0.4)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(41,98,255,0.06)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.border = '1px solid rgba(255,255,255,0.08)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.03)' }}>
+            className="list-group-item list-group-item-action d-flex align-items-center justify-content-between text-start mb-3 rounded border">
             <div>
-              <div className="text-text font-semibold text-sm">
+              <div className="fw-semibold text-heading">
                 {r === 'seller' ? 'Join as a Seller' : 'Join as a Buyer'}
               </div>
-              <div className="text-muted text-xs mt-1">
+              <small className="text-muted">
                 {r === 'seller'
                   ? 'Manufacturer, importer or primary distributor'
                   : 'Pharmacy, hospital or secondary distributor'}
-              </div>
+              </small>
             </div>
-            <span className="text-muted group-hover:text-blue transition-colors text-lg">→</span>
+            <i className="bx bx-chevron-right bx-sm text-muted" />
           </button>
         ))}
-        <p className="text-center text-muted text-sm pt-2">
+        <p className="text-center mb-0 mt-5">
           Already have an account?{' '}
-          <Link href="/login" className="text-blue hover:underline">Log in</Link>
+          <Link href="/login">Log in</Link>
         </p>
       </div>
     </div>
   )
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={GLASS}>
-      <div className="px-8 py-6 bg-surface2/50 border-b border-white/5">
-        <button onClick={() => setStep(1)} className="text-muted text-xs mb-3 hover:text-text flex items-center gap-1 transition-colors">
-          ← Back
+    <div className="card">
+      <div className="card-body">
+        <button onClick={() => setStep(1)} className="btn btn-sm btn-text-secondary mb-3">
+          <i className="bx bx-chevron-left me-1" />
+          Back
         </button>
-        <h1 className="text-text font-bold text-xl">
+        <h4 className="mb-1">
           {role === 'seller' ? 'Register as Seller' : 'Register as Buyer'}
-        </h1>
-        <p className="text-muted text-sm mt-1">
+        </h4>
+        <p className="text-muted mb-6">
           {role === 'seller'
             ? 'For manufacturers, importers & distributors · PPB Kenya'
             : 'For pharmacies, hospitals & healthcare facilities'}
         </p>
-      </div>
-      <div className="px-8 py-6">
         {error && (
-          <div className="bg-red/8 rounded-xl px-4 py-3 text-red text-sm mb-5" style={{ border: '1px solid rgba(242,54,69,0.2)' }}>
+          <div className="alert alert-danger mb-4">
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit}>
           {[
             { key: 'org_name', label: 'Organisation Name', placeholder: role === 'seller' ? 'e.g. ABC Pharma Ltd' : 'e.g. Nairobi General Hospital', required: true },
             { key: 'email', label: 'Email', placeholder: 'you@company.com', type: 'email', required: true },
@@ -122,9 +107,9 @@ export default function RegisterPage() {
             { key: 'phone', label: 'Phone', placeholder: '+254700000000', required: false },
             ...(role === 'seller' ? [{ key: 'license_no', label: 'PPB License No.', placeholder: 'e.g. PPB/MNF/2024/001', required: false }] : []),
           ].map(({ key, label, placeholder, type = 'text', required }) => (
-            <div key={key}>
-              <label className="block text-xs text-muted uppercase tracking-wider mb-2">
-                {label} {required && <span className="text-red">*</span>}
+            <div key={key} className="mb-4">
+              <label className="form-label">
+                {label} {required && <span className="text-danger">*</span>}
               </label>
               <input
                 type={type}
@@ -133,17 +118,15 @@ export default function RegisterPage() {
                 value={form[key as keyof typeof form]}
                 onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                 className={INPUT_CLASS}
-                style={INPUT_STYLE}
               />
             </div>
           ))}
           <button type="submit" disabled={loading}
-            className="w-full font-bold py-3 rounded-xl text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40 mt-1"
-            style={{ background: 'linear-gradient(135deg, #2962ff, #1a47c8)', boxShadow: '0 0 20px rgba(41,98,255,0.3)' }}>
+            className="btn btn-primary d-grid w-100">
             {loading ? 'Creating account…' : 'Create Account'}
           </button>
         </form>
-        <p className="text-muted text-xs text-center mt-4">
+        <p className="text-muted small text-center mt-4 mb-0">
           Your account will be reviewed before you can trade.
         </p>
       </div>

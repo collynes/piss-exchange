@@ -1,15 +1,11 @@
+import { SneatLogo } from '@/components/layout/SneatLogo'
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4" style={{ backgroundImage: 'radial-gradient(ellipse at 50% 0%, rgba(41,98,255,0.08) 0%, transparent 60%)' }}>
-      <div className="w-full max-w-md">
-        <div className="flex items-center gap-2.5 mb-10 justify-center">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-text font-black text-sm shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #2962ff, #089981)' }}>
-            DH
-          </div>
-          <span className="text-text font-bold text-lg tracking-tight">
-            PISS<span className="text-blue">.</span>Exchange
-          </span>
+    <div className="authentication-wrapper authentication-basic container-p-y">
+      <div className="authentication-inner">
+        <div className="app-brand justify-content-center mb-6">
+          <SneatLogo href="/" />
         </div>
         {children}
       </div>

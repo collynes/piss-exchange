@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { Ticker } from '@/components/layout/Ticker'
+import { PublicNav } from '@/components/layout/PublicNav'
 
 export default async function LandingPage() {
   const supabase = await createClient()
@@ -26,7 +28,10 @@ export default async function LandingPage() {
   })).filter(r => r.generic_name)
 
   return (
-    <div className="min-h-screen bg-bg overflow-x-hidden">
+    <div className="public-theme">
+      <Ticker />
+      <PublicNav />
+      <main className="min-h-screen bg-bg overflow-x-hidden">
 
       {/* ── HERO ──────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden">
@@ -356,6 +361,7 @@ export default async function LandingPage() {
         </div>
       </footer>
 
+      </main>
     </div>
   )
 }

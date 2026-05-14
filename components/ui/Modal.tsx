@@ -21,14 +21,16 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className={cn('relative bg-surface border border-border2 rounded w-full max-w-md', className)}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-          <h2 className="text-text font-semibold text-sm">{title}</h2>
-          <button onClick={onClose} className="text-muted hover:text-text transition-colors text-lg leading-none">×</button>
+    <div className="modal fade show d-block" tabIndex={-1}>
+      <div className="modal-backdrop fade show" onClick={onClose} />
+      <div className="modal-dialog modal-dialog-centered">
+      <div className={cn('modal-content bg-white text-body', className)}>
+        <div className="modal-header">
+          <h5 className="modal-title">{title}</h5>
+          <button type="button" onClick={onClose} className="btn-close" aria-label="Close" />
         </div>
-        <div className="p-5">{children}</div>
+        <div className="modal-body">{children}</div>
+      </div>
       </div>
     </div>
   )

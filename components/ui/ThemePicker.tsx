@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react'
 type Theme = 'light' | 'dark'
 
 export function ThemePicker({ className = '' }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>('dark')
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'dark'
+    return (localStorage.getItem('theme') as Theme) ?? 'dark'
+  })
 
   useEffect(() => {
-    const stored = (localStorage.getItem('theme') as Theme) ?? 'dark'
-    setTheme(stored)
     if (!localStorage.getItem('theme')) {
       document.documentElement.removeAttribute('data-theme')
     }

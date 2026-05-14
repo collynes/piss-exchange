@@ -79,7 +79,7 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
         )}
       </div>
 
-      {buyAsk && <BuyModal ask={buyAsk} drugId={drugId} drugName={drugName} onClose={() => setBuyAsk(null)} />}
+      {buyAsk && <BuyModal ask={buyAsk} drugName={drugName} onClose={() => setBuyAsk(null)} />}
       {showBidModal && <BidModal drugId={drugId} drugName={drugName} onClose={() => setShowBidModal(false)} />}
     </>
   )

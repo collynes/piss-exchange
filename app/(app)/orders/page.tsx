@@ -5,18 +5,14 @@ import { formatKES } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-orange/10 text-orange',
-  paid:      'bg-blue/10 text-blue',
-  confirmed: 'bg-blue/10 text-blue',
-  shipped:   'bg-orange/10 text-orange',
-  delivered: 'bg-green/10 text-green',
-  cancelled: 'bg-red/10 text-red',
-  disputed:  'bg-red/10 text-red',
+  pending:   'bg-label-warning text-warning',
+  paid:      'bg-label-primary text-primary',
+  confirmed: 'bg-label-info text-info',
+  shipped:   'bg-label-warning text-warning',
+  delivered: 'bg-label-success text-success',
+  cancelled: 'bg-label-danger text-danger',
+  disputed:  'bg-label-danger text-danger',
 }
-
-const CARD = {
-  boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)',
-} as const
 
 export default async function OrdersPage() {
   const supabase = await createClient()
@@ -30,18 +26,19 @@ export default async function OrdersPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="max-w-5xl">
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-lg font-bold text-text">My Orders</h1>
-        <span className="text-xs text-muted">{orders?.length ?? 0} orders</span>
+    <div>
+      <div className="d-flex align-items-center justify-content-between mb-4">
+        <h4 className="mb-0">My Orders</h4>
+        <span className="badge bg-label-secondary">{orders?.length ?? 0} orders</span>
       </div>
 
-      <div className="rounded-2xl overflow-x-auto bg-surface" style={CARD}>
-        <table className="w-full min-w-[640px]">
-          <thead>
-            <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
+      <div className="card">
+        <div className="table-responsive text-nowrap">
+        <table className="table table-hover mb-0">
+          <thead className="table-light">
+            <tr>
               {['Drug', 'Qty', 'Price/unit', 'Total', 'Status', 'Escrow', 'Date', ''].map((h, i) => (
-                <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                <th key={i} className={i === 0 ? '' : 'text-end'}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -50,25 +47,24 @@ export default async function OrdersPage() {
               const drug = order.drugs as { generic_name: string; slug: string } | null
               return (
                 <tr key={order.id}
-                  className="hover:bg-surface2 transition-colors"
-                  style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
-                  <td className="px-5 py-3.5">
-                    <Link href={`/drug/${drug?.slug}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
+                  className="cursor-pointer">
+                  <td>
+                    <Link href={`/drug/${drug?.slug}`} className="fw-semibold text-heading">
                       {drug?.generic_name ?? '—'}
                     </Link>
                   </td>
-                  <td className="px-5 py-3.5 text-right text-[13px] text-text tabular-nums">{order.qty.toLocaleString()}</td>
-                  <td className="px-5 py-3.5 text-right text-[13px] text-text tabular-nums">{Number(order.price_per_unit).toFixed(2)}</td>
-                  <td className="px-5 py-3.5 text-right text-[13px] font-bold text-text tabular-nums">{formatKES(Number(order.total_amount))}</td>
-                  <td className="px-5 py-3.5 text-right">
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
+                  <td className="text-end">{order.qty.toLocaleString()}</td>
+                  <td className="text-end">{Number(order.price_per_unit).toFixed(2)}</td>
+                  <td className="text-end fw-bold">{formatKES(Number(order.total_amount))}</td>
+                  <td className="text-end">
+                    <span className={`badge rounded-pill text-capitalize ${STATUS_COLOR[order.status] ?? 'bg-label-secondary'}`}>
                       {order.status}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right text-xs text-muted capitalize">{order.escrow_status}</td>
-                  <td className="px-5 py-3.5 text-right text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</td>
-                  <td className="px-5 py-3.5 text-right">
-                    <Link href={`/orders/${order.id}`} className="text-muted hover:text-text transition-colors inline-flex">
+                  <td className="text-end text-muted text-capitalize">{order.escrow_status}</td>
+                  <td className="text-end text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</td>
+                  <td className="text-end">
+                    <Link href={`/orders/${order.id}`} className="btn btn-sm btn-icon btn-text-secondary rounded-pill">
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </td>
@@ -76,12 +72,13 @@ export default async function OrdersPage() {
               )
             })}
             {(orders ?? []).length === 0 && (
-              <tr><td colSpan={8} className="px-5 py-10 text-center text-muted text-sm">
+              <tr><td colSpan={8} className="p-5 text-center text-muted">
                 No orders yet. <Link href="/market" className="text-blue hover:underline">Browse the market →</Link>
               </td></tr>
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

@@ -2,16 +2,16 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
-import { Package, Inbox, DollarSign, TrendingUp, Plus, ArrowRight } from 'lucide-react'
+import { Package, Inbox, DollarSign, Plus, ArrowRight } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
-  pending:   'bg-orange/10 text-orange',
-  paid:      'bg-blue/10 text-blue',
-  confirmed: 'bg-blue/10 text-blue',
-  shipped:   'bg-orange/10 text-orange',
-  delivered: 'bg-green/10 text-green',
-  cancelled: 'bg-red/10 text-red',
-  disputed:  'bg-red/10 text-red',
+  pending:   'bg-label-warning text-warning',
+  paid:      'bg-label-primary text-primary',
+  confirmed: 'bg-label-primary text-primary',
+  shipped:   'bg-label-warning text-warning',
+  delivered: 'bg-label-success text-success',
+  cancelled: 'bg-label-danger text-danger',
+  disputed:  'bg-label-danger text-danger',
 }
 
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
@@ -75,12 +75,12 @@ export default async function SellerDashboardPage() {
             <div className="text-xl font-black text-text">{profile?.org_name}</div>
             {profile?.verified
               ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green/15 text-green">Verified</span>
-              : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-muted/15 text-muted">Pending Review</span>
+              : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-label-secondary text-muted">Pending Review</span>
             }
           </div>
           <div className="text-sm text-muted">Seller Dashboard</div>
           {!profile?.verified && (
-            <div className="text-xs text-muted/70 mt-1">Account pending verification — listing will be enabled once approved.</div>
+            <div className="text-xs text-muted mt-1">Account pending verification — listing will be enabled once approved.</div>
           )}
         </div>
         <Link href="/seller/listings/new"
@@ -127,8 +127,8 @@ export default async function SellerDashboardPage() {
             </Link>
           </div>
           <div className="rounded-2xl overflow-hidden bg-surface" style={CARD}>
-            <table className="w-full">
-              <thead>
+            <table className="table table-hover mb-0">
+              <thead className="table-light">
                 <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
                   <th className="px-5 py-3 text-left text-[11px] font-bold text-muted uppercase tracking-wider">Drug</th>
                   <th className="px-5 py-3 text-right text-[11px] font-bold text-muted uppercase tracking-wider">Total</th>
@@ -154,7 +154,7 @@ export default async function SellerDashboardPage() {
                         {formatKES(Number(order.total_amount))}
                       </td>
                       <td className="px-5 py-3 text-right">
-                        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
+                        <span className={`badge rounded-pill text-capitalize ${STATUS_COLOR[order.status] ?? 'text-muted'}`}>
                           {order.status}
                         </span>
                       </td>
@@ -188,8 +188,7 @@ export default async function SellerDashboardPage() {
               <div className="px-5 py-6 text-center">
                 <div className="text-muted text-xs mb-3">No active listings</div>
                 <Link href="/seller/listings/new"
-                  className="text-xs font-bold text-white px-3 py-1.5 rounded-lg inline-flex items-center gap-1"
-                  style={{ background: 'linear-gradient(135deg, #28c76f, #20a85a)' }}>
+                  className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1">
                   <Plus className="w-3 h-3" /> List a Drug
                 </Link>
               </div>
@@ -233,7 +232,7 @@ export default async function SellerDashboardPage() {
         <h2 className="text-sm font-bold text-text mb-3">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
-            { href: '/seller/listings/new', label: 'List a Drug', desc: 'Add stock to the exchange', Icon: Plus, color: '#28c76f' },
+            { href: '/seller/listings/new', label: 'List a Drug', desc: 'Add stock to the exchange', Icon: Plus, color: '#7367f0' },
             { href: '/seller/listings', label: 'My Listings', desc: 'Manage active listings', Icon: Package, color: '#7367f0' },
             { href: '/seller/orders', label: 'Incoming Orders', desc: 'Confirm and ship', Icon: Inbox, color: '#7c3aed' },
           ].map(({ href, label, desc, Icon, color }) => (

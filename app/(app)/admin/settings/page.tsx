@@ -60,7 +60,7 @@ export default function AdminSettingsPage() {
                 <div className="text-sm font-semibold text-text">{meta?.label ?? setting.key}</div>
                 <div className="text-xs text-muted mt-0.5">{meta?.desc}</div>
                 {setting.updated_at && (
-                  <div className="text-xs text-muted/40 mt-1">Updated: {new Date(setting.updated_at).toLocaleString('en-KE')}</div>
+                  <div className="text-xs text-muted mt-1">Updated: {new Date(setting.updated_at).toLocaleString('en-KE')}</div>
                 )}
               </div>
               <button

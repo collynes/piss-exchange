@@ -13,16 +13,20 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div data-theme="light">
-      <Nav />
-      <div className="flex" style={{ height: 'calc(100vh - 64px)' }}>
+    <div className="layout-wrapper layout-content-navbar">
+      <div className="layout-container">
         <AppSidebar role={role} />
-        <main className="flex-1 overflow-auto bg-bg">
-          <div className="px-6 py-6">
-            {children}
+        <div className="layout-page">
+          <Nav />
+          <div className="content-wrapper">
+            <main className="container-xxl flex-grow-1 container-p-y">
+              {children}
+            </main>
+            <div className="content-backdrop fade" />
           </div>
-        </main>
+        </div>
       </div>
+      <div className="layout-overlay layout-menu-toggle" />
     </div>
   )
 }

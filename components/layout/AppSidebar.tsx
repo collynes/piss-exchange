@@ -1,44 +1,35 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  LayoutDashboard, TrendingUp, ShoppingBag, Package, Inbox,
-  User, Shield, List, Settings,
-} from 'lucide-react'
+import { SneatLogo } from '@/components/layout/SneatLogo'
 
 interface AppSidebarProps {
   role: string | null
 }
 
-function NavItem({ href, label, icon: Icon, exact = false }: {
-  href: string; label: string; icon: React.ElementType; exact?: boolean
+function NavItem({ href, label, icon, exact = false }: {
+  href: string
+  label: string
+  icon: string
+  exact?: boolean
 }) {
   const pathname = usePathname()
   const active = exact ? pathname === href : pathname.startsWith(href)
   return (
-    <Link href={href}
-      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all mx-2 ${
-        active
-          ? 'text-blue font-semibold'
-          : 'text-muted hover:text-text'
-      }`}
-      style={active ? { background: 'rgba(115,103,240,.12)' } : {}}>
-      <Icon className={`w-[18px] h-[18px] shrink-0 ${active ? 'text-blue' : 'text-muted'}`} />
-      <span>{label}</span>
-      {active && (
-        <span className="ml-auto w-2 h-2 rounded-full bg-blue flex-shrink-0" />
-      )}
-    </Link>
+    <li className={`menu-item${active ? ' active' : ''}`}>
+      <Link href={href} className="menu-link">
+        <i className={`menu-icon tf-icons bx ${icon}`} />
+        <div className="text-truncate">{label}</div>
+      </Link>
+    </li>
   )
 }
 
-function SectionLabel({ label }: { label: string }) {
+function MenuHeader({ label }: { label: string }) {
   return (
-    <div className="px-5 pt-5 pb-1">
-      <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'rgba(47,43,61,.4)' }}>
-        {label}
-      </span>
-    </div>
+    <li className="menu-header small text-uppercase">
+      <span className="menu-header-text">{label}</span>
+    </li>
   )
 }
 
@@ -47,54 +38,48 @@ export function AppSidebar({ role }: AppSidebarProps) {
   const isAdmin = role === 'admin'
 
   return (
-    <aside className="hidden md:flex w-[260px] flex-shrink-0 flex-col bg-surface overflow-y-auto"
-      style={{ borderRight: '1px solid rgba(47,43,61,.1)' }}>
-
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 h-16 flex-shrink-0"
-        style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black text-[11px]"
-          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
-          DH
-        </div>
-        <span className="font-bold text-[15px] text-text tracking-tight">
-          PISS<span className="text-blue">.</span>Exchange
-        </span>
+    <aside id="layout-menu" className="layout-menu menu-vertical menu bg-menu-theme">
+      <div className="app-brand demo">
+        <SneatLogo />
+        <button type="button" className="layout-menu-toggle menu-link text-large ms-auto border-0 bg-transparent">
+          <i className="bx bx-chevron-left d-block d-xl-none align-middle" />
+        </button>
       </div>
 
-      <div className="flex-1 py-3 space-y-0.5">
-        <SectionLabel label="Main" />
-        <NavItem href="/dashboard" label="Dashboard" icon={LayoutDashboard} exact />
-        <NavItem href="/market" label="Market Board" icon={TrendingUp} />
+      <div className="menu-divider mt-0" />
+      <div className="menu-inner-shadow" />
+
+      <ul className="menu-inner py-1">
+        <MenuHeader label="Main" />
+        <NavItem href="/dashboard" label="Dashboard" icon="bx-home-smile" exact />
+        <NavItem href="/market" label="Market Board" icon="bx-line-chart" />
 
         {!isAdmin && (
           <>
-            <SectionLabel label="Trading" />
-            <NavItem href="/orders" label="My Orders" icon={ShoppingBag} />
-            {isSeller && <NavItem href="/seller/listings" label="My Listings" icon={Package} />}
-            {isSeller && <NavItem href="/seller/orders" label="Incoming Orders" icon={Inbox} />}
+            <MenuHeader label="Trading" />
+            <NavItem href="/orders" label="My Orders" icon="bx-cart" />
+            {isSeller && <NavItem href="/seller/listings" label="My Listings" icon="bx-package" />}
+            {isSeller && <NavItem href="/seller/orders" label="Incoming Orders" icon="bx-inbox" />}
           </>
         )}
 
-        <SectionLabel label="Account" />
-        <NavItem href="/profile" label="Profile" icon={User} exact />
+        <MenuHeader label="Account" />
+        <NavItem href="/profile" label="Profile" icon="bx-user" exact />
 
         {isAdmin && (
           <>
-            <SectionLabel label="Administration" />
-            <NavItem href="/admin" label="Overview" icon={Shield} exact />
-            <NavItem href="/admin/users" label="Users" icon={List} />
-            <NavItem href="/admin/drugs" label="Drug Catalogue" icon={Package} />
-            <NavItem href="/admin/orders" label="All Orders" icon={ShoppingBag} />
-            <NavItem href="/admin/settings" label="Settings" icon={Settings} />
+            <MenuHeader label="Administration" />
+            <NavItem href="/admin" label="Overview" icon="bx-shield-quarter" exact />
+            <NavItem href="/admin/users" label="Users" icon="bx-group" />
+            <NavItem href="/admin/drugs" label="Drug Catalogue" icon="bx-capsule" />
+            <NavItem href="/admin/orders" label="All Orders" icon="bx-receipt" />
+            <NavItem href="/admin/settings" label="Settings" icon="bx-cog" />
           </>
         )}
-      </div>
 
-      {/* Footer */}
-      <div className="px-5 py-3 flex-shrink-0" style={{ borderTop: '1px solid rgba(47,43,61,.08)' }}>
-        <div className="text-[11px] text-muted">PISS Exchange v1.0</div>
-      </div>
+        <MenuHeader label="Exchange" />
+        <NavItem href="/" label="Public Home" icon="bx-globe" exact />
+      </ul>
     </aside>
   )
 }

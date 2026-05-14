@@ -85,36 +85,37 @@ export default async function MarketPage({ searchParams }: PageProps) {
   )).sort()]
 
   return (
-    <div className="flex h-[calc(100vh-68px)]">
+    <div className="row g-4">
       {/* Sidebar — desktop only */}
-      <div className="hidden md:block w-48 flex-shrink-0">
+      <div className="col-xl-3 col-lg-4 d-none d-lg-block">
         <Suspense>
           <DrugSidebar drugs={sidebarDrugs} categories={CATEGORIES} />
         </Suspense>
       </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+      <div className="col-xl-9 col-lg-8">
+        <div className="card">
         {/* Mobile category strip */}
-        <div className="md:hidden flex items-center gap-1.5 px-3 py-2 overflow-x-auto scrollbar-hide">
+        <div className="d-lg-none card-body border-bottom d-flex align-items-center gap-2 overflow-auto">
           {CATEGORIES.map(c => (
             <a key={c}
               href={c === 'All' ? '/market' : `/market?cat=${c}`}
-              className={`whitespace-nowrap px-3 py-1 text-xs rounded-full border transition-colors flex-shrink-0
+              className={`btn btn-sm flex-shrink-0
                 ${(cat ?? 'All') === c
-                  ? 'bg-blue text-white border-blue'
-                  : 'border-border text-muted hover:text-text'}`}>
+                  ? 'btn-primary'
+                  : 'btn-outline-secondary'}`}>
               {c}
             </a>
           ))}
         </div>
 
         {/* Toolbar */}
-        <div className="px-3 md:px-5 py-2.5 flex items-center justify-between flex-shrink-0 gap-2">
-          <div className="min-w-0">
-            <div className="text-sm font-semibold text-text">Market Board</div>
-            <div className="text-xs text-muted hidden sm:block">{drugs?.length ?? 0} drugs · Updated every trade</div>
+        <div className="card-header d-flex align-items-center justify-content-between gap-3">
+          <div>
+            <h5 className="mb-0">Market Board</h5>
+            <small className="text-muted d-none d-sm-block">{drugs?.length ?? 0} drugs · Updated every trade</small>
           </div>
-          <div className="flex gap-1.5 flex-shrink-0">
+          <div className="btn-group flex-shrink-0" role="group">
             {[
               { label: 'All', f: undefined },
               { label: 'Gainers', f: 'gainers' },
@@ -123,10 +124,10 @@ export default async function MarketPage({ searchParams }: PageProps) {
             ].map(({ label, f }) => (
               <a key={label}
                 href={f ? `/market?filter=${f}${cat ? `&cat=${cat}` : ''}` : `/market${cat ? `?cat=${cat}` : ''}`}
-                className={`px-2.5 py-1 text-xs rounded-lg border transition-colors whitespace-nowrap
+                className={`btn btn-sm
                   ${filter === f || (!filter && !f)
-                    ? 'bg-surface2 text-text border-border2 font-semibold'
-                    : 'border-border text-muted hover:text-text'}`}>
+                    ? 'btn-primary'
+                    : 'btn-outline-secondary'}`}>
                 {label}
               </a>
             ))}
@@ -135,14 +136,15 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
         <MarketTable rows={filtered} />
 
-        <div className="px-3 md:px-5 py-1.5 flex items-center gap-3 md:gap-5 flex-shrink-0 text-xs overflow-x-auto">
-          <span className="text-muted whitespace-nowrap">Drugs: <span className="text-text">{drugs?.length ?? 0}</span></span>
-          <span className="text-muted whitespace-nowrap hidden sm:inline">Deals today: <span className="text-text">{formatNumber(totalDeals)}</span></span>
-          <span className="text-muted whitespace-nowrap hidden sm:inline">Turnover: <span className="text-text">{formatKES(totalTurnover)}</span></span>
-          <span className="ml-auto flex items-center gap-1.5 text-green whitespace-nowrap">
-            <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
+        <div className="card-footer d-flex align-items-center flex-wrap gap-3">
+          <small className="text-muted">Drugs: <span className="fw-semibold text-heading">{drugs?.length ?? 0}</span></small>
+          <small className="text-muted d-none d-sm-inline">Deals today: <span className="fw-semibold text-heading">{formatNumber(totalDeals)}</span></small>
+          <small className="text-muted d-none d-sm-inline">Turnover: <span className="fw-semibold text-heading">{formatKES(totalTurnover)}</span></small>
+          <small className="ms-auto d-flex align-items-center gap-2 text-success">
+            <span className="badge badge-dot bg-success" />
             Live
-          </span>
+          </small>
+        </div>
         </div>
       </div>
     </div>

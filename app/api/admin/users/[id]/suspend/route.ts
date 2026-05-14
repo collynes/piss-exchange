@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -14,5 +14,5 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   const dest = error
     ? `/admin/users?error=${encodeURIComponent(error.message)}`
     : '/admin/users?success=suspended'
-  return NextResponse.redirect(new URL(dest, process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'))
+  return NextResponse.redirect(new URL(dest, request.url))
 }

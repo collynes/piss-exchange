@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { reserveOrderStock } from '@/lib/orders/inventory'
 import { captureServerEvent } from '@/lib/posthog'
 
 // M-Pesa callback — uses service role to bypass RLS
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+const adminSupabase = createAdminClient()
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -33,6 +31,21 @@ export async function POST(request: Request) {
     // Payment successful
     const items = CallbackMetadata?.Item ?? []
     const mpesaRef = items.find((i: { Name: string }) => i.Name === 'MpesaReceiptNumber')?.Value ?? null
+
+    const stock = await reserveOrderStock(adminSupabase, payment.order_id)
+    if (stock.error) {
+      await adminSupabase.from('payments').update({
+        status: 'failed',
+        updated_at: new Date().toISOString(),
+      }).eq('id', payment.id)
+
+      await adminSupabase.from('orders').update({
+        status: 'cancelled',
+        updated_at: new Date().toISOString(),
+      }).eq('id', payment.order_id)
+
+      return NextResponse.json({ ResultCode: 0, ResultDesc: 'Accepted' })
+    }
 
     await adminSupabase.from('payments').update({
       status: 'completed',
