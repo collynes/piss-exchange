@@ -61,7 +61,7 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
     const res = await fetch('/api/mpesa/stk-push', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: order.orderId, phone, amount: order.total }),
+      body: JSON.stringify({ orderId: order.orderId, phone }),
     })
 
     if (!res.ok) {

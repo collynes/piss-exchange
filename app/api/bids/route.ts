@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     drug_id: drug.id,
     buyer_id: user.id,
     qty,
-    price_per_unit: Number(price.toFixed(4)),
+    price_per_unit: Math.round(price * 10000) / 10000,
     expires_at: expiresAt.toISOString(),
     status: 'open',
   })

@@ -3,9 +3,8 @@ import { createClient as createUserClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
 
-const adminSupabase = createAdminClient()
-
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const adminSupabase = createAdminClient()
   const { id } = await params
   const supabase = await createUserClient()
   const { data: { user } } = await supabase.auth.getUser()

@@ -41,7 +41,7 @@ async function reserveOrderStockFallback(adminSupabase: AdminSupabase, orderId: 
       updated_at: new Date().toISOString(),
     })
     .eq('id', listing.id)
-    .eq('qty_remaining', listing.qty_remaining)
+    .eq('qty_remaining', listing.qty_remaining) // optimistic lock
     .eq('status', 'active')
     .select('id')
 
@@ -61,16 +61,6 @@ async function releaseOrderStockFallback(adminSupabase: AdminSupabase, orderId: 
     return { error: orderError?.message ?? 'Order listing not found' }
   }
 
-  const { error } = await adminSupabase
-    .from('listings')
-    .update({
-      status: 'active',
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', order.listing_id)
-
-  if (error) return { error: error.message }
-
   const { data: listing, error: listingError } = await adminSupabase
     .from('listings')
     .select('id, qty_remaining')
@@ -79,16 +69,17 @@ async function releaseOrderStockFallback(adminSupabase: AdminSupabase, orderId: 
 
   if (listingError || !listing) return { error: listingError?.message ?? 'Listing not found' }
 
-  const { error: qtyError } = await adminSupabase
+  const newQty = listing.qty_remaining + order.qty
+  const { error } = await adminSupabase
     .from('listings')
     .update({
-      qty_remaining: listing.qty_remaining + order.qty,
-      status: 'active',
+      qty_remaining: newQty,
+      status: newQty > 0 ? 'active' : 'filled',
       updated_at: new Date().toISOString(),
     })
     .eq('id', listing.id)
 
-  if (qtyError) return { error: qtyError.message }
+  if (error) return { error: error.message }
   return { error: null }
 }
 
