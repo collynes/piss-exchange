@@ -1,4 +1,5 @@
 import { PostHog } from 'posthog-node'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 let _client: PostHog | null = null
 
@@ -35,6 +36,19 @@ export function captureServerEvent(
   entry: AnalyticsEvent,
 ) {
   const client = getPostHogClient()
-  if (!client) return
-  client.capture({ distinctId, event: entry.event, properties: entry.props })
+  if (client) client.capture({ distinctId, event: entry.event, properties: entry.props })
+
+  void (async () => {
+    try {
+      await createAdminClient()
+        .from('app_event_logs' as never)
+        .insert({
+          distinct_id: distinctId,
+          event: entry.event,
+          properties: entry.props,
+          level: 'info',
+          source: 'server',
+        } as never)
+    } catch {}
+  })()
 }
