@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
 import {
-  ShoppingBag, Package, TrendingUp, DollarSign,
-  Clock, CheckCircle, ArrowRight, Plus,
+  ShoppingBag, DollarSign,
+  Clock, CheckCircle, ArrowRight, Plus, TrendingUp,
 } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
@@ -166,7 +166,7 @@ export default async function DashboardPage({
                   </td>
                 </tr>
               )}
-              {(recentOrders ?? []).map((order, i) => {
+              {(recentOrders ?? []).map(order => {
                 const drug = order.drugs as { generic_name: string; slug: string } | null
                 return (
                   <tr key={order.id}
@@ -220,7 +220,7 @@ export default async function DashboardPage({
                 </Link>
               </div>
             )}
-            {(listings ?? []).map((l, i) => {
+            {(listings ?? []).map(l => {
               const drug = l.drugs as { generic_name: string } | null
               const pct = l.qty_available > 0 ? Math.round((l.qty_remaining / l.qty_available) * 100) : 0
               return (

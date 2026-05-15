@@ -70,6 +70,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
           <>
             <MenuHeader label="Administration" />
             <NavItem href="/admin" label="Overview" icon="bx-shield-quarter" exact />
+            <NavItem href="/admin/analytics" label="Analytics & Logs" icon="bx-pulse" />
             <NavItem href="/admin/users" label="Users" icon="bx-group" />
             <NavItem href="/admin/drugs" label="Drug Catalogue" icon="bx-capsule" />
             <NavItem href="/admin/orders" label="All Orders" icon="bx-receipt" />

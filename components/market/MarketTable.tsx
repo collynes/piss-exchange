@@ -72,7 +72,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => {
+          {rows.map(row => {
             const pct = Number(row.change_pct)
             const isUp = pct >= 0
             return (

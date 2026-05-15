@@ -43,7 +43,7 @@ export default async function OrdersPage() {
             </tr>
           </thead>
           <tbody>
-            {(orders ?? []).map((order, i) => {
+            {(orders ?? []).map(order => {
               const drug = order.drugs as { generic_name: string; slug: string } | null
               return (
                 <tr key={order.id}

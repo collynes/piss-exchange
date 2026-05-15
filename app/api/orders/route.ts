@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { captureServerEvent } from '@/lib/posthog'
 
 interface CreateOrderBody {
   listingId: string
@@ -75,6 +76,11 @@ export async function POST(request: Request) {
   if (orderError || !order) {
     return NextResponse.json({ error: orderError?.message ?? 'Order failed' }, { status: 500 })
   }
+
+  captureServerEvent(user.id, {
+    event: 'order_created',
+    props: { order_id: order.id, drug_id: listing.drug_id, total, source: 'listing' },
+  })
 
   return NextResponse.json({ orderId: order.id, total: Number(order.total_amount) })
 }

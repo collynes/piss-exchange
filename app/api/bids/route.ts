@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { captureServerEvent } from '@/lib/posthog'
 
 interface CreateBidBody {
   drugId: string
@@ -58,5 +59,9 @@ export async function POST(request: Request) {
   })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  captureServerEvent(user.id, {
+    event: 'bid_placed',
+    props: { drug_id: drug.id, price: Number(price.toFixed(4)), qty },
+  })
   return NextResponse.json({ ok: true })
 }

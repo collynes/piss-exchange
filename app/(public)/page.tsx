@@ -28,7 +28,7 @@ export default async function LandingPage() {
   })).filter(r => r.generic_name)
 
   return (
-    <div className="public-theme">
+    <div>
       <Ticker />
       <PublicNav />
       <main className="min-h-screen bg-bg overflow-x-hidden">
@@ -39,12 +39,6 @@ export default async function LandingPage() {
         {/* Subtle grid */}
         <div className="absolute inset-0 opacity-[0.035] pointer-events-none"
           style={{ backgroundImage: 'linear-gradient(#d1d4dc 1px, transparent 1px), linear-gradient(90deg, #d1d4dc 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-
-        {/* Gradient blobs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-8 blur-3xl pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #2962ff, transparent)' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-6 blur-3xl pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #089981, transparent)' }} />
 
         {/* Live badge */}
         <div className="relative inline-flex items-center gap-2 bg-blue/10 border border-blue/25 text-blue text-xs font-bold px-4 py-2 rounded-full mb-8 uppercase tracking-widest">
@@ -69,7 +63,7 @@ export default async function LandingPage() {
         </h1>
 
         {/* Subheadline */}
-        <p className="text-text text-lg md:text-xl max-w-2xl leading-relaxed mb-10 opacity-75">
+        <p className="text-muted text-lg md:text-xl max-w-2xl leading-relaxed mb-10">
           Real-time order books, transparent KES pricing and M-Pesa escrow. Built for Kenya&apos;s licensed pharmaceutical community.
         </p>
 
@@ -115,9 +109,9 @@ export default async function LandingPage() {
       <section className="bg-surface/60 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { value: '71+', label: 'Generic Drugs', color: '#2962ff' },
+            { value: `${drugCount || 71}+`, label: 'Generic Drugs', color: '#2962ff' },
             { value: '79+', label: 'Active Listings', color: '#089981' },
-            { value: 'KES', label: 'Local Currency', color: '#d8dce6' },
+            { value: 'KES', label: 'Local Currency', color: '#7367f0' },
             { value: '24/7', label: 'Live Order Books', color: '#2962ff' },
           ].map(({ value, label, color }) => (
             <div key={label} className="text-center">
@@ -229,31 +223,36 @@ export default async function LandingPage() {
             <p className="text-muted mt-2 text-sm">Real prices from verified sellers, right now.</p>
           </div>
 
-          <div className="rounded-2xl overflow-hidden"
-            style={{
-              background: 'linear-gradient(160deg, var(--color-surface2) 0%, var(--color-surface) 100%)',
-              boxShadow: '0 25px 60px -12px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.08)',
-            }}>
-            <div className="grid grid-cols-5 px-5 py-3 bg-surface2 text-xs font-bold text-text uppercase tracking-wider border-b border-border">
-              <span className="col-span-2">Drug</span>
-              <span className="text-right">Category</span>
-              <span className="text-right">Form</span>
-              <span className="text-right">Ask (KES)</span>
+          <div className="card">
+            <div className="table-responsive">
+              <table className="table table-hover mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th>Drug</th>
+                    <th className="text-end">Category</th>
+                    <th className="text-end">Form</th>
+                    <th className="text-end">Ask (KES)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listingRows.map(row => (
+                    <tr key={row.slug}>
+                      <td>
+                        <Link href={`/drug/${row.slug}`} className="fw-semibold text-heading">
+                          {row.generic_name}
+                        </Link>
+                        <small className="d-block text-muted">{row.strength}</small>
+                      </td>
+                      <td className="text-end">
+                        <span className="badge rounded-pill bg-label-secondary text-muted">{row.category}</span>
+                      </td>
+                      <td className="text-end text-muted">{row.dosage_form}</td>
+                      <td className="text-end fw-bold text-danger tabular-nums">{row.price.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            {listingRows.map((row, i) => (
-              <Link href={`/drug/${row.slug}`} key={i}
-                className={`grid grid-cols-5 px-5 py-3.5 hover:bg-blue/5 transition-colors group items-center ${i % 2 === 1 ? 'bg-surface2/30' : ''}`}>
-                <div className="col-span-2">
-                  <div className="text-sm font-semibold text-text group-hover:text-blue transition-colors">{row.generic_name}</div>
-                  <div className="text-xs text-muted">{row.strength}</div>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-surface2 text-muted">{row.category}</span>
-                </div>
-                <div className="text-right text-sm text-muted">{row.dosage_form}</div>
-                <div className="text-right text-sm font-bold text-red tabular-nums">{row.price.toFixed(2)}</div>
-              </Link>
-            ))}
           </div>
 
           <div className="mt-4 text-center">
@@ -333,14 +332,14 @@ export default async function LandingPage() {
                 </>
               )}
             </div>
-            <p className="text-xs text-muted/60 mt-5">Licensed pharmaceutical entities only. PPB Kenya regulated.</p>
+            <p className="text-xs text-muted mt-5">Licensed pharmaceutical entities only. PPB Kenya regulated.</p>
           </div>
         </div>
       </section>
 
       {/* ── FOOTER ────────────────────────────────────────────────── */}
       <footer>
-        <div className="max-w-5xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted/50">
+        <div className="max-w-5xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green animate-pulse" />
             <span className="font-bold text-muted">PISS Exchange</span>

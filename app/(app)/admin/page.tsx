@@ -173,7 +173,7 @@ export default async function AdminPage() {
               {(pendingUsers ?? []).length === 0 && (
                 <tr><td colSpan={3} className="p-5 text-center text-muted">No pending verifications</td></tr>
               )}
-              {(pendingUsers ?? []).map((u, i) => (
+              {(pendingUsers ?? []).map(u => (
                 <tr key={u.id}>
                   <td>
                     <div className="fw-semibold text-heading">{u.org_name}</div>
@@ -220,7 +220,7 @@ export default async function AdminPage() {
               {(recentOrders ?? []).length === 0 && (
                 <tr><td colSpan={3} className="p-5 text-center text-muted">No orders yet</td></tr>
               )}
-              {(recentOrders ?? []).map((order, i) => {
+              {(recentOrders ?? []).map(order => {
                 const drug = order.drugs as { generic_name: string } | null
                 return (
                   <tr key={order.id}>
@@ -271,7 +271,7 @@ export default async function AdminPage() {
               {(recentTrades ?? []).length === 0 && (
                 <tr><td colSpan={5} className="p-5 text-center text-muted">No trades yet</td></tr>
               )}
-              {(recentTrades ?? []).map((trade, i) => {
+              {(recentTrades ?? []).map(trade => {
                 const drug = trade.drugs as { generic_name: string } | null
                 return (
                   <tr key={trade.id}>

@@ -294,14 +294,32 @@ h5,
 }
 
 .table {
-  --bs-table-color: #2b3340;
-  --bs-table-striped-color: #2b3340;
-  --bs-table-hover-color: #2b3340;
+  --bs-table-color: #222a35;
+  --bs-table-striped-color: #222a35;
+  --bs-table-hover-color: #222a35;
+  border-color: rgba(47, 43, 61, .12);
 }
 
 .table-light {
-  --bs-table-bg: #f0f1f5;
-  --bs-table-color: #384150;
+  --bs-table-bg: #eef0f4;
+  --bs-table-color: #222a35;
+}
+
+.table > :not(caption) > * > * {
+  padding-block: .9rem;
+  border-bottom-color: rgba(47, 43, 61, .1);
+}
+
+.table thead th {
+  font-weight: 700;
+  font-size: .75rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.card .table-responsive {
+  border-radius: 0 0 .75rem .75rem;
 }
 
 .menu .app-brand.demo {
