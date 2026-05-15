@@ -2,6 +2,7 @@ import { PostHog } from 'posthog-node'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 let _client: PostHog | null = null
+let _adminClient: ReturnType<typeof createAdminClient> | null = null
 
 /** Server-side PostHog client (Node SDK) — singleton */
 export function getPostHogClient(): PostHog | null {
@@ -12,6 +13,11 @@ export function getPostHogClient(): PostHog | null {
     _client = new PostHog(key, { host, flushAt: 1, flushInterval: 0 })
   }
   return _client
+}
+
+function getAdminClient() {
+  if (!_adminClient) _adminClient = createAdminClient()
+  return _adminClient
 }
 
 /** Typed event catalogue — keeps all event names in one place */
@@ -40,7 +46,7 @@ export function captureServerEvent(
 
   void (async () => {
     try {
-      await createAdminClient()
+      await getAdminClient()
         .from('app_event_logs' as never)
         .insert({
           distinct_id: distinctId,

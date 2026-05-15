@@ -36,7 +36,7 @@ type LogQueryClient = {
 }
 
 function startOfDayKey(date: Date) {
-  return date.toISOString().slice(0, 10)
+  return date.toLocaleDateString('en-CA', { timeZone: 'Africa/Nairobi' })
 }
 
 function StatCard({
@@ -74,8 +74,6 @@ export default async function AdminAnalyticsPage() {
 
   const adminSupabase = createAdminClient()
   const now = new Date()
-  const since = new Date()
-  since.setDate(since.getDate() - 7)
 
   const [
     { data: orders },
@@ -85,16 +83,16 @@ export default async function AdminAnalyticsPage() {
     { data: users },
     logResult,
   ] = await Promise.all([
-    supabase.from('orders').select('id, status, escrow_status, total_amount, created_at').order('created_at', { ascending: false }).limit(500),
-    supabase.from('trades').select('id, qty, total_amount, executed_at, drugs(generic_name)').order('executed_at', { ascending: false }).limit(200),
-    supabase.from('listings').select('id, status, qty_remaining, qty_available, price_per_unit, created_at, drugs(generic_name)').order('created_at', { ascending: false }).limit(500),
-    supabase.from('payments').select('id, status, amount, created_at, updated_at').order('created_at', { ascending: false }).limit(500),
-    supabase.from('profiles').select('id, role, verified, created_at').order('created_at', { ascending: false }).limit(500),
+    adminSupabase.from('orders').select('id, status, escrow_status, total_amount, created_at').order('created_at', { ascending: false }).limit(500),
+    adminSupabase.from('trades').select('id, qty, total_amount, executed_at, drugs(generic_name)').order('executed_at', { ascending: false }).limit(200),
+    adminSupabase.from('listings').select('id, status, qty_remaining, qty_available, price_per_unit, created_at, drugs(generic_name)').order('created_at', { ascending: false }).limit(500),
+    adminSupabase.from('payments').select('id, status, amount, created_at, updated_at').order('created_at', { ascending: false }).limit(500),
+    adminSupabase.from('profiles').select('id, role, verified, created_at').order('created_at', { ascending: false }).limit(500),
     (adminSupabase as unknown as LogQueryClient)
       .from('app_event_logs')
       .select('id, event, level, source, distinct_id, properties, created_at')
       .order('created_at', { ascending: false })
-      .limit(80),
+      .limit(20),
   ])
 
   const logs: LogRow[] = logResult?.error ? [] : (logResult?.data ?? [])
@@ -134,8 +132,6 @@ export default async function AdminAnalyticsPage() {
       .reduce((sum, order) => sum + Number(order.total_amount), 0),
   }))
   const maxDailyCount = Math.max(...dailyOrders.map(d => d.count), 1)
-
-  const recentEvents = logs.slice(0, 20)
 
   return (
     <div className="d-flex flex-column gap-4">
@@ -285,7 +281,7 @@ export default async function AdminAnalyticsPage() {
           <h5 className="mb-0">Telemetry Logs</h5>
           <div className="d-flex align-items-center gap-2">
             <FileText className="w-4 h-4 text-primary" />
-            <small className="text-muted">{recentEvents.length} recent events</small>
+            <small className="text-muted">{logs.length} recent events</small>
           </div>
         </div>
         <div className="table-responsive">
@@ -300,7 +296,7 @@ export default async function AdminAnalyticsPage() {
               </tr>
             </thead>
             <tbody>
-              {recentEvents.map(log => (
+              {logs.map(log => (
                 <tr key={log.id}>
                   <td className="fw-semibold text-heading">{log.event}</td>
                   <td><span className={`badge rounded-pill bg-label-${log.level === 'error' ? 'danger' : log.level === 'warning' ? 'warning' : 'primary'} text-${log.level === 'error' ? 'danger' : log.level === 'warning' ? 'warning' : 'primary'}`}>{log.level}</span></td>
@@ -312,7 +308,7 @@ export default async function AdminAnalyticsPage() {
                   </td>
                 </tr>
               ))}
-              {recentEvents.length === 0 && (
+              {logs.length === 0 && (
                 <tr>
                   <td colSpan={5} className="text-center text-muted py-5">
                     No internal logs yet. Apply the app_event_logs migration to persist telemetry here.

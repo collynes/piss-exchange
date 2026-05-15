@@ -15,7 +15,6 @@ create index if not exists app_event_logs_level_idx on app_event_logs(level);
 alter table app_event_logs enable row level security;
 
 drop policy if exists "app_event_logs_admin_read" on app_event_logs;
-drop policy if exists "app_event_logs_service_insert" on app_event_logs;
 
 create policy "app_event_logs_admin_read" on app_event_logs
   for select

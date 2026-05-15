@@ -235,8 +235,8 @@ export default async function LandingPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {listingRows.map((row, i) => (
-                    <tr key={i}>
+                  {listingRows.map(row => (
+                    <tr key={row.slug}>
                       <td>
                         <Link href={`/drug/${row.slug}`} className="fw-semibold text-heading">
                           {row.generic_name}
