@@ -99,7 +99,7 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
               Quantity <span className="text-red">*</span>
             </label>
             <input type="number" step="1" min="1" required value={qty}
-              onChange={e => setQty(String(Math.floor(Number(e.target.value))))} placeholder="100"
+              onChange={e => setQty(e.target.value)} placeholder="100"
               className={INPUT_CLASS} style={INPUT_STYLE} />
           </div>
 

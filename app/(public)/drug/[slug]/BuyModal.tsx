@@ -26,13 +26,16 @@ function DetailRow({ label, value, valueClass = 'text-text' }: { label: string; 
 
 export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
   const router = useRouter()
-  const [qty, setQty] = useState(ask.min_order_qty)
+  const [qtyStr, setQtyStr] = useState(String(ask.min_order_qty))
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [step, setStep] = useState<'confirm' | 'payment'>('confirm')
 
-  const total = qty * Number(ask.price_per_unit)
+  // Parse only for display/submit — keep raw string in state so partial input
+  // like "" or "-" doesn't get floored to 0 on every keystroke
+  const qty = Math.floor(Number(qtyStr))
+  const total = (Number.isFinite(qty) ? qty : 0) * Number(ask.price_per_unit)
 
   const isValidPhone = (p: string) => /^(\+?254|0)\d{9}$/.test(p.trim())
 
@@ -55,7 +58,7 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
     const orderRes = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ listingId: ask.id, qty }),
+      body: JSON.stringify({ listingId: ask.id, qty }),  // qty is already parsed integer
     })
 
     const order = await orderRes.json().catch(() => ({}))
@@ -125,8 +128,8 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
                   step="1"
                   min={ask.min_order_qty}
                   max={ask.qty_remaining}
-                  value={qty}
-                  onChange={e => setQty(Math.floor(Number(e.target.value)))}
+                  value={qtyStr}
+                  onChange={e => setQtyStr(e.target.value)}
                   className="w-full bg-bg/80 rounded-lg px-4 py-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all"
                   style={{ border: '1px solid var(--bs-border-color, rgba(47,43,61,.14))' }}
                 />
