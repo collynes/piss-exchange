@@ -61,8 +61,8 @@ export async function Nav() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex-grow-1">
-                        <h6 className="mb-0">{profile?.org_name ?? 'Account'}</h6>
+                      <div className="flex-grow-1 min-w-0">
+                        <h6 className="mb-0 text-truncate">{profile?.org_name ?? 'Account'}</h6>
                         <small className="text-muted text-capitalize">{profile?.role ?? 'user'}</small>
                       </div>
                     </div>

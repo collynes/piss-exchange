@@ -15,17 +15,26 @@ interface Drug {
 
 type FormState = { generic_name: string; slug: string; atc_code: string; dosage_form: string; strength: string; category: string }
 
+function sanitizeSlug(raw: string): string {
+  return raw.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+}
+
+function buildSlug(form: FormState): string {
+  if (form.slug.trim()) return sanitizeSlug(form.slug)
+  return sanitizeSlug(`${form.generic_name} ${form.strength} ${form.dosage_form}`)
+}
+
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 const INPUT_CLASS = 'w-full bg-bg rounded-lg px-3 py-2 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all'
 const INPUT_STYLE = { border: '1px solid rgba(47,43,61,.15)' }
 
-const FORM_FIELDS: { key: keyof FormState; label: string; placeholder: string; required: boolean }[] = [
-  { key: 'generic_name', label: 'Generic Name',   placeholder: 'Amoxicillin / Clavulanic Acid', required: true  },
-  { key: 'dosage_form',  label: 'Dosage Form',    placeholder: 'Tablet',                        required: true  },
-  { key: 'strength',     label: 'Strength',       placeholder: '625mg',                         required: true  },
-  { key: 'category',     label: 'Category',       placeholder: 'Antibiotics',                   required: true  },
-  { key: 'atc_code',     label: 'ATC Code',       placeholder: 'J01CR02',                       required: false },
-  { key: 'slug',         label: 'Slug (auto)',     placeholder: 'amoxicillin-625mg-tablet',      required: false },
+const FORM_FIELDS: { key: keyof FormState; label: string; placeholder: string; required: boolean; maxLength: number }[] = [
+  { key: 'generic_name', label: 'Generic Name',   placeholder: 'Amoxicillin / Clavulanic Acid', required: true,  maxLength: 255 },
+  { key: 'dosage_form',  label: 'Dosage Form',    placeholder: 'Tablet',                        required: true,  maxLength: 50  },
+  { key: 'strength',     label: 'Strength',       placeholder: '625mg',                         required: true,  maxLength: 50  },
+  { key: 'category',     label: 'Category',       placeholder: 'Antibiotics',                   required: true,  maxLength: 100 },
+  { key: 'atc_code',     label: 'ATC Code',       placeholder: 'J01CR02',                       required: false, maxLength: 10  },
+  { key: 'slug',         label: 'Slug (auto)',     placeholder: 'amoxicillin-625mg-tablet',      required: false, maxLength: 200 },
 ]
 
 const EMPTY_FORM: FormState = { generic_name: '', slug: '', atc_code: '', dosage_form: '', strength: '', category: '' }
@@ -69,22 +78,31 @@ function DrugForm({
   onSubmit: (e: React.FormEvent) => void
   submitLabel: string
 }) {
+  const computedSlug = buildSlug(form)
+
   return (
     <form onSubmit={onSubmit} className="px-5 py-5">
       <div className="grid grid-cols-2 gap-4 mb-5">
-        {FORM_FIELDS.map(({ key, label, placeholder, required }) => (
+        {FORM_FIELDS.map(({ key, label, placeholder, required, maxLength }) => (
           <div key={key} className={key === 'generic_name' ? 'col-span-2' : ''}>
             <label className="block text-xs font-medium text-muted mb-1.5">
               {label}{required && <span className="text-red ml-0.5">*</span>}
             </label>
             <input
               required={required}
-              placeholder={placeholder}
+              maxLength={maxLength}
+              placeholder={key === 'slug' ? computedSlug || placeholder : placeholder}
               value={form[key]}
               onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
               className={INPUT_CLASS}
               style={INPUT_STYLE}
             />
+            {key === 'slug' && (
+              <p className="text-[11px] text-muted mt-1">
+                Leave blank to auto-generate:{' '}
+                <span className="font-mono text-blue">{computedSlug || '—'}</span>
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -111,10 +129,11 @@ export default function AdminDrugsPage() {
   const [search, setSearch]     = useState('')
 
   /* modal state */
-  const [addOpen,    setAddOpen]    = useState(false)
-  const [editDrug,   setEditDrug]   = useState<Drug | null>(null)
-  const [viewDrug,   setViewDrug]   = useState<Drug | null>(null)
-  const [deleteDrug, setDeleteDrug] = useState<Drug | null>(null)
+  const [addOpen,       setAddOpen]       = useState(false)
+  const [editDrug,      setEditDrug]      = useState<Drug | null>(null)
+  const [viewDrug,      setViewDrug]      = useState<Drug | null>(null)
+  const [deleteDrug,    setDeleteDrug]    = useState<Drug | null>(null)
+  const [deleteConfirm, setDeleteConfirm] = useState('')
 
   /* form state */
   const [form,    setForm]    = useState<FormState>(EMPTY_FORM)
@@ -135,7 +154,8 @@ export default function AdminDrugsPage() {
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true); setError(null)
-    const slug = form.slug || form.generic_name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+    const slug = buildSlug(form)
+    if (!slug) { setError('Cannot generate a valid slug — check the drug name'); setSaving(false); return }
     const { data, error: err } = await createClient().from('drugs').insert({ ...form, slug }).select().single()
     if (err) { setError(err.message); setSaving(false); return }
     setDrugs(d => [...d, data].sort((a, b) => a.generic_name.localeCompare(b.generic_name)))
@@ -146,7 +166,8 @@ export default function AdminDrugsPage() {
     e.preventDefault()
     if (!editDrug) return
     setSaving(true); setError(null)
-    const slug = form.slug || form.generic_name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+    const slug = buildSlug(form)
+    if (!slug) { setError('Cannot generate a valid slug — check the drug name'); setSaving(false); return }
     const { error: err } = await createClient().from('drugs').update({ ...form, slug }).eq('id', editDrug.id)
     if (err) { setError(err.message); setSaving(false); return }
     setDrugs(d => d.map(drug => drug.id === editDrug.id ? { ...drug, ...form, slug } : drug))
@@ -347,19 +368,30 @@ export default function AdminDrugsPage() {
 
       {/* ── Delete Confirmation Modal ───────────────────────── */}
       {deleteDrug && (
-        <Modal title="Delete Drug" onClose={() => setDeleteDrug(null)}>
+        <Modal title="Delete Drug" onClose={() => { setDeleteDrug(null); setDeleteConfirm('') }}>
           <div className="px-5 py-5">
             <p className="text-sm text-text mb-1">
               Are you sure you want to delete <span className="font-bold">{deleteDrug.generic_name}</span>?
             </p>
-            <p className="text-xs text-muted mb-5">This will remove it from the catalogue and cannot be undone.</p>
+            <p className="text-xs text-muted mb-3">This will remove it from the catalogue and cannot be undone.</p>
+            <label className="block text-xs font-medium text-muted mb-1.5">
+              Type <span className="font-bold text-text">{deleteDrug.generic_name}</span> to confirm
+            </label>
+            <input
+              value={deleteConfirm}
+              onChange={e => setDeleteConfirm(e.target.value)}
+              placeholder={deleteDrug.generic_name}
+              className={INPUT_CLASS}
+              style={{ ...INPUT_STYLE, marginBottom: '1.25rem' }}
+            />
             <div className="flex gap-2">
-              <button onClick={handleDelete} disabled={deleting}
+              <button onClick={handleDelete}
+                disabled={deleting || deleteConfirm !== deleteDrug.generic_name}
                 className="px-4 py-2 text-xs font-bold text-white rounded-lg disabled:opacity-40 transition-all hover:opacity-90"
                 style={{ background: 'linear-gradient(135deg, #ea5455, #c42030)' }}>
                 {deleting ? 'Deleting…' : 'Yes, Delete'}
               </button>
-              <button onClick={() => setDeleteDrug(null)}
+              <button onClick={() => { setDeleteDrug(null); setDeleteConfirm('') }}
                 className="px-4 py-2 text-xs font-semibold text-muted rounded-lg hover:text-text transition-colors"
                 style={{ border: '1px solid rgba(47,43,61,.15)' }}>
                 Cancel

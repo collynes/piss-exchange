@@ -43,6 +43,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
+  if (!/^(\+?254|0)\d{9}$/.test(String(phone).trim())) {
+    return NextResponse.json({ error: 'Invalid phone number format — use 07XXXXXXXX or +2547XXXXXXXX' }, { status: 400 })
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

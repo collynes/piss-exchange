@@ -15,7 +15,7 @@ export function MoverCards({ drugs }: { drugs: MoverCard[] }) {
   return (
     <div className="grid grid-cols-4 gap-px bg-border rounded overflow-hidden border border-border">
       {drugs.map(drug => (
-        <Link key={drug.slug} href={`/drug/${drug.slug}`}
+        <Link key={drug.slug} href={`/drug/${encodeURIComponent(drug.slug)}`}
           className="bg-surface hover:bg-surface2 transition-colors p-5 group">
           <div className="text-sm font-semibold text-text leading-tight">{drug.generic_name}</div>
           <div className="text-xs text-muted mt-0.5">{drug.strength} · {drug.dosage_form}</div>

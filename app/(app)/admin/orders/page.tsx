@@ -63,9 +63,15 @@ export default async function AdminOrdersPage() {
                 <tr key={order.id}
                   className="hover:bg-surface2 transition-colors"
                   style={{ borderBottom: i < (orders?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
-                  <td className="px-5 py-3.5 text-[13px] font-semibold text-text">{drug?.generic_name ?? '—'}</td>
-                  <td className="px-5 py-3.5 text-xs text-muted">{buyer?.org_name ?? '—'}</td>
-                  <td className="px-5 py-3.5 text-xs text-muted">{seller?.org_name ?? '—'}</td>
+                  <td className="px-5 py-3.5 text-[13px] font-semibold text-text" style={{ maxWidth: '200px' }}>
+                    <div className="truncate">{drug?.generic_name ?? '—'}</div>
+                  </td>
+                  <td className="px-5 py-3.5 text-xs text-muted" style={{ maxWidth: '140px' }}>
+                    <div className="truncate">{buyer?.org_name ?? '—'}</div>
+                  </td>
+                  <td className="px-5 py-3.5 text-xs text-muted" style={{ maxWidth: '140px' }}>
+                    <div className="truncate">{seller?.org_name ?? '—'}</div>
+                  </td>
                   <td className="px-5 py-3.5 text-right text-[13px] text-text tabular-nums">{order.qty.toLocaleString()}</td>
                   <td className="px-5 py-3.5 text-right text-[13px] font-bold text-text tabular-nums">{formatKES(Number(order.total_amount))}</td>
                   <td className="px-5 py-3.5 text-right">

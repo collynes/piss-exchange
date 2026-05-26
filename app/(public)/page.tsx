@@ -238,7 +238,7 @@ export default async function LandingPage() {
                   {listingRows.map(row => (
                     <tr key={row.slug}>
                       <td>
-                        <Link href={`/drug/${row.slug}`} className="fw-semibold text-heading">
+                        <Link href={`/drug/${encodeURIComponent(row.slug)}`} className="fw-semibold text-heading">
                           {row.generic_name}
                         </Link>
                         <small className="d-block text-muted">{row.strength}</small>

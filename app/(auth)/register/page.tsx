@@ -31,6 +31,12 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!role) return
+
+    if (form.phone && !/^(\+?254|0)\d{9}$/.test(form.phone.trim())) {
+      setError('Phone must be a valid Kenyan number — e.g. 0712345678 or +254712345678')
+      return
+    }
+
     setLoading(true)
     setError(null)
     const supabase = createClient()
@@ -101,12 +107,12 @@ export default function RegisterPage() {
         )}
         <form onSubmit={handleSubmit}>
           {[
-            { key: 'org_name', label: 'Organisation Name', placeholder: role === 'seller' ? 'e.g. ABC Pharma Ltd' : 'e.g. Nairobi General Hospital', required: true },
-            { key: 'email', label: 'Email', placeholder: 'you@company.com', type: 'email', required: true },
-            { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true },
-            { key: 'phone', label: 'Phone', placeholder: '+254700000000', required: false },
-            ...(role === 'seller' ? [{ key: 'license_no', label: 'PPB License No.', placeholder: 'e.g. PPB/MNF/2024/001', required: false }] : []),
-          ].map(({ key, label, placeholder, type = 'text', required }) => (
+            { key: 'org_name', label: 'Organisation Name', placeholder: role === 'seller' ? 'e.g. ABC Pharma Ltd' : 'e.g. Nairobi General Hospital', required: true, maxLength: 200 },
+            { key: 'email', label: 'Email', placeholder: 'you@company.com', type: 'email', required: true, maxLength: 254 },
+            { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, minLength: 6 },
+            { key: 'phone', label: 'Phone', placeholder: '+254700000000', type: 'tel', required: false, maxLength: 15 },
+            ...(role === 'seller' ? [{ key: 'license_no', label: 'PPB License No.', placeholder: 'e.g. PPB/MNF/2024/001', required: false, maxLength: 60 }] : []),
+          ].map(({ key, label, placeholder, type = 'text', required, maxLength, minLength }: { key: string; label: string; placeholder: string; type?: string; required: boolean; maxLength?: number; minLength?: number }) => (
             <div key={key} className="mb-4">
               <label className="form-label">
                 {label} {required && <span className="text-danger">*</span>}
@@ -115,6 +121,8 @@ export default function RegisterPage() {
                 type={type}
                 required={required}
                 placeholder={placeholder}
+                maxLength={maxLength}
+                minLength={minLength}
                 value={form[key as keyof typeof form]}
                 onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                 className={INPUT_CLASS}

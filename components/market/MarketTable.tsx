@@ -27,7 +27,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
           const pct = Number(row.change_pct)
           const isUp = pct >= 0
           return (
-            <Link key={row.drug_id} href={`/drug/${row.slug}`}
+            <Link key={row.drug_id} href={`/drug/${encodeURIComponent(row.slug)}`}
               className="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
               <div className="min-w-0 flex-1">
                 <div className="fw-semibold text-heading text-truncate">{row.generic_name}</div>
@@ -78,10 +78,10 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
             return (
               <tr key={row.drug_id}
                 className="cursor-pointer"
-                onClick={() => { window.location.href = `/drug/${row.slug}` }}>
-                <td>
-                  <span className="fw-semibold text-heading">{row.generic_name}</span>
-                  <small className="text-muted ms-2">{row.strength} · {row.dosage_form}</small>
+                onClick={() => { window.location.href = `/drug/${encodeURIComponent(row.slug)}` }}>
+                <td style={{ maxWidth: '260px' }}>
+                  <div className="fw-semibold text-heading text-truncate">{row.generic_name}</div>
+                  <small className="text-muted text-nowrap">{row.strength} · {row.dosage_form}</small>
                 </td>
                 <td className={`text-end fw-semibold ${isUp ? 'text-success' : 'text-danger'}`}>
                   {row.last_price ? Number(row.last_price).toFixed(2) : '—'}
@@ -99,7 +99,7 @@ export function MarketTable({ rows }: { rows: MarketRow[] }) {
                 <td className="text-end">{row.deals_today}</td>
                 <td className="text-end text-muted">{row.seller_count}</td>
                 <td className="text-end">
-                  <Link href={`/drug/${row.slug}`} onClick={e => e.stopPropagation()}
+                  <Link href={`/drug/${encodeURIComponent(row.slug)}`} onClick={e => e.stopPropagation()}
                     className="btn btn-sm btn-icon btn-text-secondary rounded-pill">
                     <i className="bx bx-chevron-right" />
                   </Link>

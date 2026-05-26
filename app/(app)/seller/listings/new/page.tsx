@@ -46,42 +46,53 @@ export default function NewListingPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedDrug) { setError('Select a drug first'); return }
-    setLoading(true)
-    setError(null)
 
     const qty = Number(form.qty_available)
+    const price = Number(form.price_per_unit)
+    const minQty = Number(form.min_order_qty)
+
+    if (!Number.isInteger(qty) || qty < 1) { setError('Quantity must be a positive whole number'); return }
+    if (!Number.isFinite(price) || price < 0.01) { setError('Price must be at least KES 0.01'); return }
+    if (!Number.isInteger(minQty) || minQty < 1) { setError('Minimum order quantity must be a positive whole number'); return }
+    if (minQty > qty) { setError('Minimum order quantity cannot exceed total quantity'); return }
+
+    setError(null)
+    setLoading(true)
+
     const res = await fetch('/api/listings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         drugId: selectedDrug.id,
         brandName: form.brand_name,
-        manufacturer: form.manufacturer,
+        manufacturer: form.manufacturer || null,
         originCountry: form.origin_country,
         qtyAvailable: qty,
-        pricePerUnit: Number(form.price_per_unit),
-        minOrderQty: Number(form.min_order_qty),
-        batchNo: form.batch_no,
-        expiryDate: form.expiry_date,
-        listingExpiry: form.listing_expiry,
+        pricePerUnit: price,
+        minOrderQty: minQty,
+        batchNo: form.batch_no || null,
+        expiryDate: form.expiry_date || null,
+        listingExpiry: form.listing_expiry || null,
       }),
     })
 
     const body = await res.json().catch(() => ({}))
     if (!res.ok) { setError(body.error ?? 'Listing failed'); setLoading(false); return }
-    router.push(`/drug/${body.slug ?? selectedDrug.slug}`)
+    router.push(`/drug/${encodeURIComponent(body.slug ?? selectedDrug.slug)}`)
   }
 
-  const fields: { key: keyof typeof form; label: string; placeholder?: string; type?: string; step?: string; required: boolean }[] = [
-    { key: 'brand_name',     label: 'Brand Name',         placeholder: 'Augmentin',       required: true },
-    { key: 'manufacturer',   label: 'Manufacturer',       placeholder: 'GlaxoSmithKline', required: false },
-    { key: 'origin_country', label: 'Country of Origin',  placeholder: 'UK',              required: true },
-    { key: 'qty_available',  label: 'Quantity Available', placeholder: '5000',  type: 'number',            required: true },
-    { key: 'price_per_unit', label: 'Price / Unit (KES)', placeholder: '45.00', type: 'number', step: '0.01', required: true },
-    { key: 'min_order_qty',  label: 'Minimum Order Qty',  placeholder: '100',   type: 'number',            required: true },
-    { key: 'batch_no',       label: 'Batch Number',       placeholder: 'Optional',        required: false },
-    { key: 'expiry_date',    label: 'Drug Expiry Date',   type: 'date',                   required: false },
-    { key: 'listing_expiry', label: 'Listing Expires On', type: 'date',                   required: false },
+  const today = new Date().toISOString().split('T')[0]
+
+  const fields: { key: keyof typeof form; label: string; placeholder?: string; type?: string; step?: string; min?: string; maxLength?: number; required: boolean }[] = [
+    { key: 'brand_name',     label: 'Brand Name',         placeholder: 'Augmentin',       maxLength: 120, required: true },
+    { key: 'manufacturer',   label: 'Manufacturer',       placeholder: 'GlaxoSmithKline', maxLength: 120, required: false },
+    { key: 'origin_country', label: 'Country of Origin',  placeholder: 'UK',              maxLength: 60,  required: true },
+    { key: 'qty_available',  label: 'Quantity Available', placeholder: '5000',  type: 'number', min: '1',    step: '1',    required: true },
+    { key: 'price_per_unit', label: 'Price / Unit (KES)', placeholder: '45.00', type: 'number', min: '0.01', step: '0.01', required: true },
+    { key: 'min_order_qty',  label: 'Minimum Order Qty',  placeholder: '100',   type: 'number', min: '1',    step: '1',    required: true },
+    { key: 'batch_no',       label: 'Batch Number',       placeholder: 'Optional',        maxLength: 60,  required: false },
+    { key: 'expiry_date',    label: 'Drug Expiry Date',   type: 'date', min: today,                        required: false },
+    { key: 'listing_expiry', label: 'Listing Expires On', type: 'date', min: today,                        required: false },
   ]
 
   return (
@@ -157,7 +168,7 @@ export default function NewListingPage() {
             </div>
             <div className="px-5 py-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                {fields.map(({ key, label, placeholder, type = 'text', step, required }) => (
+                {fields.map(({ key, label, placeholder, type = 'text', step, min, maxLength, required }) => (
                   <div key={key} className={key === 'brand_name' || key === 'manufacturer' || key === 'origin_country' ? 'col-span-2 sm:col-span-1' : ''}>
                     <label className="block text-xs font-medium text-muted mb-1.5">
                       {label}{required && <span className="text-red ml-0.5">*</span>}
@@ -165,6 +176,8 @@ export default function NewListingPage() {
                     <input
                       type={type}
                       step={step}
+                      min={min}
+                      maxLength={maxLength}
                       required={required}
                       placeholder={placeholder}
                       value={form[key as keyof typeof form]}

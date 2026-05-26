@@ -48,8 +48,8 @@ export default async function OrdersPage() {
               return (
                 <tr key={order.id}
                   className="cursor-pointer">
-                  <td>
-                    <Link href={`/drug/${drug?.slug}`} className="fw-semibold text-heading">
+                  <td style={{ maxWidth: '200px' }}>
+                    <Link href={`/drug/${encodeURIComponent(drug?.slug ?? '')}`} className="fw-semibold text-heading d-block text-truncate">
                       {drug?.generic_name ?? '—'}
                     </Link>
                   </td>

@@ -17,9 +17,9 @@ const GLASS = {
 
 function DetailRow({ label, value, valueClass = 'text-text' }: { label: string; value: string; valueClass?: string }) {
   return (
-    <div className="flex justify-between items-center py-1.5">
-      <span className="text-xs text-muted">{label}</span>
-      <span className={`text-sm font-medium ${valueClass}`}>{value}</span>
+    <div className="flex justify-between items-center gap-3 py-1.5">
+      <span className="text-xs text-muted flex-shrink-0">{label}</span>
+      <span className={`text-sm font-medium truncate text-right ${valueClass}`}>{value}</span>
     </div>
   )
 }
@@ -34,17 +34,24 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
 
   const total = qty * Number(ask.price_per_unit)
 
+  const isValidPhone = (p: string) => /^(\+?254|0)\d{9}$/.test(p.trim())
+
   const handleConfirm = async () => {
+    setError(null)
+    if (!Number.isInteger(qty) || qty < 1) { setError('Quantity must be a whole number'); return }
     if (qty < ask.min_order_qty) { setError(`Minimum order is ${ask.min_order_qty} units`); return }
     if (qty > ask.qty_remaining) { setError(`Only ${ask.qty_remaining} units available`); return }
     if (total <= 0) { setError('Invalid total'); return }
-    setError(null)
     setStep('payment')
   }
 
   const handlePay = async () => {
-    setLoading(true)
     setError(null)
+    if (!isValidPhone(phone)) {
+      setError('Enter a valid Kenyan number — e.g. 0712345678 or +254712345678')
+      return
+    }
+    setLoading(true)
     const orderRes = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -71,6 +78,7 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
       return
     }
 
+    setLoading(false)
     onClose()
     router.push(`/orders/${order.orderId}`)
   }
@@ -80,15 +88,15 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
       <div className="rounded-2xl w-full max-w-sm overflow-hidden" style={GLASS} onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 bg-surface2 border-b border-border">
-          <div>
+        <div className="flex items-center justify-between gap-3 px-5 py-4 bg-surface2 border-b border-border">
+          <div className="min-w-0 flex-1">
             <div className="text-xs font-semibold text-muted uppercase tracking-wider">
               {step === 'confirm' ? 'Buy' : 'Pay via M-Pesa'}
             </div>
-            <div className="text-2xl font-bold text-text leading-tight mt-1">
+            <div className="text-2xl font-bold text-text leading-tight mt-1 truncate">
               {step === 'confirm' ? ask.brand_name : `KES ${total.toFixed(2)}`}
             </div>
-            <div className="text-xs text-muted mt-0.5">{step === 'confirm' ? drugName : 'Amount due'}</div>
+            <div className="text-xs text-muted mt-0.5 truncate">{step === 'confirm' ? drugName : 'Amount due'}</div>
           </div>
           <button onClick={onClose}
             className="w-7 h-7 flex items-center justify-center rounded-full bg-surface2 text-muted hover:text-text transition-colors text-base leading-none">
@@ -114,10 +122,11 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
                 </label>
                 <input
                   type="number"
+                  step="1"
                   min={ask.min_order_qty}
                   max={ask.qty_remaining}
                   value={qty}
-                  onChange={e => setQty(Number(e.target.value))}
+                  onChange={e => setQty(Math.floor(Number(e.target.value)))}
                   className="w-full bg-bg/80 rounded-lg px-4 py-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-blue/50 transition-all"
                   style={{ border: '1px solid var(--bs-border-color, rgba(47,43,61,.14))' }}
                 />
@@ -131,8 +140,8 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
                 <span className="text-2xl font-black text-text tabular-nums">KES {total.toFixed(2)}</span>
               </div>
 
-              <button onClick={handleConfirm}
-                className="w-full font-bold py-3 rounded-xl text-sm text-white bg-blue transition-all hover:opacity-90 active:scale-[0.98]"
+              <button onClick={handleConfirm} disabled={loading}
+                className="w-full font-bold py-3 rounded-xl text-sm text-white bg-blue transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40"
                 style={{ boxShadow: '0 0.5rem 1rem rgba(var(--bs-primary-rgb), .22)' }}>
                 Confirm Order →
               </button>
@@ -153,6 +162,8 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
                 <input
                   type="tel"
                   placeholder="+254700000000"
+                  required
+                  maxLength={13}
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   className="w-full bg-bg/80 rounded-lg px-4 py-3 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-green/50 transition-all"
@@ -163,7 +174,7 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
 
               {error && <div className="text-red text-xs mb-4 bg-red/8 rounded-lg px-3 py-2">{error}</div>}
 
-              <button onClick={handlePay} disabled={loading || !phone}
+              <button onClick={handlePay} disabled={loading || !isValidPhone(phone)}
                 className="w-full font-bold py-3 rounded-xl text-sm text-white bg-blue transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40"
                 style={{ boxShadow: '0 0.5rem 1rem rgba(var(--bs-primary-rgb), .22)' }}>
                 {loading ? 'Sending request…' : 'Pay with M-Pesa'}
