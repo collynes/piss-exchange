@@ -43,6 +43,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
+  // Normalize to string once — prevents phone.replace() crashing when the
+  // caller sends a numeric JSON value, which would reserve stock then throw.
+  const phoneStr = String(phone).trim()
+  if (!/^(\+?254|0)\d{9}$/.test(phoneStr)) {
+    return NextResponse.json({ error: 'Invalid phone number format — use 07XXXXXXXX or +2547XXXXXXXX' }, { status: 400 })
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -93,7 +100,7 @@ export async function POST(request: Request) {
   const passkey = process.env.MPESA_PASSKEY!
   const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14)
   const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString('base64')
-  const normalizedPhone = phone.replace(/^\+/, '').replace(/^0/, '254')
+  const normalizedPhone = phoneStr.replace(/^\+/, '').replace(/^0/, '254')
 
   const callbackSecret = process.env.MPESA_CALLBACK_SECRET
   const callbackUrl = new URL('/api/mpesa/callback', request.url)

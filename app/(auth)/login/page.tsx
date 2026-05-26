@@ -39,12 +39,12 @@ function LoginForm() {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="form-label">Email</label>
-            <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
+            <input type="email" required maxLength={254} value={email} onChange={e => setEmail(e.target.value)}
               placeholder="you@company.com" className={INPUT_CLASS} />
           </div>
           <div className="mb-6">
             <label className="form-label">Password</label>
-            <input type="password" required value={password} onChange={e => setPassword(e.target.value)}
+            <input type="password" required minLength={6} value={password} onChange={e => setPassword(e.target.value)}
               placeholder="••••••••" className={INPUT_CLASS} />
           </div>
           <button type="submit" disabled={loading}

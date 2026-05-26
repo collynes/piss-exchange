@@ -54,7 +54,7 @@ export function DrugSidebar({ drugs, categories }: DrugSidebarProps) {
           Top Movers
         </div>
         {drugs.map(drug => (
-          <Link key={drug.slug} href={`/drug/${drug.slug}`}
+          <Link key={drug.slug} href={`/drug/${encodeURIComponent(drug.slug)}`}
             className="drug-sidebar-link d-flex justify-content-between align-items-center rounded px-2 py-2 text-decoration-none">
             <div className="min-w-0 flex-grow-1">
               <div className="small fw-semibold text-heading text-truncate">

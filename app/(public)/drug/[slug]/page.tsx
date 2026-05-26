@@ -45,10 +45,10 @@ export default async function DrugPage({ params }: PageProps) {
   return (
     <div className="flex flex-col md:h-[calc(100vh-68px)] md:overflow-hidden">
       {/* Drug header */}
-      <div className="px-5 py-3 bg-surface flex items-center justify-between flex-shrink-0">
-        <div>
+      <div className="px-5 py-3 bg-surface flex items-center justify-between flex-shrink-0 min-w-0 gap-3">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-base font-bold text-text">{drug.generic_name}</h1>
+            <h1 className="text-base font-bold text-text break-words min-w-0">{drug.generic_name}</h1>
             {md?.last_price ? (
               <>
                 <span className="text-xl font-bold text-text tabular-nums">

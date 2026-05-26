@@ -43,14 +43,14 @@ export default async function SellerListingsPage() {
               return (
                 <tr key={l.id} className="hover:bg-surface2 transition-colors"
                   style={{ borderBottom: i < (listings?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
-                  <td className="px-5 py-3.5">
-                    <Link href={`/drug/${drug?.slug}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors">
+                  <td className="px-5 py-3.5" style={{ maxWidth: '200px' }}>
+                    <Link href={`/drug/${encodeURIComponent(drug?.slug ?? '')}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors truncate block">
                       {drug?.generic_name ?? '—'}
                     </Link>
                     <div className="text-xs text-muted">{drug?.strength} · {drug?.dosage_form}</div>
                   </td>
-                  <td className="px-5 py-3.5 text-[13px] text-text">
-                    {l.brand_name} · <span className="text-muted">{l.origin_country}</span>
+                  <td className="px-5 py-3.5 text-[13px] text-text" style={{ maxWidth: '160px' }}>
+                    <div className="truncate">{l.brand_name} · <span className="text-muted">{l.origin_country}</span></div>
                   </td>
                   <td className="px-5 py-3.5 text-right text-[13px] text-red font-bold tabular-nums">
                     {formatKES(Number(l.price_per_unit))}
@@ -70,7 +70,7 @@ export default async function SellerListingsPage() {
                     {l.listing_expiry ? new Date(l.listing_expiry).toLocaleDateString('en-KE') : '—'}
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <Link href={`/drug/${drug?.slug}`} className="text-muted hover:text-text transition-colors inline-flex">
+                    <Link href={`/drug/${encodeURIComponent(drug?.slug ?? '')}`} className="text-muted hover:text-text transition-colors inline-flex">
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </td>

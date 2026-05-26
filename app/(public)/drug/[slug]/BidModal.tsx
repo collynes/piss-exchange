@@ -27,19 +27,30 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
 
   const total = Number(price) * Number(qty)
 
+  const ALLOWED_DAYS = [1, 3, 7, 14, 30]
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
     setError(null)
+
+    const priceNum = Number(price)
+    const qtyNum = Number(qty)
+    const daysNum = Number(days)
+
+    if (!Number.isFinite(priceNum) || priceNum < 0.01) { setError('Price must be at least KES 0.01'); return }
+    if (!Number.isInteger(qtyNum) || qtyNum < 1) { setError('Quantity must be a whole number of at least 1'); return }
+    if (!ALLOWED_DAYS.includes(daysNum)) { setError('Invalid validity period'); return }
+
+    setLoading(true)
 
     const res = await fetch('/api/bids', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         drugId,
-        qty: Number(qty),
-        price: Number(price),
-        days: Number(days),
+        qty: qtyNum,
+        price: priceNum,
+        days: daysNum,
       }),
     })
 
@@ -50,6 +61,9 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
       return
     }
 
+    setPrice('')
+    setQty('')
+    setDays('7')
     onClose()
     router.refresh()
   }
@@ -59,10 +73,10 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
       <div className="rounded-2xl w-full max-w-sm overflow-hidden" style={GLASS} onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 bg-surface2 border-b border-border">
-          <div>
+        <div className="flex items-center justify-between gap-3 px-5 py-4 bg-surface2 border-b border-border">
+          <div className="min-w-0 flex-1">
             <div className="text-xs font-semibold text-muted uppercase tracking-wider">Place Bid</div>
-            <div className="text-2xl font-bold text-text leading-tight mt-1">{drugName}</div>
+            <div className="text-2xl font-bold text-text leading-tight mt-1 truncate">{drugName}</div>
           </div>
           <button onClick={onClose}
             className="w-7 h-7 flex items-center justify-center rounded-full bg-surface2 text-muted hover:text-text transition-colors text-base leading-none">
@@ -84,7 +98,7 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
             <label className="block text-xs text-muted uppercase tracking-wider mb-2">
               Quantity <span className="text-red">*</span>
             </label>
-            <input type="number" min="1" required value={qty}
+            <input type="number" step="1" min="1" required value={qty}
               onChange={e => setQty(e.target.value)} placeholder="100"
               className={INPUT_CLASS} style={INPUT_STYLE} />
           </div>
