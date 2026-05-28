@@ -21,16 +21,20 @@ export default async function SellerOrdersPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: orders } = await supabase
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = profile?.role === 'admin'
+
+  const ordersQuery = supabase
     .from('orders')
     .select('id, qty, total_amount, status, created_at, drugs(generic_name, slug), payments(status)')
-    .eq('seller_id', user.id)
     .order('created_at', { ascending: false })
+  const { data: orders } = await (isAdmin ? ordersQuery : ordersQuery.eq('seller_id', user.id))
 
   return (
     <div className="max-w-5xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-bold text-text">Incoming Orders</h1>
+        <h1 className="text-lg font-bold text-text">{isAdmin ? 'All Incoming Orders' : 'Incoming Orders'}</h1>
         <span className="text-xs text-muted">{orders?.length ?? 0} orders</span>
       </div>
 

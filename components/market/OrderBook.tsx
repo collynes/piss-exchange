@@ -10,11 +10,11 @@ export interface Bid {
 }
 
 interface OrderBookProps {
-  asks: Ask[]; bids: Bid[]; isAuthenticated: boolean
+  asks: Ask[]; bids: Bid[]; canBid: boolean
   onBuyClick: (ask: Ask) => void; onBidClick: () => void
 }
 
-export function OrderBook({ asks, bids, isAuthenticated, onBuyClick, onBidClick }: OrderBookProps) {
+export function OrderBook({ asks, bids, canBid, onBuyClick, onBidClick }: OrderBookProps) {
   const sortedAsks = [...asks].sort((a, b) => a.price_per_unit - b.price_per_unit)
   const sortedBids = [...bids].sort((a, b) => b.price_per_unit - a.price_per_unit)
   const maxAskQty = Math.max(...asks.map(a => a.qty_remaining), 1)
@@ -41,18 +41,18 @@ export function OrderBook({ asks, bids, isAuthenticated, onBuyClick, onBidClick 
           )}
           {sortedAsks.map(ask => (
             <div key={ask.id} className="relative flex items-center px-3 py-1 hover:bg-surface2 group cursor-pointer"
-              onClick={() => isAuthenticated && onBuyClick(ask)}>
+              onClick={() => canBid && onBuyClick(ask)}>
               <div className="absolute inset-y-0 right-0 bg-red/8"
                 style={{ width: `${(ask.qty_remaining / maxAskQty) * 100}%` }} />
               <span className="relative text-red font-semibold tabular-nums text-sm w-24">{Number(ask.price_per_unit).toFixed(2)}</span>
               <span className="relative text-text tabular-nums text-sm w-20 text-right">{ask.qty_remaining.toLocaleString()}</span>
               <span className="relative text-muted text-xs flex-1 text-right truncate">{ask.brand_name}</span>
-              {isAuthenticated && (
+              {canBid && (
                 <button className="relative ml-2 px-2 py-0.5 bg-blue text-white text-[10px] font-semibold rounded opacity-0 group-hover:opacity-100 transition-opacity">
                   Buy
                 </button>
               )}
-              {!isAuthenticated && (
+              {!canBid && (
                 <a href="/login" className="relative ml-2 text-[10px] text-muted hover:text-blue opacity-0 group-hover:opacity-100 transition-opacity">
                   Login
                 </a>
@@ -74,7 +74,7 @@ export function OrderBook({ asks, bids, isAuthenticated, onBuyClick, onBidClick 
               </span>
             )}
           </div>
-          {isAuthenticated && (
+          {canBid && (
             <button onClick={onBidClick}
               className="px-2 py-0.5 text-xs font-semibold text-green border border-green/30 rounded hover:bg-green/10 transition-colors">
               + Bid

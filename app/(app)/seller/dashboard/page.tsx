@@ -49,13 +49,18 @@ export default async function SellerDashboardPage() {
 
   if (profile?.role === 'buyer') redirect('/dashboard')
 
+  const isAdmin = profile?.role === 'admin'
+
   const [{ data: listings }, { data: orders }, { count: pendingCount }] = await Promise.all([
-    supabase.from('listings').select('id, status, qty_remaining, qty_available, price_per_unit, drugs(generic_name)')
-      .eq('seller_id', user.id).eq('status', 'active'),
-    supabase.from('orders').select('id, qty, total_amount, status, created_at, drugs(generic_name, slug)')
-      .eq('seller_id', user.id).order('created_at', { ascending: false }).limit(6),
-    supabase.from('orders').select('*', { count: 'exact', head: true })
-      .eq('seller_id', user.id).in('status', ['pending', 'paid', 'confirmed']),
+    isAdmin
+      ? supabase.from('listings').select('id, status, qty_remaining, qty_available, price_per_unit, drugs(generic_name)').eq('status', 'active')
+      : supabase.from('listings').select('id, status, qty_remaining, qty_available, price_per_unit, drugs(generic_name)').eq('seller_id', user.id).eq('status', 'active'),
+    isAdmin
+      ? supabase.from('orders').select('id, qty, total_amount, status, created_at, drugs(generic_name, slug)').order('created_at', { ascending: false }).limit(6)
+      : supabase.from('orders').select('id, qty, total_amount, status, created_at, drugs(generic_name, slug)').eq('seller_id', user.id).order('created_at', { ascending: false }).limit(6),
+    isAdmin
+      ? supabase.from('orders').select('*', { count: 'exact', head: true }).in('status', ['pending', 'paid', 'confirmed'])
+      : supabase.from('orders').select('*', { count: 'exact', head: true }).eq('seller_id', user.id).in('status', ['pending', 'paid', 'confirmed']),
   ])
 
   const activeListings = listings?.length ?? 0

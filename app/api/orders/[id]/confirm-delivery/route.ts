@@ -10,14 +10,17 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  // Verify buyer owns this order
-  const { data: order } = await supabase
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = profile?.role === 'admin'
+
+  // Verify buyer owns this order; admin can confirm delivery on any order
+  const orderBaseQuery = supabase
     .from('orders')
     .select('id, seller_id, total_amount')
     .eq('id', id)
-    .eq('buyer_id', user.id)
     .eq('status', 'shipped')
-    .single()
+  const { data: order } = await (isAdmin ? orderBaseQuery : orderBaseQuery.eq('buyer_id', user.id)).single()
 
   if (!order) return NextResponse.json({ error: 'Order not found or not in shipped state' }, { status: 404 })
 

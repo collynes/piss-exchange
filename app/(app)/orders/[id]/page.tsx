@@ -12,17 +12,24 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: order } = await supabase
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = profile?.role === 'admin'
+
+  const orderBaseQuery = supabase
     .from('orders')
     .select(`
       id, qty, price_per_unit, total_amount, status, escrow_status, notes, created_at, updated_at,
+      buyer_id,
       drugs(generic_name, slug, strength, dosage_form),
       listings(brand_name, origin_country),
       payments(amount, method, mpesa_ref, status, escrow_released_at)
     `)
     .eq('id', id)
-    .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
-    .single()
+  const { data: order } = await (isAdmin
+    ? orderBaseQuery
+    : orderBaseQuery.or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
+  ).single()
 
   if (!order) notFound()
 
@@ -32,8 +39,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   const currentStep = STATUS_STEPS.indexOf(order.status)
 
-  const { data: orderIds } = await supabase.from('orders').select('buyer_id').eq('id', id).single()
-  const isBuyer = orderIds?.buyer_id === user.id
+  // Admin has full access; otherwise check if user is the buyer
+  const isBuyer = isAdmin || (order as { buyer_id?: string }).buyer_id === user.id
 
   const orderRows = [
     { label: 'Drug',        value: drug ? `${drug.generic_name} ${drug.strength} ${drug.dosage_form}` : '—' },

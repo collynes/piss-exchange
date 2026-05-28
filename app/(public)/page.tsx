@@ -6,7 +6,7 @@ import { PublicNav } from '@/components/layout/PublicNav'
 export default async function LandingPage() {
   const supabase = await createClient()
 
-  const [{ data: { user } }, { data: stats }, { data: topDrugs }] = await Promise.all([
+  const [{ data: { user } }, { count: drugCount }, { data: topDrugs }] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from('drugs').select('id', { count: 'exact', head: true }),
     supabase
@@ -16,8 +16,6 @@ export default async function LandingPage() {
       .order('price_per_unit', { ascending: true })
       .limit(6),
   ])
-
-  const drugCount = stats ?? 0
   const listingRows = (topDrugs ?? []).slice(0, 6).map(l => ({
     generic_name: (l.drugs as { generic_name: string } | null)?.generic_name ?? '',
     slug: (l.drugs as { slug: string } | null)?.slug ?? '',
@@ -109,7 +107,7 @@ export default async function LandingPage() {
       <section className="bg-surface/60 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { value: `${drugCount || 71}+`, label: 'Generic Drugs', color: '#2962ff' },
+            { value: `${drugCount || 143}+`, label: 'Active Molecules', color: '#2962ff' },
             { value: '79+', label: 'Active Listings', color: '#089981' },
             { value: 'KES', label: 'Local Currency', color: '#7367f0' },
             { value: '24/7', label: 'Live Order Books', color: '#2962ff' },

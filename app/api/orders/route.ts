@@ -27,7 +27,8 @@ export async function POST(request: Request) {
     .eq('id', user.id)
     .single()
 
-  if (profile?.role !== 'buyer' || !profile.verified) {
+  const isAdmin = profile?.role === 'admin'
+  if (!isAdmin && (profile?.role !== 'buyer' || !profile.verified)) {
     return NextResponse.json({ error: 'Only verified buyers can place orders' }, { status: 403 })
   }
 

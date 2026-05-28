@@ -7,12 +7,25 @@ import { formatNumber, formatKES } from '@/lib/utils'
 export const revalidate = 10
 
 interface PageProps {
-  searchParams: Promise<{ cat?: string; filter?: string }>
+  searchParams: Promise<{ cat?: string; filter?: string; q?: string }>
 }
 
 export default async function MarketPage({ searchParams }: PageProps) {
-  const { cat, filter } = await searchParams
+  const { cat, filter, q } = await searchParams
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Only verified buyers can place bids or buy
+  let canBid = false
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, verified')
+      .eq('id', user.id)
+      .maybeSingle()
+    canBid = profile?.role === 'admin' || (profile?.role === 'buyer' && profile?.verified === true)
+  }
 
   const { data: sidebarData } = await supabase
     .from('market_data')
@@ -75,9 +88,13 @@ export default async function MarketPage({ searchParams }: PageProps) {
   })
 
   let filtered = rows
-  if (filter === 'gainers') filtered = rows.filter(r => r.change_pct > 0).sort((a, b) => b.change_pct - a.change_pct)
-  else if (filter === 'losers') filtered = rows.filter(r => r.change_pct < 0).sort((a, b) => a.change_pct - b.change_pct)
-  else if (filter === 'active') filtered = [...rows].sort((a, b) => b.deals_today - a.deals_today)
+  if (q) {
+    const term = q.toLowerCase()
+    filtered = filtered.filter(r => r.generic_name.toLowerCase().includes(term))
+  }
+  if (filter === 'gainers') filtered = filtered.filter(r => r.change_pct > 0).sort((a, b) => b.change_pct - a.change_pct)
+  else if (filter === 'losers') filtered = filtered.filter(r => r.change_pct < 0).sort((a, b) => a.change_pct - b.change_pct)
+  else if (filter === 'active') filtered = [...filtered].sort((a, b) => b.deals_today - a.deals_today)
 
   // Derive categories from actual drug data — no hardcoding
   const CATEGORIES = ['All', ...Array.from(new Set(
@@ -113,7 +130,11 @@ export default async function MarketPage({ searchParams }: PageProps) {
         <div className="card-header d-flex align-items-center justify-content-between gap-3">
           <div>
             <h5 className="mb-0">Market Board</h5>
-            <small className="text-muted d-none d-sm-block">{drugs?.length ?? 0} drugs · Updated every trade</small>
+            <small className="text-muted d-none d-sm-block">
+            {q ? `${filtered.length} of ${drugs?.length ?? 0} drugs` : `${drugs?.length ?? 0} drugs`}
+            {' · Updated every trade'}
+            {q && <span className="ms-2 badge bg-label-primary">Search: {q}</span>}
+          </small>
           </div>
           <div className="btn-group flex-shrink-0" role="group">
             {[
@@ -134,7 +155,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
           </div>
         </div>
 
-        <MarketTable rows={filtered} />
+        <MarketTable rows={filtered} canBid={canBid} />
 
         <div className="card-footer d-flex align-items-center flex-wrap gap-3">
           <small className="text-muted">Drugs: <span className="fw-semibold text-heading">{drugs?.length ?? 0}</span></small>

@@ -44,7 +44,8 @@ export async function POST(request: Request) {
     .eq('id', user.id)
     .single()
 
-  if (profile?.role !== 'seller' || !profile.verified) {
+  const isAdmin = profile?.role === 'admin'
+  if (!isAdmin && (profile?.role !== 'seller' || !profile.verified)) {
     return NextResponse.json({ error: 'Only verified sellers can list stock' }, { status: 403 })
   }
 

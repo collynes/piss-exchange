@@ -11,16 +11,20 @@ export default async function SellerListingsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: listings } = await supabase
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = profile?.role === 'admin'
+
+  const listingsQuery = supabase
     .from('listings')
     .select('id, brand_name, origin_country, qty_available, qty_remaining, price_per_unit, status, listing_expiry, expiry_date, created_at, drugs(generic_name, slug, strength, dosage_form)')
-    .eq('seller_id', user.id)
     .order('created_at', { ascending: false })
+  const { data: listings } = await (isAdmin ? listingsQuery : listingsQuery.eq('seller_id', user.id))
 
   return (
     <div className="max-w-5xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-bold text-text">My Listings</h1>
+        <h1 className="text-lg font-bold text-text">{isAdmin ? 'All Listings' : 'My Listings'}</h1>
         <Link href="/seller/listings/new"
           className="px-3 py-1.5 text-white text-xs font-semibold rounded-lg hover:opacity-90 transition-all"
           style={{ background: '#7367f0' }}>

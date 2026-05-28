@@ -4,24 +4,37 @@ import { createClient } from '@/lib/supabase/client'
 import { OrderBook, type Ask, type Bid } from '@/components/market/OrderBook'
 import { TradeHistory } from '@/components/market/TradeHistory'
 import { BuyModal } from './BuyModal'
-import { BidModal } from './BidModal'
+import { BidModal } from '@/components/market/BidModal'
 
 interface Trade { id: string; qty: number; price_per_unit: number; executed_at: string }
 interface Props {
   drugId: string; drugName: string; initialAsks: Ask[]; initialBids: Bid[]
-  initialTrades: Trade[]; isAuthenticated: boolean; prevPrice: number | null
+  initialTrades: Trade[]; prevPrice: number | null
 }
 
-export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, initialTrades, isAuthenticated, prevPrice }: Props) {
+export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, initialTrades, prevPrice }: Props) {
   const [asks, setAsks] = useState<Ask[]>(initialAsks)
   const [bids, setBids] = useState<Bid[]>(initialBids)
   const [trades, setTrades] = useState<Trade[]>(initialTrades)
   const [buyAsk, setBuyAsk] = useState<Ask | null>(null)
   const [showBidModal, setShowBidModal] = useState(false)
   const [mobileTab, setMobileTab] = useState<'book' | 'trades'>('book')
+  const [canBid, setCanBid] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
+
+    // Detect auth + role client-side — only verified buyers can bid/buy
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!session?.user) { setCanBid(false); return }
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role, verified')
+        .eq('id', session.user.id)
+        .maybeSingle()
+      setCanBid(profile?.role === 'admin' || (profile?.role === 'buyer' && profile?.verified === true))
+    })
+
     const listingsChannel = supabase.channel(`listings:${drugId}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'listings', filter: `drug_id=eq.${drugId}` },
         async () => {
@@ -41,7 +54,9 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
     const tradesChannel = supabase.channel(`trades:${drugId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'trades', filter: `drug_id=eq.${drugId}` },
         (payload) => { setTrades(prev => [payload.new as Trade, ...prev].slice(0, 50)) }).subscribe()
+
     return () => {
+      subscription.unsubscribe()
       supabase.removeChannel(listingsChannel)
       supabase.removeChannel(bidsChannel)
       supabase.removeChannel(tradesChannel)
@@ -63,7 +78,7 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
       {/* Desktop: order book + trades stacked */}
       <div className="hidden md:flex flex-1 flex-col md:overflow-hidden">
         <div className="flex-1 md:overflow-auto">
-          <OrderBook asks={asks} bids={bids} isAuthenticated={isAuthenticated}
+          <OrderBook asks={asks} bids={bids} canBid={canBid}
             onBuyClick={setBuyAsk} onBidClick={() => setShowBidModal(true)} />
         </div>
         <TradeHistory trades={trades} prevPrice={prevPrice} />
@@ -72,7 +87,7 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
       {/* Mobile: tabbed */}
       <div className="md:hidden flex-1 overflow-auto">
         {mobileTab === 'book' ? (
-          <OrderBook asks={asks} bids={bids} isAuthenticated={isAuthenticated}
+          <OrderBook asks={asks} bids={bids} canBid={canBid}
             onBuyClick={setBuyAsk} onBidClick={() => setShowBidModal(true)} />
         ) : (
           <TradeHistory trades={trades} prevPrice={prevPrice} />

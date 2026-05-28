@@ -9,18 +9,22 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  // Verify order is in 'confirmed' state and belongs to this seller
-  const { data: order } = await supabase
-    .from('orders').select('status').eq('id', id).eq('seller_id', user.id).single()
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = profile?.role === 'admin'
+
+  // Verify order is in 'confirmed' state; admin can act on any order, seller only on their own
+  const orderBaseQuery = supabase.from('orders').select('status').eq('id', id)
+  const { data: order } = await (isAdmin ? orderBaseQuery : orderBaseQuery.eq('seller_id', user.id)).single()
 
   if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   if (order.status !== 'confirmed') return NextResponse.json({ error: 'Order must be confirmed before shipping' }, { status: 400 })
 
   const adminSupabase = createAdminClient()
-  const { error } = await adminSupabase.from('orders')
+  const updateQuery = adminSupabase.from('orders')
     .update({ status: 'shipped', updated_at: new Date().toISOString() })
     .eq('id', id)
-    .eq('seller_id', user.id)
+  const { error } = await (isAdmin ? updateQuery : updateQuery.eq('seller_id', user.id))
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 

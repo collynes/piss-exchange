@@ -54,12 +54,15 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: order } = await supabase
+  const { data: callerProfile } = await supabase
+    .from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = callerProfile?.role === 'admin'
+
+  const orderQuery = supabase
     .from('orders')
     .select('id, status, total_amount')
     .eq('id', orderId)
-    .eq('buyer_id', user.id)
-    .single()
+  const { data: order } = await (isAdmin ? orderQuery : orderQuery.eq('buyer_id', user.id)).single()
 
   if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   if (order.status !== 'pending') return NextResponse.json({ error: 'Order is not payable' }, { status: 400 })

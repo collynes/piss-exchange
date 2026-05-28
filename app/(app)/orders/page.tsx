@@ -19,16 +19,20 @@ export default async function OrdersPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?next=/orders')
 
-  const { data: orders } = await supabase
+  const { data: profile } = await supabase
+    .from('profiles').select('role').eq('id', user.id).single()
+  const isAdmin = profile?.role === 'admin'
+
+  const ordersQuery = supabase
     .from('orders')
     .select('id, qty, price_per_unit, total_amount, status, escrow_status, created_at, drugs(generic_name, slug)')
-    .eq('buyer_id', user.id)
     .order('created_at', { ascending: false })
+  const { data: orders } = await (isAdmin ? ordersQuery : ordersQuery.eq('buyer_id', user.id))
 
   return (
     <div>
       <div className="d-flex align-items-center justify-content-between mb-4">
-        <h4 className="mb-0">My Orders</h4>
+        <h4 className="mb-0">{isAdmin ? 'All Orders' : 'My Orders'}</h4>
         <span className="badge bg-label-secondary">{orders?.length ?? 0} orders</span>
       </div>
 

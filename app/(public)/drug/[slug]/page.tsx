@@ -9,13 +9,11 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 30
 
 export default async function DrugPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
 
   const { data: drug } = await supabase
     .from('drugs')
@@ -90,7 +88,6 @@ export default async function DrugPage({ params }: PageProps) {
           initialAsks={asks ?? []}
           initialBids={bids ?? []}
           initialTrades={trades ?? []}
-          isAuthenticated={!!user}
           prevPrice={md?.prev_price ? Number(md.prev_price) : null}
         />
       </div>
