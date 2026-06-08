@@ -36,6 +36,8 @@ export type Database = {
     Tables: {
       bids: {
         Row: {
+          accepted_at: string | null
+          accepted_by: string | null
           buyer_id: string
           created_at: string | null
           drug_id: string
@@ -46,6 +48,8 @@ export type Database = {
           status: Database["public"]["Enums"]["bid_status"]
         }
         Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
           buyer_id: string
           created_at?: string | null
           drug_id: string
@@ -56,6 +60,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["bid_status"]
         }
         Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
           buyer_id?: string
           created_at?: string | null
           drug_id?: string
@@ -66,6 +72,13 @@ export type Database = {
           status?: Database["public"]["Enums"]["bid_status"]
         }
         Relationships: [
+          {
+            foreignKeyName: "bids_accepted_by_fkey"
+            columns: ["accepted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "bids_buyer_id_fkey"
             columns: ["buyer_id"]
@@ -288,6 +301,7 @@ export type Database = {
           price_per_unit: number
           qty: number
           seller_id: string
+          settlement_method: string
           status: Database["public"]["Enums"]["order_status"]
           total_amount: number
           updated_at: string | null
@@ -304,6 +318,7 @@ export type Database = {
           price_per_unit: number
           qty: number
           seller_id: string
+          settlement_method?: string
           status?: Database["public"]["Enums"]["order_status"]
           total_amount: number
           updated_at?: string | null
@@ -320,6 +335,7 @@ export type Database = {
           price_per_unit?: number
           qty?: number
           seller_id?: string
+          settlement_method?: string
           status?: Database["public"]["Enums"]["order_status"]
           total_amount?: number
           updated_at?: string | null
@@ -561,7 +577,7 @@ export type Database = {
         | "delivered"
         | "cancelled"
         | "disputed"
-      payment_method: "mpesa" | "bank_transfer"
+      payment_method: "mpesa" | "bank_transfer" | "dawahub_credit"
       payment_status: "pending" | "completed" | "failed" | "refunded"
       user_role: "buyer" | "seller" | "admin"
     }
@@ -706,7 +722,7 @@ export const Constants = {
         "cancelled",
         "disputed",
       ],
-      payment_method: ["mpesa", "bank_transfer"],
+      payment_method: ["mpesa", "bank_transfer", "dawahub_credit"],
       payment_status: ["pending", "completed", "failed", "refunded"],
       user_role: ["buyer", "seller", "admin"],
     },

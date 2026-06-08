@@ -50,6 +50,7 @@ export function MobileMenu({ role, orgName, isLoggedIn }: Props) {
                 ...(isLoggedIn && (role === 'seller' || role === 'admin') ? [
                   { href: '/seller/listings', label: 'My Listings' },
                   { href: '/seller/orders', label: 'Incoming Orders' },
+                  { href: '/seller/bids', label: 'Open Bids' },
                   { href: '/seller/listings/new', label: '+ List Drug' },
                 ] : []),
                 ...(isLoggedIn && role === 'buyer' ? [

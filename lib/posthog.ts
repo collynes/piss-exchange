@@ -35,6 +35,8 @@ export type AnalyticsEvent =
   | { event: 'user_logged_in';      props: Record<string, never> }
   | { event: 'search_performed';    props: { query: string; results: number } }
   | { event: 'market_filtered';     props: { category: string } }
+  | { event: 'bid_accepted';        props: { bid_id: string; order_id: string; drug_id: string; qty: number; price: number } }
+  | { event: 'order_settled_dawahub'; props: { order_id: string; total: number } }
 
 /** Fire a server-side event (use in Server Actions / Route Handlers) */
 export function captureServerEvent(

@@ -10,11 +10,11 @@ export interface Bid {
 }
 
 interface OrderBookProps {
-  asks: Ask[]; bids: Bid[]; canBid: boolean
-  onBuyClick: (ask: Ask) => void; onBidClick: () => void
+  asks: Ask[]; bids: Bid[]; canBid: boolean; canAcceptBid?: boolean
+  onBuyClick: (ask: Ask) => void; onBidClick: () => void; onAcceptBid?: (bid: Bid) => void
 }
 
-export function OrderBook({ asks, bids, canBid, onBuyClick, onBidClick }: OrderBookProps) {
+export function OrderBook({ asks, bids, canBid, canAcceptBid = false, onBuyClick, onBidClick, onAcceptBid }: OrderBookProps) {
   const sortedAsks = [...asks].sort((a, b) => a.price_per_unit - b.price_per_unit)
   const sortedBids = [...bids].sort((a, b) => b.price_per_unit - a.price_per_unit)
   const maxAskQty = Math.max(...asks.map(a => a.qty_remaining), 1)
@@ -86,7 +86,7 @@ export function OrderBook({ asks, bids, canBid, onBuyClick, onBidClick }: OrderB
             <div className="text-[12px] text-muted text-center py-6">No bids</div>
           )}
           {sortedBids.map(bid => (
-            <div key={bid.id} className="relative flex items-center px-3 py-1 hover:bg-surface2">
+            <div key={bid.id} className="relative flex items-center px-3 py-1 hover:bg-surface2 group">
               <div className="absolute inset-y-0 right-0 bg-green/8"
                 style={{ width: `${(bid.qty / maxBidQty) * 100}%` }} />
               <span className="relative text-green font-semibold tabular-nums text-sm w-24">{Number(bid.price_per_unit).toFixed(2)}</span>
@@ -94,6 +94,12 @@ export function OrderBook({ asks, bids, canBid, onBuyClick, onBidClick }: OrderB
               <span className="relative text-muted text-xs flex-1 text-right">
                 {bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' }) : '—'}
               </span>
+              {canAcceptBid && (
+                <button onClick={() => onAcceptBid?.(bid)}
+                  className="relative ml-2 px-2 py-0.5 bg-green text-white text-[10px] font-semibold rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                  Accept
+                </button>
+              )}
             </div>
           ))}
         </div>

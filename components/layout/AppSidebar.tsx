@@ -60,6 +60,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
             <NavItem href="/orders" label="My Orders" icon="bx-cart" />
             {isSeller && <NavItem href="/seller/listings" label="My Listings" icon="bx-package" />}
             {isSeller && <NavItem href="/seller/orders" label="Incoming Orders" icon="bx-inbox" />}
+            {isSeller && <NavItem href="/seller/bids" label="Open Bids" icon="bx-trending-up" />}
           </>
         )}
 
@@ -74,6 +75,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
             <NavItem href="/admin/users" label="Users" icon="bx-group" />
             <NavItem href="/admin/drugs" label="Drug Catalogue" icon="bx-capsule" />
             <NavItem href="/admin/orders" label="All Orders" icon="bx-receipt" />
+            <NavItem href="/seller/bids" label="Open Bids" icon="bx-trending-up" />
             <NavItem href="/admin/settings" label="Settings" icon="bx-cog" />
           </>
         )}

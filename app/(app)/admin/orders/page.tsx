@@ -27,7 +27,7 @@ export default async function AdminOrdersPage() {
   const { data: orders } = await supabase
     .from('orders')
     .select(`
-      id, qty, price_per_unit, total_amount, status, escrow_status, created_at,
+      id, qty, price_per_unit, total_amount, status, escrow_status, settlement_method, created_at,
       drugs(generic_name),
       buyer:profiles!orders_buyer_id_fkey(org_name),
       seller:profiles!orders_seller_id_fkey(org_name)
@@ -46,7 +46,7 @@ export default async function AdminOrdersPage() {
         <table className="table table-hover mb-0">
           <thead className="table-light">
             <tr style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
-              {['Drug', 'Buyer', 'Seller', 'Qty', 'Total', 'Status', 'Escrow', 'Date', ''].map((h, i) => (
+              {['Drug', 'Buyer', 'Seller', 'Qty', 'Total', 'Status', 'Settlement', 'Date', ''].map((h, i) => (
                 <th key={i} className={`px-5 py-3.5 text-[11px] font-bold text-muted uppercase tracking-wider ${i < 3 ? 'text-left' : 'text-right'}`}>{h}</th>
               ))}
             </tr>
@@ -79,12 +79,27 @@ export default async function AdminOrdersPage() {
                       {order.status}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right text-xs text-muted capitalize">{order.escrow_status}</td>
+                  <td className="px-5 py-3.5 text-right">
+                    <span className={`badge rounded-pill text-capitalize ${order.settlement_method === 'dawahub_credit' ? 'bg-label-warning text-warning' : 'bg-label-secondary text-muted'}`}>
+                      {order.settlement_method === 'dawahub_credit' ? 'Dawahub Credit' : 'M-Pesa'}
+                    </span>
+                  </td>
                   <td className="px-5 py-3.5 text-right text-xs text-muted">{new Date(order.created_at as string).toLocaleDateString('en-KE')}</td>
                   <td className="px-5 py-3.5 text-right">
-                    <Link href={`/orders/${order.id}`} className="text-muted hover:text-text transition-colors inline-flex">
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    <div className="flex items-center gap-2 justify-end">
+                      {order.settlement_method === 'dawahub_credit' && order.escrow_status !== 'released'
+                        && ['confirmed', 'shipped', 'delivered'].includes(order.status) && (
+                        <form action={`/api/orders/${order.id}/settle`} method="POST" className="inline" onClick={e => e.stopPropagation()}>
+                          <button type="submit"
+                            className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-warning text-warning hover:bg-warning/20 transition-colors">
+                            Settle
+                          </button>
+                        </form>
+                      )}
+                      <Link href={`/orders/${order.id}`} className="text-muted hover:text-text transition-colors inline-flex">
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               )

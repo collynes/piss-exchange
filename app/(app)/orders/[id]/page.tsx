@@ -19,7 +19,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const orderBaseQuery = supabase
     .from('orders')
     .select(`
-      id, qty, price_per_unit, total_amount, status, escrow_status, notes, created_at, updated_at,
+      id, qty, price_per_unit, total_amount, status, escrow_status, settlement_method, notes, created_at, updated_at,
       buyer_id,
       drugs(generic_name, slug, strength, dosage_form),
       listings(brand_name, origin_country),
@@ -48,6 +48,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
     { label: 'Quantity',    value: `${order.qty.toLocaleString()} units` },
     { label: 'Price / unit',value: `KES ${Number(order.price_per_unit).toFixed(2)}` },
     { label: 'Total',       value: formatKES(Number(order.total_amount)), bold: true },
+    { label: 'Settlement',  value: order.settlement_method === 'dawahub_credit' ? 'Dawahub Credit' : 'M-Pesa' },
     { label: 'Placed',      value: new Date(order.created_at as string).toLocaleString('en-KE') },
   ]
 
@@ -144,6 +145,26 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <button type="submit"
               className="btn btn-primary">
               Confirm Delivery & Release Payment
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Dawahub settlement (admin only) */}
+      {isAdmin && order.settlement_method === 'dawahub_credit' && order.escrow_status !== 'released'
+        && ['confirmed', 'shipped', 'delivered'].includes(order.status) && (
+        <div className="rounded-2xl px-5 py-4" style={{
+          background: 'rgba(255,159,67,.08)',
+          border: '1px solid rgba(255,159,67,.25)',
+        }}>
+          <div className="text-sm font-bold text-text mb-0.5">Dawahub-settled order</div>
+          <div className="text-xs text-muted mb-4">
+            This order was created by accepting a bid directly. Mark it settled once Dawahub has paid
+            the seller — this releases escrow and records the trade.
+          </div>
+          <form action={`/api/orders/${id}/settle`} method="POST">
+            <button type="submit" className="btn" style={{ background: '#ff9f43', color: '#fff' }}>
+              Mark as Settled
             </button>
           </form>
         </div>

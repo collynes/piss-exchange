@@ -5,6 +5,7 @@ import { OrderBook, type Ask, type Bid } from '@/components/market/OrderBook'
 import { TradeHistory } from '@/components/market/TradeHistory'
 import { BuyModal } from './BuyModal'
 import { BidModal } from '@/components/market/BidModal'
+import { AcceptBidModal } from '@/components/market/AcceptBidModal'
 
 interface Trade { id: string; qty: number; price_per_unit: number; executed_at: string }
 interface Props {
@@ -18,21 +19,24 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
   const [trades, setTrades] = useState<Trade[]>(initialTrades)
   const [buyAsk, setBuyAsk] = useState<Ask | null>(null)
   const [showBidModal, setShowBidModal] = useState(false)
+  const [acceptBid, setAcceptBid] = useState<Bid | null>(null)
   const [mobileTab, setMobileTab] = useState<'book' | 'trades'>('book')
   const [canBid, setCanBid] = useState(false)
+  const [canAcceptBid, setCanAcceptBid] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
 
-    // Detect auth + role client-side — only verified buyers can bid/buy
+    // Detect auth + role client-side — verified buyers can bid/buy, verified sellers (and admin) can accept bids
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!session?.user) { setCanBid(false); return }
+      if (!session?.user) { setCanBid(false); setCanAcceptBid(false); return }
       const { data: profile } = await supabase
         .from('profiles')
         .select('role, verified')
         .eq('id', session.user.id)
         .maybeSingle()
       setCanBid(profile?.role === 'admin' || (profile?.role === 'buyer' && profile?.verified === true))
+      setCanAcceptBid(profile?.role === 'admin' || (profile?.role === 'seller' && profile?.verified === true))
     })
 
     const listingsChannel = supabase.channel(`listings:${drugId}`)
@@ -78,8 +82,8 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
       {/* Desktop: order book + trades stacked */}
       <div className="hidden md:flex flex-1 flex-col md:overflow-hidden">
         <div className="flex-1 md:overflow-auto">
-          <OrderBook asks={asks} bids={bids} canBid={canBid}
-            onBuyClick={setBuyAsk} onBidClick={() => setShowBidModal(true)} />
+          <OrderBook asks={asks} bids={bids} canBid={canBid} canAcceptBid={canAcceptBid}
+            onBuyClick={setBuyAsk} onBidClick={() => setShowBidModal(true)} onAcceptBid={setAcceptBid} />
         </div>
         <TradeHistory trades={trades} prevPrice={prevPrice} />
       </div>
@@ -87,8 +91,8 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
       {/* Mobile: tabbed */}
       <div className="md:hidden flex-1 overflow-auto">
         {mobileTab === 'book' ? (
-          <OrderBook asks={asks} bids={bids} canBid={canBid}
-            onBuyClick={setBuyAsk} onBidClick={() => setShowBidModal(true)} />
+          <OrderBook asks={asks} bids={bids} canBid={canBid} canAcceptBid={canAcceptBid}
+            onBuyClick={setBuyAsk} onBidClick={() => setShowBidModal(true)} onAcceptBid={setAcceptBid} />
         ) : (
           <TradeHistory trades={trades} prevPrice={prevPrice} />
         )}
@@ -96,6 +100,10 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
 
       {buyAsk && <BuyModal ask={buyAsk} drugName={drugName} onClose={() => setBuyAsk(null)} />}
       {showBidModal && <BidModal drugId={drugId} drugName={drugName} onClose={() => setShowBidModal(false)} />}
+      {acceptBid && (
+        <AcceptBidModal bidId={acceptBid.id} drugName={drugName} qty={acceptBid.qty}
+          pricePerUnit={Number(acceptBid.price_per_unit)} onClose={() => setAcceptBid(null)} />
+      )}
     </>
   )
 }
