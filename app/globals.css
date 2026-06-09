@@ -145,6 +145,12 @@ html {
   color: #46505f !important;
 }
 
+/* Sneat ships .text-muted as #a1acb8 !important — too faint against white
+   cards for dense trading tables. Darken for legibility (still secondary). */
+.text-muted {
+  color: #5d6b7a !important;
+}
+
 .drug-sidebar .btn {
   max-width: 100%;
 }

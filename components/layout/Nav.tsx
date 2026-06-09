@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { NotificationBell } from './NotificationBell'
 
 export async function Nav() {
   const supabase = await createClient()
@@ -40,6 +41,12 @@ export async function Nav() {
               Market
             </Link>
           </li>
+
+          {user && profile?.role !== 'buyer' && (
+            <li className="nav-item me-1">
+              <NotificationBell />
+            </li>
+          )}
 
           {user ? (
             <li className="nav-item navbar-dropdown dropdown-user dropdown">

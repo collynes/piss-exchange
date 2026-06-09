@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
-import { Package, Inbox, DollarSign, Plus, ArrowRight } from 'lucide-react'
+import { Package, Inbox, DollarSign, Plus, ArrowRight, TrendingUp } from 'lucide-react'
 
 const STATUS_COLOR: Record<string, string> = {
   pending:   'bg-label-warning text-warning',
@@ -51,7 +51,7 @@ export default async function SellerDashboardPage() {
 
   const isAdmin = profile?.role === 'admin'
 
-  const [{ data: listings }, { data: orders }, { count: pendingCount }] = await Promise.all([
+  const [{ data: listings }, { data: orders }, { count: pendingCount }, { count: openBidsCount }] = await Promise.all([
     isAdmin
       ? supabase.from('listings').select('id, status, qty_remaining, qty_available, price_per_unit, drugs(generic_name)').eq('status', 'active')
       : supabase.from('listings').select('id, status, qty_remaining, qty_available, price_per_unit, drugs(generic_name)').eq('seller_id', user.id).eq('status', 'active'),
@@ -61,6 +61,10 @@ export default async function SellerDashboardPage() {
     isAdmin
       ? supabase.from('orders').select('*', { count: 'exact', head: true }).in('status', ['pending', 'paid', 'confirmed'])
       : supabase.from('orders').select('*', { count: 'exact', head: true }).eq('seller_id', user.id).in('status', ['pending', 'paid', 'confirmed']),
+    supabase.from('bids').select('*', { count: 'exact', head: true })
+      .eq('status', 'open')
+      .gt('expires_at', new Date().toISOString())
+      .neq('buyer_id', user.id),
   ])
 
   const activeListings = listings?.length ?? 0
@@ -96,7 +100,7 @@ export default async function SellerDashboardPage() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           label="Active Listings"
           value={String(activeListings)}
@@ -104,6 +108,15 @@ export default async function SellerDashboardPage() {
           Icon={Package}
           color={{ bg: 'rgba(40,199,111,.15)', text: '#28c76f' }}
         />
+        <Link href="/seller/bids" className="block">
+          <StatCard
+            label="Open Bids"
+            value={String(openBidsCount ?? 0)}
+            sub="awaiting acceptance"
+            Icon={TrendingUp}
+            color={{ bg: 'rgba(115,103,240,.15)', text: '#7367f0' }}
+          />
+        </Link>
         <StatCard
           label="Pending Orders"
           value={String(pendingCount ?? 0)}
@@ -206,7 +219,7 @@ export default async function SellerDashboardPage() {
                   style={{ borderBottom: i < Math.min((listings?.length ?? 0), 5) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <div className="flex justify-between items-start mb-1.5">
                     <div className="text-[13px] font-semibold text-text truncate flex-1 pr-2">{drug?.generic_name ?? '—'}</div>
-                    <div className="text-xs font-bold text-red tabular-nums flex-shrink-0">
+                    <div className="text-xs font-bold text-text tabular-nums flex-shrink-0">
                       KES {Number(l.price_per_unit).toFixed(2)}
                     </div>
                   </div>
@@ -239,6 +252,7 @@ export default async function SellerDashboardPage() {
           {[
             { href: '/seller/listings/new', label: 'List a Drug', desc: 'Add stock to the exchange', Icon: Plus, color: '#7367f0' },
             { href: '/seller/listings', label: 'My Listings', desc: 'Manage active listings', Icon: Package, color: '#7367f0' },
+            { href: '/seller/bids', label: 'Open Bids', desc: 'Accept buyer bids', Icon: TrendingUp, color: '#28c76f' },
             { href: '/seller/orders', label: 'Incoming Orders', desc: 'Confirm and ship', Icon: Inbox, color: '#7c3aed' },
           ].map(({ href, label, desc, Icon, color }) => (
             <Link key={href} href={href}
