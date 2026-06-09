@@ -16,7 +16,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Only verified buyers can place bids or buy
+  // Any verified account (buyer or seller) can place bids
   let canBid = false
   if (user) {
     const { data: profile } = await supabase
@@ -24,7 +24,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
       .select('role, verified')
       .eq('id', user.id)
       .maybeSingle()
-    canBid = profile?.role === 'admin' || (profile?.role === 'buyer' && profile?.verified === true)
+    canBid = profile?.role === 'admin' || profile?.verified === true
   }
 
   const { data: sidebarData } = await supabase
@@ -103,8 +103,8 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
   return (
     <div className="row g-4">
-      {/* Sidebar — desktop only */}
-      <div className="col-xl-3 col-lg-4 d-none d-lg-block">
+      {/* Sidebar — stacks above table on small screens, sits beside it on lg+ */}
+      <div className="col-12 col-lg-4 col-xl-3">
         <Suspense>
           <DrugSidebar drugs={sidebarDrugs} categories={CATEGORIES} />
         </Suspense>
@@ -112,20 +112,6 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
       <div className="col-xl-9 col-lg-8">
         <div className="card">
-        {/* Mobile category strip */}
-        <div className="d-lg-none card-body border-bottom d-flex align-items-center gap-2 overflow-auto">
-          {CATEGORIES.map(c => (
-            <a key={c}
-              href={c === 'All' ? '/market' : `/market?cat=${c}`}
-              className={`btn btn-sm flex-shrink-0
-                ${(cat ?? 'All') === c
-                  ? 'btn-primary'
-                  : 'btn-outline-secondary'}`}>
-              {c}
-            </a>
-          ))}
-        </div>
-
         {/* Toolbar */}
         <div className="card-header d-flex align-items-center justify-content-between gap-3">
           <div>

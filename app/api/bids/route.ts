@@ -32,8 +32,8 @@ export async function POST(request: Request) {
     .single()
 
   const isAdmin = profile?.role === 'admin'
-  if (!isAdmin && (profile?.role !== 'buyer' || !profile.verified)) {
-    return NextResponse.json({ error: 'Only verified buyers can place bids' }, { status: 403 })
+  if (!isAdmin && !profile?.verified) {
+    return NextResponse.json({ error: 'Only verified accounts can place bids' }, { status: 403 })
   }
 
   const adminSupabase = createAdminClient()

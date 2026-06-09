@@ -27,7 +27,7 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
   useEffect(() => {
     const supabase = createClient()
 
-    // Detect auth + role client-side — verified buyers can bid/buy, verified sellers (and admin) can accept bids
+    // Detect auth + role client-side — any verified account can bid; verified sellers (and admin) can accept bids
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!session?.user) { setCanBid(false); setCanAcceptBid(false); return }
       const { data: profile } = await supabase
@@ -35,7 +35,7 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
         .select('role, verified')
         .eq('id', session.user.id)
         .maybeSingle()
-      setCanBid(profile?.role === 'admin' || (profile?.role === 'buyer' && profile?.verified === true))
+      setCanBid(profile?.role === 'admin' || profile?.verified === true)
       setCanAcceptBid(profile?.role === 'admin' || (profile?.role === 'seller' && profile?.verified === true))
     })
 
