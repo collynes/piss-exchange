@@ -101,7 +101,12 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
       </div>
 
       {buyAsk && <BuyModal ask={buyAsk} drugName={drugName} onClose={() => setBuyAsk(null)} />}
-      {showBidModal && <BidModal drugId={drugId} drugName={drugName} onClose={() => setShowBidModal(false)} />}
+      {showBidModal && (
+        <BidModal drugId={drugId} drugName={drugName} onClose={() => setShowBidModal(false)}
+          bestBid={bids.length ? Math.max(...bids.map(b => Number(b.price_per_unit))) : null}
+          bestAsk={asks.length ? Math.min(...asks.map(a => Number(a.price_per_unit))) : null}
+          lastPrice={trades.length ? Number(trades[0].price_per_unit) : prevPrice} />
+      )}
       {acceptBid && (
         <AcceptBidModal bidId={acceptBid.id} drugName={drugName} qty={acceptBid.qty}
           pricePerUnit={Number(acceptBid.price_per_unit)} onClose={() => setAcceptBid(null)} />

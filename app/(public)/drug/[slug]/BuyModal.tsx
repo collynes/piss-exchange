@@ -87,7 +87,8 @@ export function BuyModal({ ask, drugName, onClose }: BuyModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+    // zIndex must beat Bootstrap's .sticky-top (1020) used by the market table header
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" style={{ zIndex: 1100 }} onClick={onClose}>
       <div className="rounded-2xl w-full max-w-sm overflow-hidden" style={GLASS} onClick={e => e.stopPropagation()}>
 
         {/* Header */}

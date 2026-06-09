@@ -91,7 +91,9 @@ export default async function MarketPage({ searchParams }: PageProps) {
   let filtered = rows
   if (q) {
     const term = q.toLowerCase()
-    filtered = filtered.filter(r => r.generic_name.toLowerCase().includes(term))
+    filtered = filtered.filter(r =>
+      r.generic_name.toLowerCase().includes(term) ||
+      (r.atc_code?.toLowerCase().includes(term) ?? false))
   }
   if (filter === 'gainers') filtered = filtered.filter(r => r.change_pct > 0).sort((a, b) => b.change_pct - a.change_pct)
   else if (filter === 'losers') filtered = filtered.filter(r => r.change_pct < 0).sort((a, b) => a.change_pct - b.change_pct)

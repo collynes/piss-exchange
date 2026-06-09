@@ -10,7 +10,8 @@ DELETE FROM drugs;
 INSERT INTO auth.users (
   id, instance_id, aud, role, email, encrypted_password,
   email_confirmed_at, raw_app_meta_data, raw_user_meta_data,
-  created_at, updated_at, confirmation_token, recovery_token, email_change_token_new
+  created_at, updated_at, confirmation_token, recovery_token, email_change_token_new,
+  email_change, phone_change, phone_change_token, email_change_token_current, reauthentication_token
 ) VALUES (
   'ba7a1000-0000-0000-0000-000000000001',
   '00000000-0000-0000-0000-000000000000',
@@ -20,7 +21,8 @@ INSERT INTO auth.users (
   now(),
   '{"provider":"email","providers":["email"]}',
   '{"org_name":"Batalo Pharma"}',
-  now(), now(), '', '', ''
+  now(), now(), '', '', '',
+  '', '', '', '', ''
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Create Batalo Pharma profile (admin + seller, pre-verified)

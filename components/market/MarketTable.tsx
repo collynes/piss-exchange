@@ -21,7 +21,7 @@ interface MarketRow {
 }
 
 export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boolean }) {
-  const [bidDrug, setBidDrug] = useState<{ id: string; name: string } | null>(null)
+  const [bidDrug, setBidDrug] = useState<MarketRow | null>(null)
 
   return (
     <>
@@ -48,7 +48,7 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
                   </div>
                   {canBid && (
                     <button
-                      onClick={() => setBidDrug({ id: row.drug_id, name: row.generic_name })}
+                      onClick={() => setBidDrug(row)}
                       className="btn btn-sm btn-outline-success flex-shrink-0">
                       Bid
                     </button>
@@ -115,7 +115,7 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
                     <div className="d-flex align-items-center justify-content-end gap-1">
                       {canBid && (
                         <button
-                          onClick={() => setBidDrug({ id: row.drug_id, name: row.generic_name })}
+                          onClick={() => setBidDrug(row)}
                           className="btn btn-sm btn-outline-success text-nowrap">
                           + Bid
                         </button>
@@ -138,8 +138,11 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
 
       {bidDrug && (
         <BidModal
-          drugId={bidDrug.id}
-          drugName={bidDrug.name}
+          drugId={bidDrug.drug_id}
+          drugName={bidDrug.generic_name}
+          bestBid={bidDrug.best_bid != null ? Number(bidDrug.best_bid) : null}
+          bestAsk={bidDrug.best_ask != null ? Number(bidDrug.best_ask) : null}
+          lastPrice={bidDrug.last_price != null ? Number(bidDrug.last_price) : null}
           onClose={() => setBidDrug(null)}
         />
       )}

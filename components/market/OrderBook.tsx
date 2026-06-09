@@ -48,12 +48,12 @@ export function OrderBook({ asks, bids, canBid, canAcceptBid = false, onBuyClick
               <span className="relative text-text tabular-nums text-sm w-20 text-right">{ask.qty_remaining.toLocaleString()}</span>
               <span className="relative text-muted text-xs flex-1 text-right truncate">{ask.brand_name}</span>
               {canBid && (
-                <button className="relative ml-2 px-2 py-0.5 bg-blue text-white text-[10px] font-semibold rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                <button className="relative ml-2 px-2 py-0.5 bg-blue text-white text-[10px] font-semibold rounded opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   Buy
                 </button>
               )}
               {!canBid && (
-                <a href="/login" className="relative ml-2 text-[10px] text-muted hover:text-blue opacity-0 group-hover:opacity-100 transition-opacity">
+                <a href="/login" className="relative ml-2 text-[10px] text-muted hover:text-blue opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   Login
                 </a>
               )}
@@ -96,7 +96,7 @@ export function OrderBook({ asks, bids, canBid, canAcceptBid = false, onBuyClick
               </span>
               {canAcceptBid && (
                 <button onClick={() => onAcceptBid?.(bid)}
-                  className="relative ml-2 px-2 py-0.5 bg-green text-white text-[10px] font-semibold rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                  className="relative ml-2 px-2 py-0.5 bg-green text-white text-[10px] font-semibold rounded opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   Accept
                 </button>
               )}

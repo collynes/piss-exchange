@@ -139,7 +139,9 @@ export function DrugSidebar({ drugs, categories }: DrugSidebarProps) {
             </Link>
           ))}
           {filteredDrugs.length === 0 && (
-            <small className="text-muted">No drugs found.</small>
+            <small className="text-muted">
+              No match in top movers — press <i className="bx bx-search align-middle" /> to search the full market.
+            </small>
           )}
         </div>
       )}

@@ -25,7 +25,7 @@ export function MobileMenu({ role, orgName, isLoggedIn }: Props) {
 
       {/* Backdrop */}
       {open && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 md:hidden" style={{ zIndex: 1100 }}>
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
           {/* Drawer */}

@@ -11,6 +11,7 @@ export interface OpenBid {
   created_at: string | null
   drug_name: string
   buyer_org: string
+  is_own: boolean
 }
 
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
@@ -46,7 +47,9 @@ export function SellerBidsClient({ bids, canAccept }: { bids: OpenBid[]; canAcce
                   {new Date(bid.expires_at).toLocaleDateString('en-KE')}
                 </td>
                 <td className="px-5 py-3.5 text-right">
-                  {canAccept ? (
+                  {bid.is_own ? (
+                    <span className="text-xs text-muted">Your bid</span>
+                  ) : canAccept ? (
                     <button onClick={() => setAcceptBid(bid)}
                       className="btn btn-sm btn-outline-success text-nowrap">
                       Accept

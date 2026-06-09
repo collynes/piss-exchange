@@ -20,7 +20,7 @@ export default async function SellerBidsPage() {
   const { data: bids } = await adminSupabase
     .from('bids')
     .select(`
-      id, qty, price_per_unit, expires_at, created_at,
+      id, qty, price_per_unit, expires_at, created_at, buyer_id,
       drugs(generic_name, slug, strength, dosage_form),
       buyer:profiles!bids_buyer_id_fkey(org_name)
     `)
@@ -40,6 +40,7 @@ export default async function SellerBidsPage() {
       created_at: b.created_at,
       drug_name: drug ? `${drug.generic_name} ${drug.strength} ${drug.dosage_form}` : '—',
       buyer_org: buyer?.org_name ?? 'Anonymous Buyer',
+      is_own: b.buyer_id === user.id,
     }
   })
 

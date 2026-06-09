@@ -149,6 +149,14 @@ html {
   max-width: 100%;
 }
 
+/* When the sidebar stacks above the market table (below lg), cap the
+   scrollable lists so the table stays within reach of the first scroll */
+@media (max-width: 991.98px) {
+  .drug-sidebar .overflow-auto {
+    max-height: 38vh;
+  }
+}
+
 .drug-sidebar-link {
   color: #3b4655;
 }

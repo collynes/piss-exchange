@@ -15,9 +15,12 @@ interface BidModalProps {
   drugId: string
   drugName: string
   onClose: () => void
+  bestBid?: number | null
+  bestAsk?: number | null
+  lastPrice?: number | null
 }
 
-export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
+export function BidModal({ drugId, drugName, onClose, bestBid, bestAsk, lastPrice }: BidModalProps) {
   const router = useRouter()
   const [price, setPrice] = useState('')
   const [qty, setQty] = useState('')
@@ -55,7 +58,8 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+    // zIndex must beat Bootstrap's .sticky-top (1020) used by the market table header
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" style={{ zIndex: 1100 }} onClick={onClose}>
       <div className="rounded-2xl w-full max-w-sm overflow-hidden" style={GLASS} onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between gap-3 px-5 py-4 bg-surface2 border-b border-border">
           <div className="min-w-0 flex-1">
@@ -65,6 +69,22 @@ export function BidModal({ drugId, drugName, onClose }: BidModalProps) {
           <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-full bg-surface2 text-muted hover:text-text transition-colors text-base leading-none">×</button>
         </div>
         <form onSubmit={handleSubmit} className="px-5 py-5 space-y-4">
+          {(bestBid != null || bestAsk != null || lastPrice != null) && (
+            <div className="flex items-center justify-between gap-2 py-2.5 px-4 rounded-xl bg-bg text-center" style={{ border: '1px solid var(--bs-border-color, rgba(47,43,61,.14))' }}>
+              <div className="flex-1">
+                <div className="text-[10px] text-muted uppercase tracking-wider">Best Bid</div>
+                <div className="text-sm font-bold text-green tabular-nums">{bestBid != null ? bestBid.toFixed(2) : '—'}</div>
+              </div>
+              <div className="flex-1">
+                <div className="text-[10px] text-muted uppercase tracking-wider">Last</div>
+                <div className="text-sm font-bold text-text tabular-nums">{lastPrice != null ? lastPrice.toFixed(2) : '—'}</div>
+              </div>
+              <div className="flex-1">
+                <div className="text-[10px] text-muted uppercase tracking-wider">Best Ask</div>
+                <div className="text-sm font-bold text-red tabular-nums">{bestAsk != null ? bestAsk.toFixed(2) : '—'}</div>
+              </div>
+            </div>
+          )}
           <div>
             <label className="block text-xs text-muted uppercase tracking-wider mb-2">Bid Price (KES / unit) <span className="text-red">*</span></label>
             <input type="number" step="0.01" min="0.01" required value={price}

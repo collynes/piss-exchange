@@ -152,7 +152,10 @@ export default function NewListingPage() {
                 </div>
               )}
               {search.length > 1 && drugs.length === 0 && (
-                <p className="text-xs text-muted px-1">No drugs found for &quot;{search}&quot;</p>
+                <p className="text-xs text-muted px-1">
+                  No drugs found for &quot;{search}&quot; — this generic may not be in the catalogue yet.
+                  Contact Dawahub support to have it added before listing.
+                </p>
               )}
             </div>
           )}
