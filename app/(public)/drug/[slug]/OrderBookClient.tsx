@@ -52,7 +52,9 @@ export function OrderBookClient({ drugId, drugName, initialAsks, initialBids, in
         async () => {
           const { data } = await supabase.from('bids')
             .select('id, qty, price_per_unit, created_at')
-            .eq('drug_id', drugId).eq('status', 'open').order('price_per_unit', { ascending: false })
+            .eq('drug_id', drugId).eq('status', 'open')
+            .gt('expires_at', new Date().toISOString())
+            .order('price_per_unit', { ascending: false })
           if (data) setBids(data)
         }).subscribe()
     const tradesChannel = supabase.channel(`trades:${drugId}`)

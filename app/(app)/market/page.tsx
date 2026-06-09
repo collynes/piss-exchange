@@ -44,6 +44,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
     .eq('active', true)
     .eq('listings.status', 'active')
     .eq('bids.status', 'open')
+    .gt('bids.expires_at', new Date().toISOString())
 
   if (cat && cat !== 'All') query = (query as typeof query).eq('category', cat)
   const { data: drugs } = await query.order('generic_name')
