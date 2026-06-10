@@ -39,6 +39,7 @@ export type AnalyticsEvent =
   | { event: 'order_settled_dawahub'; props: { order_id: string; total: number } }
   | { event: 'bid_cancelled';       props: { bid_id: string } }
   | { event: 'listing_cancelled';   props: { listing_id: string } }
+  | { event: 'order_cancelled';     props: { order_id: string } }
 
 /** Fire a server-side event (use in Server Actions / Route Handlers) */
 export function captureServerEvent(

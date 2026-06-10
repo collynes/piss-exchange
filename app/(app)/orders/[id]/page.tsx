@@ -2,8 +2,18 @@ import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
+import { CancelOrderButton } from './CancelOrderButton'
 
 const STATUS_STEPS = ['pending', 'paid', 'confirmed', 'shipped', 'delivered']
+const TERMINAL_STATES: Record<string, { title: string; tone: string }> = {
+  cancelled: { title: 'This order was cancelled', tone: 'rgba(234,84,85,.9)' },
+  disputed:  { title: 'This order is under dispute', tone: 'rgba(255,159,67,.95)' },
+}
+const PAYMENT_STATUS_CLASS: Record<string, string> = {
+  completed: 'text-success',
+  pending:   'text-warning',
+  failed:    'text-danger',
+}
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -52,10 +62,10 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
     { label: 'Placed',      value: new Date(order.created_at as string).toLocaleString('en-KE') },
   ]
 
-  const paymentRows = payment ? [
+  const paymentRows: { label: string; value: string; valueClass?: string }[] = payment ? [
     { label: 'Method',          value: payment.method.toUpperCase() },
     { label: 'Amount',          value: formatKES(Number(payment.amount)) },
-    { label: 'Status',          value: payment.status },
+    { label: 'Status',          value: payment.status, valueClass: `fw-semibold ${PAYMENT_STATUS_CLASS[payment.status] ?? 'text-muted'}` },
     ...(payment.mpesa_ref       ? [{ label: 'M-Pesa Ref',      value: payment.mpesa_ref }] : []),
     ...(payment.escrow_released_at ? [{ label: 'Escrow Released', value: new Date(payment.escrow_released_at).toLocaleString('en-KE') }] : []),
   ] : []
@@ -70,30 +80,38 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         <span className="font-mono">{id.slice(0, 8)}…</span>
       </div>
 
-      {/* Status stepper */}
-      <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
-        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
-          <h2 className="text-sm font-bold text-text">Order Status</h2>
+      {/* Status — terminal states get a clear banner, the linear flow gets a stepper */}
+      {TERMINAL_STATES[order.status] ? (
+        <div className="rounded-2xl px-5 py-4 flex items-center gap-3"
+          style={{ background: 'rgba(47,43,61,.04)', border: `1px solid ${TERMINAL_STATES[order.status].tone}` }}>
+          <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: TERMINAL_STATES[order.status].tone }} />
+          <div className="text-sm font-bold text-text">{TERMINAL_STATES[order.status].title}</div>
         </div>
-        <div className="px-5 py-5">
-          <div className="flex items-center">
-            {STATUS_STEPS.map((step, i) => (
-              <div key={step} className="flex items-center flex-1">
-                <div className="flex flex-col items-center gap-1">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0
-                    ${i < currentStep ? 'bg-green text-white' : i === currentStep ? 'bg-blue text-white' : 'bg-surface2 text-muted'}`}>
-                    {i < currentStep ? '✓' : i + 1}
+      ) : (
+        <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
+          <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
+            <h2 className="text-sm font-bold text-text">Order Status</h2>
+          </div>
+          <div className="px-5 py-5">
+            <div className="flex items-center">
+              {STATUS_STEPS.map((step, i) => (
+                <div key={step} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center gap-1">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0
+                      ${i < currentStep ? 'bg-green text-white' : i === currentStep ? 'bg-blue text-white' : 'bg-surface2 text-muted'}`}>
+                      {i < currentStep ? '✓' : i + 1}
+                    </div>
+                    <div className="text-[9px] text-muted capitalize hidden sm:block">{step}</div>
                   </div>
-                  <div className="text-[9px] text-muted capitalize hidden sm:block">{step}</div>
+                  {i < STATUS_STEPS.length - 1 && (
+                    <div className={`flex-1 h-0.5 mx-2 mb-3 ${i < currentStep ? 'bg-green' : 'bg-surface2'}`} />
+                  )}
                 </div>
-                {i < STATUS_STEPS.length - 1 && (
-                  <div className={`flex-1 h-0.5 mx-2 mb-3 ${i < currentStep ? 'bg-green' : 'bg-surface2'}`} />
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Order details */}
       <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
@@ -121,16 +139,31 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           </div>
           <table className="table table-hover mb-0">
             <tbody>
-              {paymentRows.map(({ label, value }, i) => (
+              {paymentRows.map(({ label, value, valueClass }, i) => (
                 <tr key={label}
                   style={{ borderBottom: i < paymentRows.length - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                   <td className="px-5 py-3 text-xs text-muted uppercase tracking-wider w-1/3">{label}</td>
-                  <td className="px-5 py-3 text-right text-[13px] text-text capitalize">{value}</td>
+                  <td className={`px-5 py-3 text-right text-[13px] capitalize ${valueClass ?? 'text-text'}`}>{value}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* Notes */}
+      {order.notes && (
+        <div className="rounded-2xl bg-surface overflow-hidden" style={CARD}>
+          <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
+            <h2 className="text-sm font-bold text-text">Notes</h2>
+          </div>
+          <div className="px-5 py-4 text-[13px] text-text whitespace-pre-wrap">{order.notes}</div>
+        </div>
+      )}
+
+      {/* Cancel a still-unpaid order (buyer or admin) */}
+      {order.status === 'pending' && isBuyer && (
+        <CancelOrderButton orderId={id} />
       )}
 
       {/* Confirm delivery */}

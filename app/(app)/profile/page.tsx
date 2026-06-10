@@ -12,10 +12,12 @@ export default async function ProfilePage() {
     .eq('id', user.id)
     .single()
 
+  // capitalize is only correct for the role enum — applying it to email or a
+  // license number mangles them (collynes@gmail.com → Collynes@gmail.com)
   const rows = [
     { label: 'Email',       value: user.email ?? '—' },
     { label: 'Organisation',value: profile?.org_name ?? '—' },
-    { label: 'Role',        value: profile?.role ?? '—' },
+    { label: 'Role',        value: profile?.role ?? '—', capitalize: true },
     { label: 'Phone',       value: profile?.phone ?? '—' },
     { label: 'PPB License', value: profile?.license_no ?? '—' },
   ]
@@ -40,10 +42,10 @@ export default async function ProfilePage() {
         <div className="table-responsive">
         <table className="table mb-0">
           <tbody>
-            {rows.map(({ label, value }) => (
+            {rows.map(({ label, value, capitalize }) => (
               <tr key={label}>
                 <td className="text-uppercase small fw-semibold text-muted w-25">{label}</td>
-                <td className="text-end fw-medium text-heading text-capitalize">{value}</td>
+                <td className={`text-end fw-medium text-heading ${capitalize ? 'text-capitalize' : ''}`}>{value}</td>
               </tr>
             ))}
           </tbody>
