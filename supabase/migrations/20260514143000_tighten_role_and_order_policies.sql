@@ -36,8 +36,12 @@ CREATE POLICY "bids_buyer_select_own" ON bids
   USING (buyer_id = auth.uid());
 
 -- Unique constraint on M-Pesa checkout ID to enforce idempotency at DB level
-ALTER TABLE payments
-  ADD CONSTRAINT IF NOT EXISTS payments_mpesa_checkout_id_unique UNIQUE (mpesa_checkout_id);
+-- (Postgres has no ADD CONSTRAINT IF NOT EXISTS — guard via exception)
+DO $$ BEGIN
+  ALTER TABLE payments
+    ADD CONSTRAINT payments_mpesa_checkout_id_unique UNIQUE (mpesa_checkout_id);
+EXCEPTION WHEN duplicate_table OR duplicate_object THEN NULL;
+END $$;
 
 CREATE OR REPLACE FUNCTION reserve_order_stock(p_order_id uuid)
 RETURNS text

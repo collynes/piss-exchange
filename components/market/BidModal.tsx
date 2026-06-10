@@ -31,6 +31,18 @@ export function BidModal({ drugId, drugName, onClose, bestBid, bestAsk, lastPric
   const total = Number(price) * Number(qty)
   const ALLOWED_DAYS = [1, 3, 7, 14, 30]
 
+  // Fat-finger guard: prod has bids like 851/unit against a ~99 ask —
+  // almost certainly a total typed into the per-unit field
+  const priceNum = Number(price)
+  const refPrice = bestAsk ?? lastPrice ?? null
+  const priceWarning = refPrice != null && Number.isFinite(priceNum) && priceNum > 0
+    ? (priceNum > refPrice * 2
+        ? `Your bid is ${(priceNum / refPrice).toFixed(1)}× the ${bestAsk != null ? 'best ask' : 'last price'} (${refPrice.toFixed(2)}). Double-check this is the price per unit, not the total.`
+        : priceNum < refPrice * 0.2
+          ? `Your bid is far below the ${bestAsk != null ? 'best ask' : 'last price'} (${refPrice.toFixed(2)}) and is unlikely to be accepted.`
+          : null)
+    : null
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -90,6 +102,12 @@ export function BidModal({ drugId, drugName, onClose, bestBid, bestAsk, lastPric
             <input type="number" step="0.01" min="0.01" required value={price}
               onChange={e => setPrice(e.target.value)} placeholder="0.00"
               className={INPUT_CLASS} style={INPUT_STYLE} />
+            {priceWarning && (
+              <p className="text-xs mt-2 px-3 py-2 rounded-lg"
+                style={{ color: '#b07b00', background: 'rgba(255,171,0,.1)', border: '1px solid rgba(255,171,0,.25)' }}>
+                ⚠ {priceWarning}
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-xs text-muted uppercase tracking-wider mb-2">Quantity <span className="text-red">*</span></label>

@@ -47,14 +47,15 @@ export function MobileMenu({ role, orgName, isLoggedIn }: Props) {
               {[
                 { href: '/market', label: 'Market' },
                 ...(isLoggedIn ? [{ href: '/dashboard', label: 'Dashboard' }] : []),
+                ...(isLoggedIn ? [
+                  { href: '/orders', label: 'My Orders' },
+                  { href: '/bids', label: 'My Bids' },
+                ] : []),
                 ...(isLoggedIn && (role === 'seller' || role === 'admin') ? [
                   { href: '/seller/listings', label: 'My Listings' },
                   { href: '/seller/orders', label: 'Incoming Orders' },
                   { href: '/seller/bids', label: 'Open Bids' },
                   { href: '/seller/listings/new', label: '+ List Drug' },
-                ] : []),
-                ...(isLoggedIn && role === 'buyer' ? [
-                  { href: '/orders', label: 'My Orders' },
                 ] : []),
                 ...(isLoggedIn && role === 'admin' ? [{ href: '/admin', label: 'Admin' }] : []),
               ].map(({ href, label }) => (

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
+import { ListingActions } from './ListingActions'
 
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
@@ -106,9 +107,12 @@ export default async function SellerListingsPage({ searchParams }: { searchParam
                     {l.listing_expiry ? new Date(l.listing_expiry).toLocaleDateString('en-KE') : '—'}
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <Link href={`/drug/${encodeURIComponent(drug?.slug ?? '')}`} className="text-muted hover:text-text transition-colors inline-flex">
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    <div className="d-inline-flex align-items-center gap-2">
+                      {l.status === 'active' && <ListingActions listingId={l.id} />}
+                      <Link href={`/drug/${encodeURIComponent(drug?.slug ?? '')}`} className="text-muted hover:text-text transition-colors inline-flex">
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               )

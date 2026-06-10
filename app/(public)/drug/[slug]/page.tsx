@@ -28,6 +28,7 @@ export default async function DrugPage({ params }: PageProps) {
     supabase.from('listings')
       .select('id, seller_id, brand_name, origin_country, qty_remaining, price_per_unit, min_order_qty')
       .eq('drug_id', drug.id).eq('status', 'active')
+      .or(`listing_expiry.is.null,listing_expiry.gte.${new Date().toISOString().slice(0, 10)}`)
       .order('price_per_unit', { ascending: true }),
     supabase.from('bids')
       .select('id, qty, price_per_unit, created_at')

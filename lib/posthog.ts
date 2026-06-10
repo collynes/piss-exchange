@@ -37,6 +37,8 @@ export type AnalyticsEvent =
   | { event: 'market_filtered';     props: { category: string } }
   | { event: 'bid_accepted';        props: { bid_id: string; order_id: string; drug_id: string; qty: number; price: number } }
   | { event: 'order_settled_dawahub'; props: { order_id: string; total: number } }
+  | { event: 'bid_cancelled';       props: { bid_id: string } }
+  | { event: 'listing_cancelled';   props: { listing_id: string } }
 
 /** Fire a server-side event (use in Server Actions / Route Handlers) */
 export function captureServerEvent(

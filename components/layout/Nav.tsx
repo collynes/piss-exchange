@@ -42,9 +42,9 @@ export async function Nav() {
             </Link>
           </li>
 
-          {user && profile?.role !== 'buyer' && (
+          {user && (
             <li className="nav-item me-1">
-              <NotificationBell />
+              <NotificationBell mode={profile?.role === 'buyer' ? 'buyer' : 'seller'} />
             </li>
           )}
 

@@ -43,6 +43,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
     `)
     .eq('active', true)
     .eq('listings.status', 'active')
+    .or(`listing_expiry.is.null,listing_expiry.gte.${new Date().toISOString().slice(0, 10)}`, { referencedTable: 'listings' })
     .eq('bids.status', 'open')
     .gt('bids.expires_at', new Date().toISOString())
 

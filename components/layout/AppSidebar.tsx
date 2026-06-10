@@ -58,6 +58,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
           <>
             <MenuHeader label="Trading" />
             <NavItem href="/orders" label="My Orders" icon="bx-cart" />
+            <NavItem href="/bids" label="My Bids" icon="bx-up-arrow-alt" />
             {isSeller && <NavItem href="/seller/listings" label="My Listings" icon="bx-package" />}
             {isSeller && <NavItem href="/seller/orders" label="Incoming Orders" icon="bx-inbox" />}
             {isSeller && <NavItem href="/seller/bids" label="Open Bids" icon="bx-trending-up" />}

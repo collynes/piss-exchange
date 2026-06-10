@@ -1,5 +1,15 @@
 'use client'
 
+// Bids live for up to 30 days — time-only ("14:59") reads as today.
+// Show the time for today's bids and a short date for older ones.
+function formatBidAge(createdAt: string) {
+  const d = new Date(createdAt)
+  const isToday = d.toDateString() === new Date().toDateString()
+  return isToday
+    ? d.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })
+    : d.toLocaleDateString('en-KE', { day: '2-digit', month: 'short' })
+}
+
 export interface Ask {
   id: string; seller_id: string; brand_name: string
   origin_country: string; qty_remaining: number
@@ -92,7 +102,7 @@ export function OrderBook({ asks, bids, canBid, canAcceptBid = false, onBuyClick
               <span className="relative text-green font-semibold tabular-nums text-sm w-24">{Number(bid.price_per_unit).toFixed(2)}</span>
               <span className="relative text-text tabular-nums text-sm w-20 text-right">{bid.qty.toLocaleString()}</span>
               <span className="relative text-muted text-xs flex-1 text-right">
-                {bid.created_at ? new Date(bid.created_at).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' }) : '—'}
+                {bid.created_at ? formatBidAge(bid.created_at) : '—'}
               </span>
               {canAcceptBid && (
                 <button onClick={() => onAcceptBid?.(bid)}

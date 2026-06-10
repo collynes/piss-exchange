@@ -35,12 +35,16 @@ export async function POST(request: Request) {
   const adminSupabase = createAdminClient()
   const { data: listing, error: listingError } = await adminSupabase
     .from('listings')
-    .select('id, drug_id, seller_id, qty_remaining, price_per_unit, min_order_qty, status')
+    .select('id, drug_id, seller_id, qty_remaining, price_per_unit, min_order_qty, status, listing_expiry')
     .eq('id', listingId)
     .single()
 
   if (listingError || !listing || listing.status !== 'active') {
     return NextResponse.json({ error: 'Listing is not available' }, { status: 404 })
+  }
+
+  if (listing.listing_expiry && new Date(listing.listing_expiry).getTime() < Date.now()) {
+    return NextResponse.json({ error: 'This listing has expired' }, { status: 410 })
   }
 
   if (listing.seller_id === user.id) {
