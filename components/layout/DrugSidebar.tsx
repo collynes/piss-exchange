@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 interface SidebarDrug {
   slug: string
@@ -22,9 +23,45 @@ export function DrugSidebar({ drugs, categories }: DrugSidebarProps) {
   const activeCategory = searchParams.get('cat') ?? 'All'
   const [mode, setMode] = useState<'drug' | 'category'>('drug')
   const [query, setQuery] = useState('')
+  // Keyed by the query that produced them, so stale results are never shown
+  const [results, setResults] = useState<{ q: string; rows: SidebarDrug[] } | null>(null)
 
   const q = query.trim().toLowerCase()
-  const filteredDrugs = q ? drugs.filter(d => d.generic_name.toLowerCase().includes(q)) : drugs
+
+  // The drugs prop only carries the top movers — live-search the whole
+  // catalogue so newly added / never-traded drugs are findable too
+  useEffect(() => {
+    if (mode !== 'drug' || !q) return
+    const supabase = createClient()
+    let stale = false
+    const t = setTimeout(async () => {
+      const { data } = await supabase
+        .from('drugs')
+        .select('slug, generic_name, dosage_form, market_data(last_price, change_pct)')
+        .eq('active', true)
+        .ilike('generic_name', `%${q}%`)
+        .order('generic_name')
+        .limit(15)
+      if (stale) return
+      setResults({
+        q,
+        rows: (data ?? []).map(d => {
+          const md = d.market_data as unknown as { last_price: number | null; change_pct: number | null } | null
+          return {
+            slug: d.slug,
+            generic_name: d.generic_name,
+            dosage_form: d.dosage_form,
+            last_price: md?.last_price != null ? Number(md.last_price) : null,
+            change_pct: md?.change_pct != null ? Number(md.change_pct) : null,
+          }
+        }),
+      })
+    }, 250)
+    return () => { stale = true; clearTimeout(t) }
+  }, [mode, q])
+
+  const liveRows = q && results?.q === q ? results.rows : null
+  const filteredDrugs = q ? (liveRows ?? []) : drugs
   const filteredCategories = q
     ? categories.filter(c => c.toLowerCase().includes(q))
     : categories
@@ -140,7 +177,9 @@ export function DrugSidebar({ drugs, categories }: DrugSidebarProps) {
           ))}
           {filteredDrugs.length === 0 && (
             <small className="text-muted">
-              No match in top movers — press <i className="bx bx-search align-middle" /> to search the full market.
+              {q && liveRows === null
+                ? 'Searching…'
+                : <>No drugs found for &quot;{query.trim()}&quot; — the generic may not be in the catalogue yet.</>}
             </small>
           )}
         </div>

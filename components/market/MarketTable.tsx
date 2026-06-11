@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { formatNumber } from '@/lib/utils'
 import { BidModal } from './BidModal'
+import { DrugQuickView } from './DrugQuickView'
 
 interface MarketRow {
   drug_id: string
@@ -22,6 +23,7 @@ interface MarketRow {
 
 export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boolean }) {
   const [bidDrug, setBidDrug] = useState<MarketRow | null>(null)
+  const [quickView, setQuickView] = useState<MarketRow | null>(null)
 
   return (
     <>
@@ -63,7 +65,7 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
         </div>
 
         {/* Desktop table */}
-        <table className="table table-hover card-table mb-0 d-none d-md-table">
+        <table className="table table-hover card-table mb-0 d-none d-md-table market-table">
           <thead className="table-light sticky-top">
             <tr>
               {[
@@ -91,7 +93,7 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
               return (
                 <tr key={row.drug_id}
                   className="cursor-pointer"
-                  onClick={() => { window.location.href = `/drug/${encodeURIComponent(row.slug)}` }}>
+                  onClick={() => setQuickView(row)}>
                   <td style={{ maxWidth: '260px' }}>
                     <div className="fw-semibold text-heading text-truncate">{row.generic_name}</div>
                     <small className="text-muted text-nowrap">{row.strength} · {row.dosage_form}</small>
@@ -144,6 +146,21 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
           bestAsk={bidDrug.best_ask != null ? Number(bidDrug.best_ask) : null}
           lastPrice={bidDrug.last_price != null ? Number(bidDrug.last_price) : null}
           onClose={() => setBidDrug(null)}
+        />
+      )}
+
+      {quickView && (
+        <DrugQuickView
+          drug={{
+            drug_id: quickView.drug_id,
+            slug: quickView.slug,
+            generic_name: quickView.generic_name,
+            strength: quickView.strength,
+            dosage_form: quickView.dosage_form,
+            last_price: quickView.last_price != null ? Number(quickView.last_price) : null,
+          }}
+          canBid={canBid}
+          onClose={() => setQuickView(null)}
         />
       )}
     </>
