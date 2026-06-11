@@ -65,7 +65,7 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
         </div>
 
         {/* Desktop table */}
-        <table className="table table-hover card-table mb-0 d-none d-md-table market-table">
+        <table className="table table-hover card-table mb-0 d-none d-md-table">
           <thead className="table-light sticky-top">
             <tr>
               {[
