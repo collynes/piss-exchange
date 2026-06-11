@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { MarketTable } from '@/components/market/MarketTable'
+import { MarketSearchForm } from '@/components/market/MarketSearchForm'
 import { formatNumber, formatKES } from '@/lib/utils'
 
 export const revalidate = 10
@@ -114,22 +115,8 @@ export default async function MarketPage({ searchParams }: PageProps) {
           </small>
           </div>
 
-          {/* Search + category — plain GET form, server filters via ?q / ?cat */}
-          <form method="GET" action="/market" className="d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" style={{ maxWidth: 480 }}>
-            {filter && <input type="hidden" name="filter" value={filter} />}
-            <input name="q" defaultValue={q ?? ''} placeholder="Search drug…"
-              className="form-control form-control-sm" style={{ minWidth: 140 }} />
-            <select name="cat" defaultValue={cat ?? 'All'}
-              className="form-select form-select-sm w-auto flex-shrink-0">
-              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-            <button type="submit" className="btn btn-sm btn-primary flex-shrink-0">
-              <i className="bx bx-search" />
-            </button>
-            {(q || (cat && cat !== 'All')) && (
-              <a href="/market" className="btn btn-sm btn-text-secondary flex-shrink-0">Clear</a>
-            )}
-          </form>
+          {/* Search (with autocomplete) + category — filters the board via ?q / ?cat */}
+          <MarketSearchForm q={q} cat={cat} filter={filter} categories={CATEGORIES} />
 
           <div className="btn-group flex-shrink-0" role="group">
             {[
