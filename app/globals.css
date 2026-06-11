@@ -151,27 +151,6 @@ html {
   color: #5d6b7a !important;
 }
 
-.drug-sidebar .btn {
-  max-width: 100%;
-}
-
-/* When the sidebar stacks above the market table (below lg), cap the
-   scrollable lists so the table stays within reach of the first scroll */
-@media (max-width: 991.98px) {
-  .drug-sidebar .overflow-auto {
-    max-height: 38vh;
-  }
-}
-
-.drug-sidebar-link {
-  color: #3b4655;
-}
-
-.drug-sidebar-link:hover {
-  background: #f4f5f8;
-  color: #252c38;
-}
-
 .layout-page .text-lg {
   font-size: 1.25rem !important;
   line-height: 1.25 !important;

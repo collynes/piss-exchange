@@ -1,6 +1,4 @@
-import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
-import { DrugSidebar } from '@/components/layout/DrugSidebar'
 import { MarketTable } from '@/components/market/MarketTable'
 import { formatNumber, formatKES } from '@/lib/utils'
 
@@ -27,11 +25,12 @@ export default async function MarketPage({ searchParams }: PageProps) {
     canBid = profile?.role === 'admin' || profile?.verified === true
   }
 
-  const { data: sidebarData } = await supabase
-    .from('market_data')
-    .select('drug_id, last_price, change_pct, drugs(generic_name, slug, dosage_form)')
-    .order('deals_today', { ascending: false })
-    .limit(20)
+  // All categories, independent of the current ?cat filter, so the
+  // category dropdown always offers the full list
+  const { data: catRows } = await supabase
+    .from('drugs')
+    .select('category')
+    .eq('active', true)
 
   let query = supabase
     .from('drugs')
@@ -56,17 +55,6 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
   const totalDeals = totals?.reduce((s, r) => s + (r.deals_today ?? 0), 0) ?? 0
   const totalTurnover = totals?.reduce((s, r) => s + Number(r.turnover_today ?? 0), 0) ?? 0
-
-  const sidebarDrugs = (sidebarData ?? []).map(r => {
-    const drug = r.drugs as { generic_name: string; slug: string; dosage_form: string } | null
-    return {
-      slug: drug?.slug ?? '',
-      generic_name: drug?.generic_name ?? '',
-      dosage_form: drug?.dosage_form ?? '',
-      last_price: r.last_price ? Number(r.last_price) : null,
-      change_pct: r.change_pct ? Number(r.change_pct) : null,
-    }
-  }).filter(d => d.slug)
 
   const rows = (drugs ?? []).map(drug => {
     const md = drug.market_data as unknown as { last_price: number | null; change_pct: number; volume_today: number; deals_today: number } | null
@@ -102,30 +90,47 @@ export default async function MarketPage({ searchParams }: PageProps) {
 
   // Derive categories from actual drug data — no hardcoding
   const CATEGORIES = ['All', ...Array.from(new Set(
-    (drugs ?? []).map(d => d.category).filter((c): c is string => Boolean(c))
+    (catRows ?? []).map(d => d.category).filter((c): c is string => Boolean(c))
   )).sort()]
 
-  return (
-    <div className="row g-4">
-      {/* Sidebar — stacks above table on small screens, sits beside it on lg+ */}
-      <div className="col-12 col-lg-4 col-xl-3">
-        <Suspense>
-          <DrugSidebar drugs={sidebarDrugs} categories={CATEGORIES} />
-        </Suspense>
-      </div>
+  const filterHref = (f?: string) => {
+    const params = new URLSearchParams()
+    if (f) params.set('filter', f)
+    if (cat && cat !== 'All') params.set('cat', cat)
+    if (q) params.set('q', q)
+    const qs = params.toString()
+    return qs ? `/market?${qs}` : '/market'
+  }
 
-      <div className="col-xl-9 col-lg-8">
-        <div className="card">
+  return (
+    <div className="card">
         {/* Toolbar */}
-        <div className="card-header d-flex align-items-center justify-content-between gap-3">
+        <div className="card-header d-flex align-items-center justify-content-between gap-3 flex-wrap">
           <div>
             <h5 className="mb-0">Market Board</h5>
             <small className="text-muted d-none d-sm-block">
             {q ? `${filtered.length} of ${drugs?.length ?? 0} drugs` : `${drugs?.length ?? 0} drugs`}
             {' · Updated every trade'}
-            {q && <span className="ms-2 badge bg-label-primary">Search: {q}</span>}
           </small>
           </div>
+
+          {/* Search + category — plain GET form, server filters via ?q / ?cat */}
+          <form method="GET" action="/market" className="d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" style={{ maxWidth: 480 }}>
+            {filter && <input type="hidden" name="filter" value={filter} />}
+            <input name="q" defaultValue={q ?? ''} placeholder="Search drug…"
+              className="form-control form-control-sm" style={{ minWidth: 140 }} />
+            <select name="cat" defaultValue={cat ?? 'All'}
+              className="form-select form-select-sm w-auto flex-shrink-0">
+              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+            <button type="submit" className="btn btn-sm btn-primary flex-shrink-0">
+              <i className="bx bx-search" />
+            </button>
+            {(q || (cat && cat !== 'All')) && (
+              <a href="/market" className="btn btn-sm btn-text-secondary flex-shrink-0">Clear</a>
+            )}
+          </form>
+
           <div className="btn-group flex-shrink-0" role="group">
             {[
               { label: 'All', f: undefined },
@@ -134,7 +139,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
               { label: 'Active', f: 'active' },
             ].map(({ label, f }) => (
               <a key={label}
-                href={f ? `/market?filter=${f}${cat ? `&cat=${cat}` : ''}` : `/market${cat ? `?cat=${cat}` : ''}`}
+                href={filterHref(f)}
                 className={`btn btn-sm
                   ${filter === f || (!filter && !f)
                     ? 'btn-primary'
@@ -156,8 +161,6 @@ export default async function MarketPage({ searchParams }: PageProps) {
             Live
           </small>
         </div>
-        </div>
-      </div>
     </div>
   )
 }
