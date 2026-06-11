@@ -41,7 +41,7 @@ export default async function LandingPage() {
         {/* Live badge */}
         <div className="relative inline-flex items-center gap-2 bg-blue/10 border border-blue/25 text-blue text-xs font-bold px-4 py-2 rounded-full mb-8 uppercase tracking-widest">
           <span className="w-2 h-2 rounded-full bg-green" style={{ animation: 'pulse-dot 2s ease-in-out infinite' }} />
-          Kenya Pharma Exchange — Live
+          Pharma Exchange — Live
         </div>
 
         {/* Main headline */}
