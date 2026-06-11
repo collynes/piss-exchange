@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 
 export async function PublicNav() {
@@ -20,12 +21,9 @@ export async function PublicNav() {
       style={{ borderBottom: '1px solid rgba(47,43,61,.1)', boxShadow: '0 2px 6px rgba(47,43,61,.06)' }}
     >
       <Link href="/" className="flex items-center gap-2 shrink-0">
-        <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black text-[11px]"
-          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}
-        >
-          DH
-        </div>
+        {/* Source art is a white circle on a square — clip to a circle */}
+        <Image src="/dawahub-logo.jpeg" alt="Dawahub" width={28} height={28}
+          className="rounded-full" priority />
         <span className="font-bold text-[14px] tracking-tight text-text">
           PISS<span className="text-blue">.</span>Exchange
         </span>

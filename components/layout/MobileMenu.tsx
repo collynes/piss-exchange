@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Props {
   role: string | null
@@ -33,10 +34,7 @@ export function MobileMenu({ role, orgName, isLoggedIn }: Props) {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-black text-[11px]"
-                  style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
-                  DH
-                </div>
+                <Image src="/dawahub-logo.jpeg" alt="Dawahub" width={28} height={28} className="rounded-full" />
                 <span className="font-bold text-sm text-text">PISS<span className="text-blue">.</span>Exchange</span>
               </div>
               <button onClick={() => setOpen(false)} className="text-muted hover:text-text text-xl leading-none p-1">×</button>
