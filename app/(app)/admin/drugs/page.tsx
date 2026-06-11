@@ -115,7 +115,7 @@ function DrugForm({
       <div className="flex gap-2">
         <button type="submit" disabled={saving}
           className="px-4 py-2 text-sm font-bold text-white rounded-lg disabled:opacity-40 transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
+          style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}>
           {saving ? 'Saving…' : submitLabel}
         </button>
       </div>
@@ -203,7 +203,7 @@ export default function AdminDrugsPage() {
         </div>
         <button onClick={openAdd}
           className="px-3 py-1.5 text-xs font-bold text-white rounded-lg transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
+          style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}>
           + Add Drug
         </button>
       </div>
@@ -353,7 +353,7 @@ export default function AdminDrugsPage() {
             <div className="mt-4 flex gap-2">
               <button onClick={() => { setViewDrug(null); openEdit(viewDrug) }}
                 className="px-4 py-2 text-xs font-bold text-white rounded-lg hover:opacity-90 transition-all"
-                style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
+                style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}>
                 Edit Drug
               </button>
               <button onClick={() => setViewDrug(null)}

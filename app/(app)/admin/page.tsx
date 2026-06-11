@@ -110,7 +110,7 @@ export default async function AdminPage() {
           value={formatNumber(userCount ?? 0)}
           sub="registered accounts"
           Icon={Users}
-          color={{ bg: 'rgba(115,103,240,.15)', text: '#7367f0' }}
+          color={{ bg: 'rgba(90, 17, 73,.15)', text: '#5a1149' }}
         />
         </div>
         <div className="col-6 col-md-3">

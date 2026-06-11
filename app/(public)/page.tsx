@@ -109,7 +109,7 @@ export default async function LandingPage() {
           {[
             { value: `${drugCount || 143}+`, label: 'Active Molecules', color: '#2962ff' },
             { value: '79+', label: 'Active Listings', color: '#089981' },
-            { value: 'KES', label: 'Local Currency', color: '#7367f0' },
+            { value: 'KES', label: 'Local Currency', color: '#5a1149' },
             { value: '24/7', label: 'Live Order Books', color: '#2962ff' },
           ].map(({ value, label, color }) => (
             <div key={label} className="text-center">

@@ -76,7 +76,7 @@ export default async function SellerDashboardPage() {
       {/* Welcome banner */}
       <div className="rounded-2xl p-6 flex items-center justify-between overflow-hidden relative"
         style={{
-          background: 'linear-gradient(135deg, rgba(115,103,240,.08) 0%, rgba(40,199,111,.06) 100%)',
+          background: 'linear-gradient(135deg, rgba(90, 17, 73,.08) 0%, rgba(40,199,111,.06) 100%)',
           border: '1px solid rgba(47,43,61,.1)',
         }}>
         <div className="relative">
@@ -94,7 +94,7 @@ export default async function SellerDashboardPage() {
         </div>
         <Link href="/seller/listings/new"
           className="relative hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white flex-shrink-0 transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)', boxShadow: '0 4px 16px rgba(115,103,240,.4)' }}>
+          style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)', boxShadow: '0 4px 16px rgba(90, 17, 73,.4)' }}>
           <Plus className="w-4 h-4" /> List Drug
         </Link>
       </div>
@@ -114,7 +114,7 @@ export default async function SellerDashboardPage() {
             value={String(openBidsCount ?? 0)}
             sub="awaiting acceptance"
             Icon={TrendingUp}
-            color={{ bg: 'rgba(115,103,240,.15)', text: '#7367f0' }}
+            color={{ bg: 'rgba(90, 17, 73,.15)', text: '#5a1149' }}
           />
         </Link>
         <StatCard
@@ -250,8 +250,8 @@ export default async function SellerDashboardPage() {
         <h2 className="text-sm font-bold text-text mb-3">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
-            { href: '/seller/listings/new', label: 'List a Drug', desc: 'Add stock to the exchange', Icon: Plus, color: '#7367f0' },
-            { href: '/seller/listings', label: 'My Listings', desc: 'Manage active listings', Icon: Package, color: '#7367f0' },
+            { href: '/seller/listings/new', label: 'List a Drug', desc: 'Add stock to the exchange', Icon: Plus, color: '#5a1149' },
+            { href: '/seller/listings', label: 'My Listings', desc: 'Manage active listings', Icon: Package, color: '#5a1149' },
             { href: '/seller/bids', label: 'Open Bids', desc: 'Accept buyer bids', Icon: TrendingUp, color: '#28c76f' },
             { href: '/seller/orders', label: 'Incoming Orders', desc: 'Confirm and ship', Icon: Inbox, color: '#7c3aed' },
           ].map(({ href, label, desc, Icon, color }) => (

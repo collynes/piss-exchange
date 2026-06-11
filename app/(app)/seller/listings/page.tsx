@@ -47,7 +47,7 @@ export default async function SellerListingsPage({ searchParams }: { searchParam
           </form>
           <Link href="/seller/listings/new"
             className="px-3 py-1.5 text-white text-xs font-semibold rounded-lg hover:opacity-90 transition-all flex-shrink-0"
-            style={{ background: '#7367f0' }}>
+            style={{ background: '#5a1149' }}>
             + List Drug
           </Link>
         </div>

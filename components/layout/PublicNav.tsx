@@ -38,7 +38,7 @@ export async function PublicNav() {
             </div>
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[12px] font-bold flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}
+              style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}
             >
               {profile?.org_name?.[0]?.toUpperCase() ?? 'U'}
             </div>
@@ -59,7 +59,7 @@ export async function PublicNav() {
             <Link
               href="/register"
               className="px-4 py-1.5 text-[13px] font-semibold text-white rounded-lg transition-colors hover:opacity-90"
-              style={{ background: '#7367f0' }}
+              style={{ background: '#5a1149' }}
             >
               Join Exchange
             </Link>

@@ -24,7 +24,7 @@ export function AdminSidebar() {
       <div className="px-4 py-4 flex-shrink-0" style={{ borderBottom: '1px solid rgba(47,43,61,.08)' }}>
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white"
-            style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
+            style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}>
             <Settings className="w-3.5 h-3.5" />
           </div>
           <span className="text-[13px] font-bold text-text">Administration</span>
@@ -42,7 +42,7 @@ export function AdminSidebar() {
               className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all ${
                 active ? 'font-semibold text-blue' : 'text-muted hover:text-text hover:bg-surface2'
               }`}
-              style={active ? { background: 'rgba(115,103,240,.12)' } : {}}>
+              style={active ? { background: 'rgba(90, 17, 73,.12)' } : {}}>
               <Icon className={`w-[18px] h-[18px] shrink-0 ${active ? 'text-blue' : 'text-muted'}`} />
               <span>{item.label}</span>
               {active && <span className="ml-auto w-2 h-2 rounded-full bg-blue flex-shrink-0" />}

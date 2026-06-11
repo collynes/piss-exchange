@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --color-blue: #7367f0;
+  --color-blue: #5a1149;
   --color-green: #28c76f;
   --color-red: #ea5455;
   --color-orange: #ffab00;
@@ -15,7 +15,7 @@
 }
 
 @theme {
-  --color-blue: #696cff;
+  --color-blue: #5a1149;
   --color-green: #71dd37;
   --color-red: #ff3e1d;
   --color-orange: #ffab00;
@@ -37,8 +37,8 @@ body {
 }
 
 html {
-  --bs-primary: #7367f0;
-  --bs-primary-rgb: 115, 103, 240;
+  --bs-primary: #5a1149;
+  --bs-primary-rgb: 90, 17, 73;
   --bs-success: #28c76f;
   --bs-success-rgb: 40, 199, 111;
   --bs-danger: #ea5455;
@@ -137,7 +137,7 @@ html {
 
 .layout-menu .menu-item.active > .menu-link,
 .layout-menu .menu-item.active > .menu-link .menu-icon {
-  color: #7367f0 !important;
+  color: #5a1149 !important;
 }
 
 .layout-navbar .form-control,

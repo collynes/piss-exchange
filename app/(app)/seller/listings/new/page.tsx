@@ -194,7 +194,7 @@ export default function NewListingPage() {
 
               {form.qty_available && form.price_per_unit && (
                 <div className="flex justify-between items-center py-3 px-4 rounded-lg"
-                  style={{ background: 'rgba(115,103,240,.04)', border: '1px solid rgba(115,103,240,.12)' }}>
+                  style={{ background: 'rgba(90, 17, 73,.04)', border: '1px solid rgba(90, 17, 73,.12)' }}>
                   <span className="text-xs text-muted">Total listing value</span>
                   <span className="text-sm font-bold text-text tabular-nums">
                     KES {(Number(form.qty_available) * Number(form.price_per_unit)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -211,7 +211,7 @@ export default function NewListingPage() {
 
               <button type="submit" disabled={loading}
                 className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 disabled:opacity-40"
-                style={{ background: 'linear-gradient(135deg, #7367f0, #9e95f5)' }}>
+                style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}>
                 {loading ? 'Listing…' : 'List Drug on Exchange'}
               </button>
             </div>

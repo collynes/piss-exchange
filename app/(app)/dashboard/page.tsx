@@ -122,7 +122,7 @@ export default async function DashboardPage({
       {/* Stat cards */}
       <div className="row g-4">
         <div className="col-6 col-md-3">
-        <StatCard label="Total Orders" value={String(totalOrders ?? 0)} sub="all time" Icon={ShoppingBag} color={{ bg: 'rgba(115,103,240,.15)', text: '#7367f0' }} />
+        <StatCard label="Total Orders" value={String(totalOrders ?? 0)} sub="all time" Icon={ShoppingBag} color={{ bg: 'rgba(90, 17, 73,.15)', text: '#5a1149' }} />
         </div>
         <div className="col-6 col-md-3">
         <StatCard label="Pending" value={String(pendingOrders ?? 0)} sub="awaiting action" Icon={Clock} color={{ bg: 'rgba(234,84,85,.12)', text: '#ea5455' }} />

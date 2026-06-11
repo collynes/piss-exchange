@@ -169,8 +169,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {/* Confirm delivery */}
       {order.status === 'shipped' && isBuyer && (
         <div className="rounded-2xl px-5 py-4" style={{
-          background: 'rgba(115,103,240,.08)',
-          border: '1px solid rgba(115,103,240,.22)',
+          background: 'rgba(90, 17, 73,.08)',
+          border: '1px solid rgba(90, 17, 73,.22)',
         }}>
           <div className="text-sm font-bold text-text mb-0.5">Your order has been shipped</div>
           <div className="text-xs text-muted mb-4">Confirm receipt to release payment to the seller.</div>
