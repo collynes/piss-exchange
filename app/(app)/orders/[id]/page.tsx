@@ -161,6 +161,15 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         </div>
       )}
 
+      {/* Settlement invoice — available once the order is confirmed */}
+      {['confirmed', 'shipped', 'delivered'].includes(order.status) && (
+        <div className="flex justify-end">
+          <Link href={`/orders/${id}/invoice`} className="text-xs text-blue hover:underline">
+            View settlement invoice →
+          </Link>
+        </div>
+      )}
+
       {/* Cancel a still-unpaid order (buyer or admin) */}
       {order.status === 'pending' && isBuyer && (
         <CancelOrderButton orderId={id} />

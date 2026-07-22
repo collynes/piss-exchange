@@ -6,28 +6,14 @@ import { PublicNav } from '@/components/layout/PublicNav'
 export default async function LandingPage() {
   const supabase = await createClient()
 
-  const [{ data: { user } }, { count: drugCount }, { data: topDrugs }] = await Promise.all([
+  const [{ data: { user } }, { count: drugCount }] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from('drugs').select('id', { count: 'exact', head: true }),
-    supabase
-      .from('listings')
-      .select('drug_id, price_per_unit, drugs(generic_name, slug, category, dosage_form, strength)')
-      .eq('status', 'active')
-      .order('price_per_unit', { ascending: true })
-      .limit(6),
   ])
-  const listingRows = (topDrugs ?? []).slice(0, 6).map(l => ({
-    generic_name: (l.drugs as { generic_name: string } | null)?.generic_name ?? '',
-    slug: (l.drugs as { slug: string } | null)?.slug ?? '',
-    category: (l.drugs as { category: string } | null)?.category ?? '',
-    strength: (l.drugs as { strength: string } | null)?.strength ?? '',
-    dosage_form: (l.drugs as { dosage_form: string } | null)?.dosage_form ?? '',
-    price: Number(l.price_per_unit),
-  })).filter(r => r.generic_name)
 
   return (
     <div>
-      <Ticker />
+      {user && <Ticker />}
       <PublicNav />
       <main className="min-h-screen bg-bg overflow-x-hidden">
 
@@ -80,7 +66,7 @@ export default async function LandingPage() {
               Join the Exchange
             </Link>
           )}
-          <Link href="/market"
+          <Link href={user ? '/market' : '/login'}
             className="px-8 py-4 rounded-full font-semibold text-text text-sm tracking-wide border border-border bg-surface hover:bg-surface2 hover:border-border2 transition-all">
             Browse Live Market
           </Link>
@@ -208,59 +194,6 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* ── LIVE MARKET PREVIEW ───────────────────────────────────── */}
-      {listingRows.length > 0 && (
-        <section className="max-w-5xl mx-auto px-6 py-20">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-green uppercase tracking-widest bg-green/10 px-3 py-1 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-green" style={{ animation: 'pulse-dot 2s ease-in-out infinite' }} />
-              Live listings
-            </div>
-            <h2 className="text-3xl font-black text-text">What&apos;s on the exchange</h2>
-            <p className="text-muted mt-2 text-sm">Real prices from verified sellers, right now.</p>
-          </div>
-
-          <div className="card">
-            <div className="table-responsive">
-              <table className="table table-hover mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th>Drug</th>
-                    <th className="text-end">Category</th>
-                    <th className="text-end">Form</th>
-                    <th className="text-end">Ask (KES)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {listingRows.map(row => (
-                    <tr key={row.slug}>
-                      <td>
-                        <Link href={`/drug/${encodeURIComponent(row.slug)}`} className="fw-semibold text-heading">
-                          {row.generic_name}
-                        </Link>
-                        <small className="d-block text-muted">{row.strength}</small>
-                      </td>
-                      <td className="text-end">
-                        <span className="badge rounded-pill bg-label-secondary text-muted">{row.category}</span>
-                      </td>
-                      <td className="text-end text-muted">{row.dosage_form}</td>
-                      <td className="text-end fw-bold text-danger tabular-nums">{row.price.toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div className="mt-4 text-center">
-            <Link href="/market"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue hover:gap-3 transition-all">
-              View full market board
-            </Link>
-          </div>
-        </section>
-      )}
 
       {/* ── TRUST FEATURES ────────────────────────────────────────── */}
       <section className="bg-surface/40">

@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { DrugStats } from '@/components/market/DrugStats'
 import { OrderBookClient } from './OrderBookClient'
@@ -14,6 +14,29 @@ export const revalidate = 30
 export default async function DrugPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect(`/login?next=/drug/${encodeURIComponent(slug)}`)
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, verified')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  const isVerified = profile?.role === 'admin' || profile?.verified === true
+  if (!isVerified) {
+    return (
+      <div className="card m-4">
+        <div className="card-body text-center py-5">
+          <h5 className="mb-2">Account pending verification</h5>
+          <p className="text-muted mb-0">
+            Drug details unlock once your account is verified.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   const { data: drug } = await supabase
     .from('drugs')

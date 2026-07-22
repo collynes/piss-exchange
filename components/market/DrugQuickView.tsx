@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { OrderBook, type Ask, type Bid } from './OrderBook'
 import { BidModal } from './BidModal'
-import { BuyModal } from '@/app/(public)/drug/[slug]/BuyModal'
+import { BuyModal } from '@/app/(app)/drug/[slug]/BuyModal'
 
 const GLASS = {
   background: 'var(--bs-card-bg, #fff)',

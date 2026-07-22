@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { MarketTable } from '@/components/market/MarketTable'
 import { MarketSearchForm } from '@/components/market/MarketSearchForm'
@@ -14,17 +15,34 @@ export default async function MarketPage({ searchParams }: PageProps) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login?next=/market')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, verified')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  const isAdmin = profile?.role === 'admin'
+  const isVerified = isAdmin || profile?.verified === true
+
+  // Unverified accounts see nothing but a pending-review notice
+  if (!isVerified) {
+    return (
+      <div className="card">
+        <div className="card-body text-center py-5">
+          <h5 className="mb-2">Account pending verification</h5>
+          <p className="text-muted mb-0">
+            The market board unlocks once your account is verified.
+            We&apos;ll notify you as soon as review is complete.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   // Any verified account (buyer or seller) can place bids
-  let canBid = false
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, verified')
-      .eq('id', user.id)
-      .maybeSingle()
-    canBid = profile?.role === 'admin' || profile?.verified === true
-  }
+  const canBid = isVerified
 
   // All categories, independent of the current ?cat filter, so the
   // category dropdown always offers the full list

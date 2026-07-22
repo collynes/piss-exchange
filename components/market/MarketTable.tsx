@@ -48,6 +48,13 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
                       {isUp ? '▲' : '▼'} {Math.abs(pct).toFixed(2)}%
                     </small>
                   </div>
+                  {canBid && row.best_ask != null && (
+                    <button
+                      onClick={() => setQuickView(row)}
+                      className="btn btn-sm btn-outline-primary flex-shrink-0">
+                      Buy
+                    </button>
+                  )}
                   {canBid && (
                     <button
                       onClick={() => setBidDrug(row)}
@@ -115,6 +122,13 @@ export function MarketTable({ rows, canBid }: { rows: MarketRow[]; canBid: boole
                   <td className="text-end text-muted">{row.seller_count}</td>
                   <td className="text-end" onClick={e => e.stopPropagation()}>
                     <div className="d-flex align-items-center justify-content-end gap-1">
+                      {canBid && row.best_ask != null && (
+                        <button
+                          onClick={() => setQuickView(row)}
+                          className="btn btn-sm btn-outline-primary text-nowrap">
+                          Buy
+                        </button>
+                      )}
                       {canBid && (
                         <button
                           onClick={() => setBidDrug(row)}

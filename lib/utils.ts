@@ -18,6 +18,13 @@ export function formatNumber(n: number): string {
   return new Intl.NumberFormat('en-KE').format(n)
 }
 
+// Stable, anonymous identifier for a profile — used anywhere a buyer/seller's
+// org name must not be shown to the other party (e.g. settlement invoices).
+// Derived from the UUID itself, so it needs no extra DB column or lookup.
+export function memberCode(profileId: string): string {
+  return `PX-${profileId.replace(/-/g, '').slice(0, 8).toUpperCase()}`
+}
+
 export function formatChange(pct: number): string {
   const sign = pct > 0 ? '▲' : pct < 0 ? '▼' : ''
   return `${sign} ${Math.abs(pct).toFixed(2)}%`

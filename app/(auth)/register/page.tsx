@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     email: '', password: '', org_name: '', phone: '', license_no: '',
   })
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
   const handleRoleSelect = (r: Role) => { setRole(r); setStep(2) }
 
@@ -31,6 +32,10 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!role) return
+    if (!acceptedTerms) {
+      setError('Please accept the Terms & Conditions to continue.')
+      return
+    }
 
     if (form.phone && !/^(\+?254|0)\d{9}$/.test(form.phone.trim())) {
       setError('Phone must be a valid Kenyan number — e.g. 0712345678 or +254712345678')
@@ -59,7 +64,11 @@ export default function RegisterPage() {
   if (step === 1) return (
     <div className="card">
       <div className="card-body">
-        <h4 className="mb-1">Join the Exchange</h4>
+        <h4 className="mb-1">Welcome to Dawahub PISS Exchange</h4>
+        <p className="text-muted mb-4">
+          A patented solution for the healthcare industry — reducing the cost of pharmaceutical
+          products to end users and ensuring the authenticity of every product traded.
+        </p>
         <p className="text-muted mb-6">Choose your role to get started</p>
         {(['seller', 'buyer'] as Role[]).map(r => (
           <button key={r} onClick={() => handleRoleSelect(r)}
@@ -129,7 +138,22 @@ export default function RegisterPage() {
               />
             </div>
           ))}
-          <button type="submit" disabled={loading}
+          <div className="form-check mb-4">
+            <input
+              type="checkbox"
+              id="accept-terms"
+              className="form-check-input"
+              checked={acceptedTerms}
+              onChange={e => setAcceptedTerms(e.target.checked)}
+            />
+            <label htmlFor="accept-terms" className="form-check-label small">
+              I accept the{' '}
+              <Link href="/terms" target="_blank" className="text-blue">Terms &amp; Conditions</Link>,
+              including that Dawahub PISS Exchange is a patented solution and buyer/seller identities
+              are anonymised on the platform.
+            </label>
+          </div>
+          <button type="submit" disabled={loading || !acceptedTerms}
             className="btn btn-primary d-grid w-100">
             {loading ? 'Creating account…' : 'Create Account'}
           </button>

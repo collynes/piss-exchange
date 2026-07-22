@@ -100,7 +100,7 @@ export default async function DashboardPage({
           </div>
           <p className="text-muted text-capitalize mb-0">
             {profile?.role} account
-            {!profile?.verified && ' · Under review — you can browse the market while you wait'}
+            {!profile?.verified && ' · Under review — market access unlocks once verified'}
           </p>
         </div>
         <Link href="/market"
