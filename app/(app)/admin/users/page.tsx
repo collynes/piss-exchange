@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
@@ -79,7 +80,9 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 className="hover:bg-surface2 transition-colors"
                 style={{ borderBottom: i < (users?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                 <td className="px-5 py-3.5" style={{ maxWidth: '220px' }}>
-                  <div className="text-[13px] font-semibold text-text truncate">{u.org_name}</div>
+                  <Link href={`/admin/users/${u.id}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors truncate block">
+                    {u.org_name}
+                  </Link>
                   <div className="text-xs text-muted font-mono">{u.id.slice(0, 8)}…</div>
                 </td>
                 <td className="px-5 py-3.5 text-right">
