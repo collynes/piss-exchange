@@ -36,7 +36,11 @@ export default function AdminSettingsPage() {
   const toggle = async (key: string, currentValue: string) => {
     setSaving(key)
     const newValue = currentValue === 'true' ? 'false' : 'true'
-    await createClient().from('platform_settings').update({ value: newValue, updated_at: new Date().toISOString() }).eq('key', key)
+    await fetch(`/api/admin/settings/${key}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value: newValue }),
+    })
     setSettings(s => s.map(setting => setting.key === key ? { ...setting, value: newValue } : setting))
     setSaving(null)
   }

@@ -58,6 +58,11 @@ export default function RegisterPage() {
       phone: form.phone || null, license_no: form.license_no || null,
     })
     if (profileError) { setError(profileError.message); setLoading(false); return }
+    fetch('/api/analytics/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: 'user_registered', props: { role, org_name: form.org_name } }),
+    }).catch(() => {})
     router.push('/dashboard?registered=1')
   }
 

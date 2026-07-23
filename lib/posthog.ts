@@ -40,6 +40,13 @@ export type AnalyticsEvent =
   | { event: 'bid_cancelled';       props: { bid_id: string } }
   | { event: 'listing_cancelled';   props: { listing_id: string } }
   | { event: 'order_cancelled';     props: { order_id: string } }
+  | { event: 'user_verified';       props: { by: string } }
+  | { event: 'user_suspended';      props: { by: string } }
+  | { event: 'drug_created';        props: { drug_id: string; generic_name: string; by: string } }
+  | { event: 'drug_updated';        props: { drug_id: string; generic_name: string; by: string } }
+  | { event: 'drug_deleted';        props: { drug_id: string; generic_name: string; by: string } }
+  | { event: 'drug_status_toggled'; props: { drug_id: string; active: boolean; by: string } }
+  | { event: 'setting_updated';     props: { key: string; value: string; by: string } }
 
 /** Fire a server-side event (use in Server Actions / Route Handlers) */
 export function captureServerEvent(

@@ -156,8 +156,13 @@ export default function AdminDrugsPage() {
     setSaving(true); setError(null)
     const slug = buildSlug(form)
     if (!slug) { setError('Cannot generate a valid slug — check the drug name'); setSaving(false); return }
-    const { data, error: err } = await createClient().from('drugs').insert({ ...form, slug }).select().single()
-    if (err) { setError(err.message); setSaving(false); return }
+    const res = await fetch('/api/admin/drugs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, slug }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) { setError(data.error ?? 'Failed to add drug'); setSaving(false); return }
     setDrugs(d => [...d, data].sort((a, b) => a.generic_name.localeCompare(b.generic_name)))
     setAddOpen(false); setSaving(false)
   }
@@ -168,8 +173,13 @@ export default function AdminDrugsPage() {
     setSaving(true); setError(null)
     const slug = buildSlug(form)
     if (!slug) { setError('Cannot generate a valid slug — check the drug name'); setSaving(false); return }
-    const { error: err } = await createClient().from('drugs').update({ ...form, slug }).eq('id', editDrug.id)
-    if (err) { setError(err.message); setSaving(false); return }
+    const res = await fetch(`/api/admin/drugs/${editDrug.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, slug }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) { setError(data.error ?? 'Failed to save drug'); setSaving(false); return }
     setDrugs(d => d.map(drug => drug.id === editDrug.id ? { ...drug, ...form, slug } : drug))
     setEditDrug(null); setSaving(false)
   }
@@ -177,13 +187,17 @@ export default function AdminDrugsPage() {
   const handleDelete = async () => {
     if (!deleteDrug) return
     setDeleting(true)
-    await createClient().from('drugs').delete().eq('id', deleteDrug.id)
+    await fetch(`/api/admin/drugs/${deleteDrug.id}`, { method: 'DELETE' })
     setDrugs(d => d.filter(drug => drug.id !== deleteDrug.id))
     setDeleteDrug(null); setDeleting(false)
   }
 
   const toggleActive = async (id: string, active: boolean) => {
-    await createClient().from('drugs').update({ active: !active }).eq('id', id)
+    await fetch(`/api/admin/drugs/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active: !active }),
+    })
     setDrugs(d => d.map(drug => drug.id === id ? { ...drug, active: !active } : drug))
   }
 
