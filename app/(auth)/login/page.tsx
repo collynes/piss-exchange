@@ -21,7 +21,16 @@ function LoginForm() {
     setError(null)
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { setError(error.message); setLoading(false); return }
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      fetch('/api/analytics/beacon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: 'login_failed', email }),
+      }).catch(() => {})
+      return
+    }
     fetch('/api/analytics/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -140,9 +140,14 @@ export default async function AdminAnalyticsPage() {
           <h4 className="mb-1">Analytics & Logs</h4>
           <p className="text-muted mb-0">Operational telemetry, order health, and audit trail</p>
         </div>
-        <span className={`badge rounded-pill ${logs.length ? 'bg-label-success text-success' : 'bg-label-warning text-warning'}`}>
-          {logs.length ? 'Logging active' : 'Migration pending'}
-        </span>
+        <div className="d-flex align-items-center gap-2">
+          <a href="/admin/analytics/behavior" className="btn btn-sm btn-outline-primary">
+            Behavior Analytics →
+          </a>
+          <span className={`badge rounded-pill ${logs.length ? 'bg-label-success text-success' : 'bg-label-warning text-warning'}`}>
+            {logs.length ? 'Logging active' : 'Migration pending'}
+          </span>
+        </div>
       </div>
 
       <div className="row g-4">

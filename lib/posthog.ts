@@ -47,6 +47,9 @@ export type AnalyticsEvent =
   | { event: 'drug_deleted';        props: { drug_id: string; generic_name: string; by: string } }
   | { event: 'drug_status_toggled'; props: { drug_id: string; active: boolean; by: string } }
   | { event: 'setting_updated';     props: { key: string; value: string; by: string } }
+  | { event: 'page_viewed';         props: { path: string } }
+  | { event: 'login_failed';        props: { email_domain: string } }
+  | { event: 'page_not_found';      props: { path: string; referrer: string } }
 
 /** Fire a server-side event (use in Server Actions / Route Handlers) */
 export function captureServerEvent(

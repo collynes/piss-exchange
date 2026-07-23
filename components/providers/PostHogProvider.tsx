@@ -11,9 +11,17 @@ function PageViewTracker() {
   const ph = usePostHog()
 
   useEffect(() => {
-    if (!ph) return
     const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '')
-    ph.capture('$pageview', { $current_url: url })
+    if (ph) ph.capture('$pageview', { $current_url: url })
+
+    // Mirror into app_event_logs so the in-app admin dashboard can show
+    // popular/least-visited pages without needing the PostHog console.
+    const body = JSON.stringify({ event: 'page_viewed', path: pathname })
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/analytics/beacon', new Blob([body], { type: 'application/json' }))
+    } else {
+      fetch('/api/analytics/beacon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {})
+    }
   }, [pathname, searchParams, ph])
 
   return null
@@ -39,7 +47,14 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     })
   }, [key, host])
 
-  if (!key) return <>{children}</>
+  if (!key) return (
+    <>
+      <Suspense fallback={null}>
+        <PageViewTracker />
+      </Suspense>
+      {children}
+    </>
+  )
 
   return (
     <PHProvider client={posthog}>
