@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { BulkDrugImport } from '@/components/admin/BulkDrugImport'
 
 interface Drug {
   id: string
@@ -141,12 +142,14 @@ export default function AdminDrugsPage() {
   const [deleting,setDeleting]= useState(false)
   const [error,   setError]   = useState<string | null>(null)
 
-  useEffect(() => {
+  const reload = () => {
     createClient().from('drugs').select('*').order('generic_name').then(({ data }) => {
       setDrugs(data ?? [])
       setLoading(false)
     })
-  }, [])
+  }
+
+  useEffect(() => { reload() }, [])
 
   const openAdd = () => { setForm(EMPTY_FORM); setError(null); setAddOpen(true) }
   const openEdit = (d: Drug) => { setForm(drugToForm(d)); setError(null); setEditDrug(d) }
@@ -215,11 +218,14 @@ export default function AdminDrugsPage() {
           <h1 className="text-lg font-bold text-text">Drug Catalogue</h1>
           <p className="text-xs text-muted mt-0.5">{drugs.length} drugs registered</p>
         </div>
-        <button onClick={openAdd}
-          className="px-3 py-1.5 text-xs font-bold text-white rounded-lg transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}>
-          + Add Drug
-        </button>
+        <div className="flex items-center gap-2">
+          <BulkDrugImport onImported={reload} />
+          <button onClick={openAdd}
+            className="px-3 py-1.5 text-xs font-bold text-white rounded-lg transition-all hover:opacity-90"
+            style={{ background: 'linear-gradient(135deg, #5a1149, #8c3d77)' }}>
+            + Add Drug
+          </button>
+        </div>
       </div>
 
       {/* Table card */}

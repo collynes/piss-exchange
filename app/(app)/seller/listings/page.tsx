@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { formatKES } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 import { ListingActions } from './ListingActions'
+import { BulkListingImport } from '@/components/seller/BulkListingImport'
 
 const CARD = { boxShadow: '0 4px 18px 0 rgba(47,43,61,.1), 0 0 0 1px rgba(47,43,61,.05)' } as const
 
@@ -45,6 +46,7 @@ export default async function SellerListingsPage({ searchParams }: { searchParam
               <i className="bx bx-search" />
             </button>
           </form>
+          <BulkListingImport />
           <Link href="/seller/listings/new"
             className="px-3 py-1.5 text-white text-xs font-semibold rounded-lg hover:opacity-90 transition-all flex-shrink-0"
             style={{ background: '#5a1149' }}>
