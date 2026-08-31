@@ -50,6 +50,8 @@ export type AnalyticsEvent =
   | { event: 'page_viewed';         props: { path: string } }
   | { event: 'login_failed';        props: { email_domain: string } }
   | { event: 'page_not_found';      props: { path: string; referrer: string } }
+  | { event: 'profile_updated';     props: Record<string, never> }
+  | { event: 'password_changed';    props: Record<string, never> }
 
 /** Fire a server-side event (use in Server Actions / Route Handlers) */
 export function captureServerEvent(

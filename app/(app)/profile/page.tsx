@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { EditProfileForm } from '@/components/profile/EditProfileForm'
+import { ChangePasswordForm } from '@/components/profile/ChangePasswordForm'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
@@ -50,6 +52,16 @@ export default async function ProfilePage() {
             ))}
           </tbody>
         </table>
+        </div>
+
+        <div className="card-body border-top d-flex flex-wrap gap-2">
+          <EditProfileForm
+            orgName={profile?.org_name ?? ''}
+            phone={profile?.phone ?? ''}
+            licenseNo={profile?.license_no ?? ''}
+            showLicense={profile?.role === 'seller' || profile?.role === 'admin'}
+          />
+          <ChangePasswordForm email={user.email ?? ''} />
         </div>
       </div>
       </div>

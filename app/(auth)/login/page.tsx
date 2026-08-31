@@ -57,7 +57,10 @@ function LoginForm() {
               placeholder="you@company.com" className={INPUT_CLASS} />
           </div>
           <div className="mb-6">
-            <label className="form-label">Password</label>
+            <div className="d-flex align-items-center justify-content-between">
+              <label className="form-label">Password</label>
+              <Link href="/forgot-password" className="small">Forgot password?</Link>
+            </div>
             <input type="password" required minLength={6} value={password} onChange={e => setPassword(e.target.value)}
               placeholder="••••••••" className={INPUT_CLASS} />
           </div>

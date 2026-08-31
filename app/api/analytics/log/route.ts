@@ -5,7 +5,7 @@ import { captureServerEvent } from '@/lib/posthog'
 // Whitelisted client-triggerable events only — everything else must be
 // logged server-side directly where the mutation happens. distinct_id is
 // always the authenticated session user, never client-supplied.
-const ALLOWED_EVENTS = ['user_registered', 'user_logged_in'] as const
+const ALLOWED_EVENTS = ['user_registered', 'user_logged_in', 'password_changed'] as const
 
 export async function POST(request: Request) {
   const supabase = await createClient()
