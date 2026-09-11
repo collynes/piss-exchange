@@ -63,6 +63,7 @@ export default function RegisterPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ event: 'user_registered', props: { role, org_name: form.org_name } }),
     }).catch(() => {})
+    fetch('/api/notifications/registered', { method: 'POST' }).catch(() => {})
     router.push('/dashboard?registered=1')
   }
 

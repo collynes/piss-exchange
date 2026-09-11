@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
+import { sendSms } from '@/lib/sms'
 
 interface CreateListingBody {
   drugId: string
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, verified')
+    .select('role, verified, phone')
     .eq('id', user.id)
     .single()
 
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
   const adminSupabase = createAdminClient()
   const { data: drug } = await adminSupabase
     .from('drugs')
-    .select('id, slug, active')
+    .select('id, slug, active, generic_name')
     .eq('id', body.drugId)
     .single()
 
@@ -81,5 +82,7 @@ export async function POST(request: Request) {
     event: 'listing_created',
     props: { drug_id: drug.id, price: Number(price.toFixed(4)), qty },
   })
+  sendSms(profile?.phone,
+    `Dawahub PISS Exchange: your listing for ${drug.generic_name} (${qty} units @ KES ${price.toFixed(2)}) is now live.`)
   return NextResponse.json({ slug: drug.slug })
 }

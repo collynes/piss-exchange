@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
+import { sendSms } from '@/lib/sms'
 
 // Lets a verified seller (or admin) accept an open bid directly — creating an
 // order without the buyer needing to find and buy a listing first. Used for
@@ -27,7 +28,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const adminSupabase = createAdminClient()
   const { data: bid } = await adminSupabase
     .from('bids')
-    .select('id, drug_id, buyer_id, qty, price_per_unit, expires_at, status')
+    .select('id, drug_id, buyer_id, qty, price_per_unit, expires_at, status, drugs(generic_name)')
     .eq('id', id)
     .single()
 
@@ -86,6 +87,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     event: 'bid_accepted',
     props: { bid_id: bid.id, order_id: order.id, drug_id: bid.drug_id, qty: bid.qty, price },
   })
+
+  const { data: buyerProfile } = await adminSupabase
+    .from('profiles').select('phone').eq('id', bid.buyer_id).single()
+  const drugName = (bid.drugs as { generic_name: string } | null)?.generic_name ?? 'your drug'
+  sendSms(buyerProfile?.phone,
+    `Dawahub PISS Exchange: your bid for ${drugName} (${bid.qty} units) has been accepted. Order is confirmed.`)
 
   return NextResponse.json({ orderId: order.id })
 }

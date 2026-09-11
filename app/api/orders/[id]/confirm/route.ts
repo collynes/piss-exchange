@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
+import { sendSms } from '@/lib/sms'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -14,7 +15,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const isAdmin = profile?.role === 'admin'
 
   // Verify order is in 'paid' state; admin can act on any order, seller only on their own
-  const orderBaseQuery = supabase.from('orders').select('status').eq('id', id)
+  const orderBaseQuery = supabase.from('orders').select('status, buyer_id').eq('id', id)
   const { data: order } = await (isAdmin ? orderBaseQuery : orderBaseQuery.eq('seller_id', user.id)).single()
 
   if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
@@ -29,6 +30,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   captureServerEvent(user.id, { event: 'order_confirmed', props: { order_id: id } })
+
+  const { data: buyerProfile } = await adminSupabase
+    .from('profiles').select('phone').eq('id', order.buyer_id).single()
+  sendSms(buyerProfile?.phone, `Dawahub PISS Exchange: your order has been confirmed by the seller and is being processed.`)
 
   return NextResponse.redirect(new URL('/seller/orders', request.url))
 }

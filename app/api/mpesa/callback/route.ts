@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { releaseOrderStock } from '@/lib/orders/inventory'
 import { captureServerEvent } from '@/lib/posthog'
+import { sendSms } from '@/lib/sms'
 
 export async function POST(request: Request) {
   // C1: Reject callbacks that don't carry the shared secret embedded in the CallBackURL
@@ -57,12 +58,18 @@ export async function POST(request: Request) {
     }).eq('id', payment.order_id)
 
     const { data: order } = await adminSupabase
-      .from('orders').select('buyer_id').eq('id', payment.order_id).single()
+      .from('orders').select('buyer_id, seller_id').eq('id', payment.order_id).single()
     if (order) {
       captureServerEvent(order.buyer_id, {
         event: 'payment_completed',
         props: { order_id: payment.order_id, amount: payment.amount },
       })
+      const { data: parties } = await adminSupabase
+        .from('profiles').select('id, phone').in('id', [order.buyer_id, order.seller_id])
+      const buyerPhone = parties?.find(p => p.id === order.buyer_id)?.phone
+      const sellerPhone = parties?.find(p => p.id === order.seller_id)?.phone
+      sendSms(buyerPhone, `Dawahub PISS Exchange: payment of KES ${Number(payment.amount).toFixed(2)} received. Your order is confirmed.`)
+      sendSms(sellerPhone, `Dawahub PISS Exchange: payment received for an order (KES ${Number(payment.amount).toFixed(2)}). Please prepare to ship.`)
     }
   } else {
     // Payment failed — stock was reserved at stk-push time, release it now

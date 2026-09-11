@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { captureServerEvent } from '@/lib/posthog'
+import { sendSms } from '@/lib/sms'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -12,7 +13,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (adminProfile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const { error } = await supabase.from('profiles').update({ verified: true, updated_at: new Date().toISOString() }).eq('id', id)
-  if (!error) captureServerEvent(id, { event: 'user_verified', props: { by: user.id } })
+  if (!error) {
+    captureServerEvent(id, { event: 'user_verified', props: { by: user.id } })
+    const { data: verifiedProfile } = await supabase.from('profiles').select('phone').eq('id', id).single()
+    sendSms(verifiedProfile?.phone, `Dawahub PISS Exchange: your account has been verified. You can now trade on the exchange.`)
+  }
   const dest = error
     ? `/admin/users?error=${encodeURIComponent(error.message)}`
     : '/admin/users?success=verified'

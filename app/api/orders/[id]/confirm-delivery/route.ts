@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient as createUserClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
+import { sendSms } from '@/lib/sms'
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const adminSupabase = createAdminClient()
@@ -59,6 +60,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 
   captureServerEvent(user.id, { event: 'order_delivered', props: { order_id: id } })
+
+  const { data: sellerProfile } = await adminSupabase
+    .from('profiles').select('phone').eq('id', order.seller_id).single()
+  sendSms(sellerProfile?.phone,
+    `Dawahub PISS Exchange: delivery confirmed. KES ${Number(order.total_amount).toFixed(2)} has been released to you.`)
 
   return NextResponse.redirect(new URL(`/orders/${id}`, request.url))
 }

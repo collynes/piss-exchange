@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { captureServerEvent } from '@/lib/posthog'
+import { sendSms } from '@/lib/sms'
 
 interface CreateBidBody {
   drugId: string
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, verified')
+    .select('role, verified, phone')
     .eq('id', user.id)
     .single()
 
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
   const adminSupabase = createAdminClient()
   const { data: drug } = await adminSupabase
     .from('drugs')
-    .select('id, active')
+    .select('id, active, generic_name')
     .eq('id', drugId)
     .single()
 
@@ -64,5 +65,7 @@ export async function POST(request: Request) {
     event: 'bid_placed',
     props: { drug_id: drug.id, price: Number(price.toFixed(4)), qty },
   })
+  sendSms(profile?.phone,
+    `Dawahub PISS Exchange: your bid for ${drug.generic_name} (${qty} units @ KES ${price.toFixed(2)}) has been placed.`)
   return NextResponse.json({ ok: true })
 }
