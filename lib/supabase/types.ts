@@ -452,6 +452,7 @@ export type Database = {
           created_at: string | null
           doc_url: string | null
           id: string
+          is_investor: boolean
           license_no: string | null
           org_name: string
           phone: string | null
@@ -464,6 +465,7 @@ export type Database = {
           created_at?: string | null
           doc_url?: string | null
           id: string
+          is_investor?: boolean
           license_no?: string | null
           org_name: string
           phone?: string | null
@@ -476,6 +478,7 @@ export type Database = {
           created_at?: string | null
           doc_url?: string | null
           id?: string
+          is_investor?: boolean
           license_no?: string | null
           org_name?: string
           phone?: string | null

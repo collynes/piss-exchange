@@ -41,7 +41,7 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
 
   const { data: profile } = await adminSupabase
     .from('profiles')
-    .select('id, org_name, role, verified, phone, license_no, doc_url, created_at, updated_at')
+    .select('id, org_name, role, verified, is_investor, phone, license_no, doc_url, created_at, updated_at')
     .eq('id', id)
     .single()
 
@@ -129,6 +129,9 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
               <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${profile.verified ? 'bg-label-success text-success' : 'bg-label-secondary text-muted'}`}>
                 {profile.verified ? 'Verified' : 'Pending'}
               </span>
+              {profile.is_investor && (
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-warning text-warning">Investor</span>
+              )}
             </div>
             <div className="text-xs text-muted mt-1 font-mono">{memberCode(profile.id)}</div>
           </div>
@@ -141,6 +144,15 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
             {profile.verified && (
               <form action={`/api/admin/users/${profile.id}/suspend`} method="POST">
                 <button type="submit" className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-danger text-danger hover:bg-red/20 transition-colors">Suspend</button>
+              </form>
+            )}
+            {profile.is_investor ? (
+              <form action={`/api/admin/users/${profile.id}/investor/revoke`} method="POST">
+                <button type="submit" className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-secondary text-muted hover:bg-red/10 hover:text-danger transition-colors">Remove Investor</button>
+              </form>
+            ) : (
+              <form action={`/api/admin/users/${profile.id}/investor`} method="POST">
+                <button type="submit" className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-warning text-warning hover:bg-yellow/20 transition-colors">Make Investor</button>
               </form>
             )}
           </div>

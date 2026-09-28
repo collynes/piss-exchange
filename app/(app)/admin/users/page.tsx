@@ -19,13 +19,14 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
 
   let query = supabase
     .from('profiles')
-    .select('id, org_name, role, verified, license_no, phone, created_at')
+    .select('id, org_name, role, verified, is_investor, license_no, phone, created_at')
     .order('created_at', { ascending: false })
 
   if (roleFilter && ['admin', 'buyer', 'seller'].includes(roleFilter))
     query = (query as typeof query).eq('role', roleFilter as 'admin' | 'buyer' | 'seller')
   if (statusFilter === 'pending') query = (query as typeof query).eq('verified', false)
   if (statusFilter === 'verified') query = (query as typeof query).eq('verified', true)
+  if (statusFilter === 'investor') query = (query as typeof query).eq('is_investor', true)
 
   const { data: users } = await query
 
@@ -33,6 +34,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     { label: 'All', href: '/admin/users' },
     { label: 'Pending', href: '/admin/users?status=pending' },
     { label: 'Verified', href: '/admin/users?status=verified' },
+    { label: 'Investors', href: '/admin/users?status=investor' },
     { label: 'Buyers', href: '/admin/users?role=buyer' },
     { label: 'Sellers', href: '/admin/users?role=seller' },
   ]
@@ -80,9 +82,16 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 className="hover:bg-surface2 transition-colors"
                 style={{ borderBottom: i < (users?.length ?? 0) - 1 ? '1px solid rgba(47,43,61,.06)' : undefined }}>
                 <td className="px-5 py-3.5" style={{ maxWidth: '220px' }}>
-                  <Link href={`/admin/users/${u.id}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors truncate block">
-                    {u.org_name}
-                  </Link>
+                  <div className="flex items-center gap-1.5">
+                    <Link href={`/admin/users/${u.id}`} className="text-[13px] font-semibold text-text hover:text-blue transition-colors truncate block">
+                      {u.org_name}
+                    </Link>
+                    {u.is_investor && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-label-warning text-warning flex-shrink-0">
+                        Investor
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs text-muted font-mono">{u.id.slice(0, 8)}…</div>
                 </td>
                 <td className="px-5 py-3.5 text-right">
@@ -119,6 +128,21 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                         <button type="submit"
                           className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-danger text-danger hover:bg-red/20 transition-colors">
                           Suspend
+                        </button>
+                      </form>
+                    )}
+                    {u.is_investor ? (
+                      <form action={`/api/admin/users/${u.id}/investor/revoke`} method="POST">
+                        <button type="submit"
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-secondary text-muted hover:bg-red/10 hover:text-danger transition-colors">
+                          Remove Investor
+                        </button>
+                      </form>
+                    ) : (
+                      <form action={`/api/admin/users/${u.id}/investor`} method="POST">
+                        <button type="submit"
+                          className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-label-warning text-warning hover:bg-yellow/20 transition-colors">
+                          Make Investor
                         </button>
                       </form>
                     )}

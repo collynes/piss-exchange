@@ -52,6 +52,8 @@ export type AnalyticsEvent =
   | { event: 'page_not_found';      props: { path: string; referrer: string } }
   | { event: 'profile_updated';     props: Record<string, never> }
   | { event: 'password_changed';    props: Record<string, never> }
+  | { event: 'investor_granted';    props: { by: string } }
+  | { event: 'investor_revoked';    props: { by: string } }
 
 /** Fire a server-side event (use in Server Actions / Route Handlers) */
 export function captureServerEvent(

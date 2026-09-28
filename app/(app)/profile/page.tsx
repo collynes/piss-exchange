@@ -35,10 +35,15 @@ export default async function ProfilePage() {
       <div className="card">
         <div className="card-header d-flex align-items-center justify-content-between">
           <h5 className="mb-0">Account</h5>
-          {profile?.verified
-            ? <span className="badge bg-label-success text-success">Verified</span>
-            : <span className="badge bg-label-secondary text-muted">Pending Verification</span>
-          }
+          <div className="d-flex gap-2">
+            {profile?.is_investor && (
+              <span className="badge bg-label-warning text-warning">Investor</span>
+            )}
+            {profile?.verified
+              ? <span className="badge bg-label-success text-success">Verified</span>
+              : <span className="badge bg-label-secondary text-muted">Pending Verification</span>
+            }
+          </div>
         </div>
 
         <div className="table-responsive">
