@@ -1,0 +1,79 @@
+<svg viewBox="0 0 1400 1640" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="1400" height="1640" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,7 L10,3.5 z" fill="#000000"/>
+    </marker>
+  <style>text{stroke:none;fill:#000000;}</style></defs><text x="700.0" y="55" text-anchor="middle" font-size="27" font-weight="bold">FIGURE 6 — DUAL-SINK EVENT CAPTURE FUNCTION EXECUTION PATH</text><g transform="translate(0,90)">
+  <g stroke="#000000" stroke-width="2.5" fill="none" font-size="19">
+
+    <!-- 600: caller invokes -->
+    <rect x="390" y="40" width="620" height="130" rx="45" ry="45" fill="#ffffff"/>
+    <text x="700" y="85" text-anchor="middle" font-size="20">ROUTE HANDLER INVOKES</text>
+    <text x="700" y="115" text-anchor="middle" font-size="20">captureServerEvent(distinctId,</text>
+    <text x="700" y="145" text-anchor="middle" font-size="20">{event, props})   600</text>
+    <line x1="700" y1="170" x2="700" y2="228" marker-end="url(#arrow)"/>
+
+    <!-- 602: split point -->
+    <polygon points="700,230 790,275 700,320 610,275" fill="#ffffff"/>
+    <text x="700" y="282" text-anchor="middle" font-size="16">602</text>
+
+    <!-- branch left: synchronous PostHog sink -->
+    <line x1="610" y1="275" x2="330" y2="275"/>
+    <line x1="330" y1="275" x2="330" y2="333" marker-end="url(#arrow)"/>
+    <rect x="90" y="335" width="480" height="150" fill="#ffffff"/>
+    <text x="330" y="368" text-anchor="middle" font-weight="bold" font-size="19">SINK A — SYNCHRONOUS</text>
+    <text x="330" y="398" text-anchor="middle" font-size="18">event forwarded, with its actor</text>
+    <text x="330" y="426" text-anchor="middle" font-size="18">identifier and properties, to an</text>
+    <text x="330" y="454" text-anchor="middle" font-size="18">external product-analytics service</text>
+    <text x="330" y="478" text-anchor="middle" font-size="18">604</text>
+
+    <!-- branch right: async fire-and-forget local sink -->
+    <line x1="790" y1="275" x2="1070" y2="275"/>
+    <line x1="1070" y1="275" x2="1070" y2="333" marker-end="url(#arrow)"/>
+    <rect x="830" y="335" width="480" height="200" fill="#ffffff"/>
+    <text x="1070" y="368" text-anchor="middle" font-weight="bold" font-size="19">SINK B — ASYNCHRONOUS,</text>
+    <text x="1070" y="396" text-anchor="middle" font-weight="bold" font-size="19">NON-BLOCKING   606</text>
+    <text x="1070" y="428" text-anchor="middle" font-size="18">self-invoking async function</text>
+    <text x="1070" y="456" text-anchor="middle" font-size="18">persists the event to a local</text>
+    <text x="1070" y="484" text-anchor="middle" font-size="18">audit-log store, wrapped in a</text>
+    <text x="1070" y="512" text-anchor="middle" font-size="18">failure-tolerant handler   608</text>
+
+    <!-- caller does not await sink B -->
+    <line x1="700" y1="320" x2="700" y2="668" marker-end="url(#arrow)"/>
+    <text x="720" y="590" font-size="18">caller does NOT await</text>
+    <text x="720" y="618" font-size="18">Sink B — request completes</text>
+    <text x="720" y="646" font-size="18">independent of log write   610</text>
+
+    <!-- 612: caller returns response -->
+    <rect x="390" y="670" width="620" height="100" fill="#ffffff"/>
+    <text x="700" y="710" text-anchor="middle" font-size="19">ROUTE HANDLER RETURNS HTTP</text>
+    <text x="700" y="740" text-anchor="middle" font-size="19">RESPONSE TO CLIENT   612</text>
+
+    <!-- Sink A failure path -->
+    <line x1="330" y1="485" x2="330" y2="560"/>
+    <line x1="330" y1="560" x2="640" y2="668" marker-end="url(#arrow)" stroke-dasharray="8,5"/>
+    <text x="90" y="580" font-size="17">on failure: swallowed,</text>
+    <text x="90" y="605" font-size="17">no effect on caller</text>
+
+    <!-- Sink B failure path -->
+    <line x1="1070" y1="535" x2="1070" y2="655"/>
+    <line x1="1070" y1="655" x2="790" y2="655"/>
+    <line x1="790" y1="655" x2="790" y2="668" marker-end="url(#arrow)" stroke-dasharray="8,5"/>
+    <text x="1080" y="590" font-size="17">try/catch swallows write</text>
+    <text x="1080" y="615" font-size="17">failure — an analytics outage</text>
+    <text x="1080" y="640" font-size="17">cannot break a trading</text>
+    <text x="1080" y="665" font-size="17">operation   614</text>
+
+    <!-- 616: downstream consumer -->
+    <line x1="700" y1="770" x2="700" y2="828" marker-end="url(#arrow)"/>
+    <rect x="330" y="830" width="740" height="180" fill="#ffffff"/>
+    <text x="700" y="866" text-anchor="middle" font-size="19">LOCAL AUDIT-LOG STORE QUERIED BY</text>
+    <text x="700" y="896" text-anchor="middle" font-size="19">ADMINISTRATIVE AUDIT-TRAIL AND</text>
+    <text x="700" y="926" text-anchor="middle" font-size="19">BEHAVIOR-ANALYTICS DASHBOARDS</text>
+    <text x="700" y="956" text-anchor="middle" font-size="19">(SEE FIG. 8)</text>
+    <text x="700" y="988" text-anchor="middle" font-size="18">616</text>
+
+  </g>
+  <text x="700" y="1500" text-anchor="middle" font-size="30" font-weight="bold">FIG. 6</text>
+</g></svg>

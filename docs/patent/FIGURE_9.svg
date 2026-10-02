@@ -1,0 +1,63 @@
+<svg viewBox="0 0 1700 1470" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="1700" height="1470" fill="#ffffff"/>
+  <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,7 L10,3.5 z" fill="#000000"/></marker><style>text{stroke:none;fill:#000000;}</style></defs>
+  <text x="850" y="55" text-anchor="middle" font-size="27" font-weight="bold">FIGURE 9 — LIFECYCLE NOTIFICATION DISPATCH WITH NON-BLOCKING, FAIL-SAFE DELIVERY</text>
+  <g stroke="#000000" stroke-width="2.5" fill="none" font-size="19">
+<rect x="240" y="100" width="760" height="138" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="138" text-anchor="middle" font-size="19">LIFECYCLE EVENT OCCURS: REGISTRATION, VERIFICATION,</text>
+<text x="620" y="166" text-anchor="middle" font-size="19">LISTING, BID, BID ACCEPTANCE, PAYMENT, ORDER</text>
+<text x="620" y="194" text-anchor="middle" font-size="19">CONFIRMATION, SHIPMENT OR DELIVERY</text>
+<text x="620" y="222" text-anchor="middle" font-size="18">900</text>
+<line x1="620" y1="238" x2="620" y2="288" marker-end="url(#arrow)"/>
+<rect x="240" y="288" width="760" height="82" fill="#ffffff"/>
+<text x="620" y="326" text-anchor="middle" font-size="19">PRIMARY OPERATION COMPLETES AND IS PERSISTED</text>
+<text x="620" y="354" text-anchor="middle" font-size="18">902</text>
+<line x1="620" y1="370" x2="620" y2="420" marker-end="url(#arrow)"/>
+<rect x="240" y="420" width="760" height="110" fill="#ffffff"/>
+<text x="620" y="458" text-anchor="middle" font-size="19">COMPOSE MESSAGE FROM EVENT CONTEXT AND RESOLVE</text>
+<text x="620" y="486" text-anchor="middle" font-size="19">EACH RECIPIENT PARTY (BUYER, SELLER OR BOTH)</text>
+<text x="620" y="514" text-anchor="middle" font-size="18">904</text>
+<line x1="620" y1="530" x2="620" y2="580" marker-end="url(#arrow)"/>
+<polygon points="620,580 880,665 620,750 360,665" fill="#ffffff"/>
+<text x="620" y="643" text-anchor="middle" font-size="18">GATEWAY CREDENTIALS</text>
+<text x="620" y="671" text-anchor="middle" font-size="18">CONFIGURED?</text>
+<text x="620" y="699" text-anchor="middle" font-size="17">906</text>
+<line x1="880" y1="665" x2="1170" y2="665" marker-end="url(#arrow)"/>
+<text x="1025" y="653" text-anchor="middle" font-size="18">NO</text>
+<rect x="1170" y="595" width="420" height="110" fill="#ffffff"/>
+<text x="1380" y="633" text-anchor="middle" font-size="19">SILENT NO-OP: NO MESSAGE</text>
+<text x="1380" y="661" text-anchor="middle" font-size="19">SENT, NO ERROR RAISED</text>
+<text x="1380" y="689" text-anchor="middle" font-size="18">908</text>
+<line x1="620" y1="750" x2="620" y2="810" marker-end="url(#arrow)"/>
+<text x="650" y="788" text-anchor="middle" font-size="18">YES</text>
+<polygon points="620,810 900,905 620,1000 340,905" fill="#ffffff"/>
+<text x="620" y="883" text-anchor="middle" font-size="18">RECIPIENT NUMBER VALID</text>
+<text x="620" y="911" text-anchor="middle" font-size="18">AFTER NORMALIZATION?</text>
+<text x="620" y="939" text-anchor="middle" font-size="17">910</text>
+<line x1="900" y1="905" x2="1170" y2="905" marker-end="url(#arrow)"/>
+<text x="1035" y="893" text-anchor="middle" font-size="18">NO</text>
+<rect x="1170" y="835" width="420" height="110" fill="#ffffff"/>
+<text x="1380" y="873" text-anchor="middle" font-size="19">SKIP THIS RECIPIENT;</text>
+<text x="1380" y="901" text-anchor="middle" font-size="19">CONTINUE WITH OTHERS</text>
+<text x="1380" y="929" text-anchor="middle" font-size="18">912</text>
+<line x1="620" y1="1000" x2="620" y2="1060" marker-end="url(#arrow)"/>
+<text x="650" y="1038" text-anchor="middle" font-size="18">YES</text>
+<rect x="240" y="1060" width="760" height="110" fill="#ffffff"/>
+<text x="620" y="1098" text-anchor="middle" font-size="19">DISPATCH TO MESSAGING GATEWAY ASYNCHRONOUSLY;</text>
+<text x="620" y="1126" text-anchor="middle" font-size="19">CALLER DOES NOT AWAIT THE RESULT</text>
+<text x="620" y="1154" text-anchor="middle" font-size="18">914</text>
+<line x1="620" y1="1170" x2="620" y2="1230" marker-end="url(#arrow)"/>
+<rect x="240" y="1230" width="760" height="110" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="1268" text-anchor="middle" font-size="19">CALLER RETURNS RESPONSE TO CLIENT, INDEPENDENT</text>
+<text x="620" y="1296" text-anchor="middle" font-size="19">OF THE MESSAGE OUTCOME</text>
+<text x="620" y="1324" text-anchor="middle" font-size="18">918</text>
+<line x1="1000" y1="1100" x2="1380" y2="1100" stroke-dasharray="8,5"/>
+<line x1="1380" y1="1100" x2="1380" y2="1140" marker-end="url(#arrow)" stroke-dasharray="8,5"/>
+<rect x="1150" y="1140" width="460" height="138" fill="#ffffff"/>
+<text x="1380" y="1178" text-anchor="middle" font-size="19">GATEWAY FAILURE IS SWALLOWED:</text>
+<text x="1380" y="1206" text-anchor="middle" font-size="19">A MESSAGING OUTAGE CANNOT</text>
+<text x="1380" y="1234" text-anchor="middle" font-size="19">BREAK A TRADING OPERATION</text>
+<text x="1380" y="1262" text-anchor="middle" font-size="18">916</text>
+  </g>
+  <text x="850" y="1425" text-anchor="middle" font-size="30" font-weight="bold">FIG. 9</text>
+</svg>

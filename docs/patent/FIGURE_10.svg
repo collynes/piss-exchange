@@ -1,0 +1,67 @@
+<svg viewBox="0 0 1700 1900" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="1700" height="1900" fill="#ffffff"/>
+  <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,7 L10,3.5 z" fill="#000000"/></marker><style>text{stroke:none;fill:#000000;}</style></defs>
+  <text x="850" y="55" text-anchor="middle" font-size="27" font-weight="bold">FIGURE 10 — ADMINISTRATOR-GRANTED INVESTOR DESIGNATION ADDITIVE TO EXISTING ROLE</text>
+  <g stroke="#000000" stroke-width="2.5" fill="none" font-size="19">
+<rect x="240" y="100" width="760" height="110" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="138" text-anchor="middle" font-size="19">ADMINISTRATOR SELECTS AN EXISTING VERIFIED</text>
+<text x="620" y="166" text-anchor="middle" font-size="19">ACCOUNT (BUYER OR SELLER) FOR DESIGNATION</text>
+<text x="620" y="194" text-anchor="middle" font-size="18">1000</text>
+<line x1="620" y1="210" x2="620" y2="260" marker-end="url(#arrow)"/>
+<polygon points="620,260 900,355 620,450 340,355" fill="#ffffff"/>
+<text x="620" y="333" text-anchor="middle" font-size="18">REQUESTER AUTHENTICATED</text>
+<text x="620" y="361" text-anchor="middle" font-size="18">AS ADMINISTRATOR?</text>
+<text x="620" y="389" text-anchor="middle" font-size="17">1002</text>
+<line x1="900" y1="355" x2="1160" y2="355" marker-end="url(#arrow)"/>
+<text x="1030" y="343" text-anchor="middle" font-size="18">NO</text>
+<rect x="1160" y="285" width="440" height="110" fill="#ffffff"/>
+<text x="1380" y="323" text-anchor="middle" font-size="19">REQUEST REJECTED;</text>
+<text x="1380" y="351" text-anchor="middle" font-size="19">NO CHANGE MADE</text>
+<text x="1380" y="379" text-anchor="middle" font-size="18">1004</text>
+<line x1="620" y1="450" x2="620" y2="510" marker-end="url(#arrow)"/>
+<text x="650" y="488" text-anchor="middle" font-size="18">YES</text>
+<rect x="240" y="510" width="760" height="110" fill="#ffffff"/>
+<text x="620" y="548" text-anchor="middle" font-size="19">SET INVESTOR INDICATOR ON THE ACCOUNT, INDEPENDENT</text>
+<text x="620" y="576" text-anchor="middle" font-size="19">OF ITS BUYER OR SELLER ROLE (ROLE UNCHANGED)</text>
+<text x="620" y="604" text-anchor="middle" font-size="18">1006</text>
+<line x1="620" y1="620" x2="620" y2="670" marker-end="url(#arrow)"/>
+<rect x="240" y="670" width="760" height="110" fill="#ffffff"/>
+<text x="620" y="708" text-anchor="middle" font-size="19">RECORD AUDIT ENTRY: SUBJECT ACCOUNT AND</text>
+<text x="620" y="736" text-anchor="middle" font-size="19">IDENTITY OF THE GRANTING ADMINISTRATOR</text>
+<text x="620" y="764" text-anchor="middle" font-size="18">1008</text>
+<line x1="620" y1="780" x2="620" y2="830" marker-end="url(#arrow)"/>
+<rect x="240" y="830" width="760" height="82" fill="#ffffff"/>
+<text x="620" y="868" text-anchor="middle" font-size="19">NOTIFY ACCOUNT HOLDER (SEE FIG. 9)</text>
+<text x="620" y="896" text-anchor="middle" font-size="18">1010</text>
+<line x1="620" y1="912" x2="620" y2="962" marker-end="url(#arrow)"/>
+<rect x="240" y="962" width="760" height="138" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="1000" text-anchor="middle" font-size="19">ACCOUNT RETAINS ALL BASE-ROLE CAPABILITIES AND</text>
+<text x="620" y="1028" text-anchor="middle" font-size="19">CARRIES THE INVESTOR DESIGNATION; MARKET</text>
+<text x="620" y="1056" text-anchor="middle" font-size="19">VISIBILITY AND BIDDING RULES UNCHANGED</text>
+<text x="620" y="1084" text-anchor="middle" font-size="18">1012</text>
+<text x="620" y="1210" text-anchor="middle" font-size="22" font-weight="bold">SELF-SERVICE ATTEMPT</text>
+<rect x="240" y="1240" width="760" height="110" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="1278" text-anchor="middle" font-size="19">ACCOUNT HOLDER ATTEMPTS TO SET OWN</text>
+<text x="620" y="1306" text-anchor="middle" font-size="19">INVESTOR INDICATOR</text>
+<text x="620" y="1334" text-anchor="middle" font-size="18">1014</text>
+<line x1="620" y1="1350" x2="620" y2="1400" marker-end="url(#arrow)"/>
+<polygon points="620,1400 930,1500 620,1600 310,1500" fill="#ffffff"/>
+<text x="620" y="1464" text-anchor="middle" font-size="18">PROPOSED INDICATOR EQUALS</text>
+<text x="620" y="1492" text-anchor="middle" font-size="18">STORED VALUE (ROW-LEVEL</text>
+<text x="620" y="1520" text-anchor="middle" font-size="18">POLICY CHECK)?</text>
+<text x="620" y="1548" text-anchor="middle" font-size="17">1016</text>
+<line x1="930" y1="1500" x2="1160" y2="1500" marker-end="url(#arrow)"/>
+<text x="1045" y="1488" text-anchor="middle" font-size="18">NO</text>
+<rect x="1160" y="1430" width="440" height="110" fill="#ffffff"/>
+<text x="1380" y="1468" text-anchor="middle" font-size="19">UPDATE REJECTED BY THE</text>
+<text x="1380" y="1496" text-anchor="middle" font-size="19">DATABASE POLICY</text>
+<text x="1380" y="1524" text-anchor="middle" font-size="18">1018</text>
+<line x1="620" y1="1600" x2="620" y2="1660" marker-end="url(#arrow)"/>
+<text x="650" y="1638" text-anchor="middle" font-size="18">YES</text>
+<rect x="240" y="1660" width="760" height="110" fill="#ffffff"/>
+<text x="620" y="1698" text-anchor="middle" font-size="19">OTHER PROFILE FIELDS UPDATE NORMALLY;</text>
+<text x="620" y="1726" text-anchor="middle" font-size="19">INDICATOR UNCHANGED</text>
+<text x="620" y="1754" text-anchor="middle" font-size="18">1020</text>
+  </g>
+  <text x="850" y="1855" text-anchor="middle" font-size="30" font-weight="bold">FIG. 10</text>
+</svg>

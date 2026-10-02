@@ -1,0 +1,75 @@
+<svg viewBox="0 0 1700 2012" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="1700" height="2012" fill="#ffffff"/>
+  <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,7 L10,3.5 z" fill="#000000"/></marker><style>text{stroke:none;fill:#000000;}</style></defs>
+  <text x="850" y="55" text-anchor="middle" font-size="27" font-weight="bold">FIGURE 11 — CATALOGUE-FIRST BULK IMPORT WITH EXACT-MATCH LISTING IMPORT</text>
+  <g stroke="#000000" stroke-width="2.5" fill="none" font-size="19">
+<text x="620" y="110" text-anchor="middle" font-size="22" font-weight="bold">STAGE 1 — GENERIC CATALOGUE IMPORT (ADMINISTRATOR)</text>
+<rect x="240" y="135" width="760" height="110" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="173" text-anchor="middle" font-size="19">SPREADSHEET OF GENERIC ITEMS UPLOADED AND</text>
+<text x="620" y="201" text-anchor="middle" font-size="19">PARSED; COLUMN HEADERS NORMALIZED</text>
+<text x="620" y="229" text-anchor="middle" font-size="18">1100</text>
+<line x1="620" y1="245" x2="620" y2="295" marker-end="url(#arrow)"/>
+<polygon points="620,295 920,390 620,485 320,390" fill="#ffffff"/>
+<text x="620" y="368" text-anchor="middle" font-size="18">ROW HAS ALL REQUIRED</text>
+<text x="620" y="396" text-anchor="middle" font-size="18">FIELDS?</text>
+<text x="620" y="424" text-anchor="middle" font-size="17">1102</text>
+<line x1="920" y1="390" x2="1160" y2="390" marker-end="url(#arrow)"/>
+<text x="1040" y="378" text-anchor="middle" font-size="18">NO</text>
+<rect x="1160" y="320" width="440" height="110" fill="#ffffff"/>
+<text x="1380" y="358" text-anchor="middle" font-size="19">ROW SKIPPED AND REPORTED</text>
+<text x="1380" y="386" text-anchor="middle" font-size="19">WITH THE REASON</text>
+<text x="1380" y="414" text-anchor="middle" font-size="18">1104</text>
+<line x1="620" y1="485" x2="620" y2="545" marker-end="url(#arrow)"/>
+<text x="650" y="523" text-anchor="middle" font-size="18">YES</text>
+<rect x="240" y="545" width="760" height="110" fill="#ffffff"/>
+<text x="620" y="583" text-anchor="middle" font-size="19">DERIVE UNIQUE IDENTIFIER FROM NAME, STRENGTH</text>
+<text x="620" y="611" text-anchor="middle" font-size="19">AND FORM; INSERT IDEMPOTENTLY (EXISTING SKIPPED)</text>
+<text x="620" y="639" text-anchor="middle" font-size="18">1106</text>
+<line x1="620" y1="655" x2="620" y2="705" marker-end="url(#arrow)"/>
+<rect x="240" y="705" width="760" height="110" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="743" text-anchor="middle" font-size="19">SUMMARY: ITEMS CREATED AND ROWS FAILED</text>
+<text x="620" y="771" text-anchor="middle" font-size="19">(CATALOGUE NOW AVAILABLE FOR LISTING)</text>
+<text x="620" y="799" text-anchor="middle" font-size="18">1108</text>
+<text x="620" y="915" text-anchor="middle" font-size="22" font-weight="bold">STAGE 2 — BRAND LISTING IMPORT (SELLER)</text>
+<rect x="240" y="940" width="760" height="110" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="978" text-anchor="middle" font-size="19">SPREADSHEET OF BRAND OFFERS UPLOADED;</text>
+<text x="620" y="1006" text-anchor="middle" font-size="19">ACTIVE CATALOGUE FETCHED</text>
+<text x="620" y="1034" text-anchor="middle" font-size="18">1110</text>
+<line x1="620" y1="1050" x2="620" y2="1100" marker-end="url(#arrow)"/>
+<polygon points="620,1100 1000,1210 620,1320 240,1210" fill="#ffffff"/>
+<text x="620" y="1174" text-anchor="middle" font-size="18">NAME, STRENGTH AND FORM</text>
+<text x="620" y="1202" text-anchor="middle" font-size="18">EXACTLY MATCH A CATALOGUE</text>
+<text x="620" y="1230" text-anchor="middle" font-size="18">ENTRY (NORMALIZED)?</text>
+<text x="620" y="1258" text-anchor="middle" font-size="17">1112</text>
+<line x1="1000" y1="1210" x2="1160" y2="1210" marker-end="url(#arrow)"/>
+<text x="1080" y="1198" text-anchor="middle" font-size="18">NO</text>
+<rect x="1160" y="1125" width="440" height="138" fill="#ffffff"/>
+<text x="1380" y="1163" text-anchor="middle" font-size="19">ROW SKIPPED AND REPORTED:</text>
+<text x="1380" y="1191" text-anchor="middle" font-size="19">GENERIC NOT YET IN CATALOGUE</text>
+<text x="1380" y="1219" text-anchor="middle" font-size="19">(NEVER GUESSED)</text>
+<text x="1380" y="1247" text-anchor="middle" font-size="18">1114</text>
+<line x1="620" y1="1320" x2="620" y2="1380" marker-end="url(#arrow)"/>
+<text x="650" y="1358" text-anchor="middle" font-size="18">YES</text>
+<polygon points="620,1380 940,1480 620,1580 300,1480" fill="#ffffff"/>
+<text x="620" y="1458" text-anchor="middle" font-size="18">QUANTITY, PRICE AND MINIMUM</text>
+<text x="620" y="1486" text-anchor="middle" font-size="18">ORDER VALID?</text>
+<text x="620" y="1514" text-anchor="middle" font-size="17">1116</text>
+<line x1="940" y1="1480" x2="1160" y2="1480" marker-end="url(#arrow)"/>
+<text x="1050" y="1468" text-anchor="middle" font-size="18">NO</text>
+<rect x="1160" y="1410" width="440" height="110" fill="#ffffff"/>
+<text x="1380" y="1448" text-anchor="middle" font-size="19">ROW SKIPPED AND REPORTED</text>
+<text x="1380" y="1476" text-anchor="middle" font-size="19">WITH THE REASON</text>
+<text x="1380" y="1504" text-anchor="middle" font-size="18">1118</text>
+<line x1="620" y1="1580" x2="620" y2="1640" marker-end="url(#arrow)"/>
+<text x="650" y="1618" text-anchor="middle" font-size="18">YES</text>
+<rect x="240" y="1640" width="760" height="110" fill="#ffffff"/>
+<text x="620" y="1678" text-anchor="middle" font-size="19">CREATE OFFER ATTRIBUTED TO THE AUTHENTICATED</text>
+<text x="620" y="1706" text-anchor="middle" font-size="19">VERIFIED SELLER; NO PER-ROW NOTIFICATION SENT</text>
+<text x="620" y="1734" text-anchor="middle" font-size="18">1120</text>
+<line x1="620" y1="1750" x2="620" y2="1800" marker-end="url(#arrow)"/>
+<rect x="240" y="1800" width="760" height="82" rx="45" ry="45" fill="#ffffff"/>
+<text x="620" y="1838" text-anchor="middle" font-size="19">SUMMARY: OFFERS CREATED AND ROWS FAILED</text>
+<text x="620" y="1866" text-anchor="middle" font-size="18">1122</text>
+  </g>
+  <text x="850" y="1967" text-anchor="middle" font-size="30" font-weight="bold">FIG. 11</text>
+</svg>

@@ -1,0 +1,85 @@
+<svg viewBox="0 0 1300 1790" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="1300" height="1790" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,7 L10,3.5 z" fill="#000000"/>
+    </marker>
+  <style>text{stroke:none;fill:#000000;}</style></defs><text x="650.0" y="55" text-anchor="middle" font-size="27" font-weight="bold">FIGURE 4 — POSTGRESQL TRIGGER EXECUTION FOR REAL-TIME MARKET DATA AGGREGATION</text><g transform="translate(0,90)">
+  <g stroke="#000000" stroke-width="2.5" fill="none" font-size="19">
+
+    <!-- 400: trade row inserted -->
+    <rect x="330" y="40" width="640" height="130" rx="45" ry="45" fill="#ffffff"/>
+    <text x="650" y="85" text-anchor="middle" font-size="20">A COMPLETED-TRANSACTION RECORD IS</text>
+    <text x="650" y="115" text-anchor="middle" font-size="20">PERSISTED (item identifier, quantity,</text>
+    <text x="650" y="145" text-anchor="middle" font-size="20">unit price, total value)   400</text>
+    <line x1="650" y1="170" x2="650" y2="228" marker-end="url(#arrow)"/>
+
+    <!-- 402: after insert trigger fires -->
+    <rect x="330" y="230" width="640" height="100" fill="#ffffff"/>
+    <text x="650" y="270" text-anchor="middle" font-size="20">AGGREGATE-STATISTICS TRIGGER</text>
+    <text x="650" y="300" text-anchor="middle" font-size="20">FUNCTION FIRES   402</text>
+    <line x1="650" y1="330" x2="650" y2="388" marker-end="url(#arrow)"/>
+
+    <!-- 404: select prior price -->
+    <rect x="290" y="390" width="720" height="100" fill="#ffffff"/>
+    <text x="650" y="430" text-anchor="middle" font-size="20">READ THE ITEM'S PRIOR REFERENCE</text>
+    <text x="650" y="460" text-anchor="middle" font-size="20">PRICE FROM ITS AGGREGATE STATISTICS RECORD   404</text>
+    <line x1="650" y1="490" x2="650" y2="548" marker-end="url(#arrow)"/>
+
+    <!-- 406: decision diamond -->
+    <polygon points="650,550 900,660 650,770 400,660" fill="#ffffff"/>
+    <text x="650" y="645" text-anchor="middle" font-size="19">PRIOR PRICE ABSENT</text>
+    <text x="650" y="675" text-anchor="middle" font-size="19">OR ZERO?</text>
+    <text x="650" y="705" text-anchor="middle" font-size="18">406</text>
+
+    <!-- YES branch left -->
+    <line x1="400" y1="660" x2="175" y2="660"/>
+    <line x1="175" y1="660" x2="175" y2="698" marker-end="url(#arrow)"/>
+    <text x="300" y="640" text-anchor="middle" font-size="18">YES</text>
+    <rect x="30" y="700" width="290" height="90" fill="#ffffff"/>
+    <text x="175" y="740" text-anchor="middle" font-size="19">percent change := 0</text>
+    <text x="175" y="768" text-anchor="middle" font-size="18">408</text>
+
+    <!-- NO branch right -->
+    <line x1="900" y1="660" x2="1125" y2="660"/>
+    <line x1="1125" y1="660" x2="1125" y2="688" marker-end="url(#arrow)"/>
+    <text x="1010" y="640" text-anchor="middle" font-size="18">NO</text>
+    <rect x="980" y="690" width="290" height="130" fill="#ffffff"/>
+    <text x="1125" y="720" text-anchor="middle" font-size="17">percent change :=</text>
+    <text x="1125" y="748" text-anchor="middle" font-size="17">(current price − prior price)</text>
+    <text x="1125" y="776" text-anchor="middle" font-size="17">÷ prior price × 100</text>
+    <text x="1125" y="804" text-anchor="middle" font-size="17">410</text>
+
+    <!-- merge down to update -->
+    <line x1="175" y1="790" x2="175" y2="870"/>
+    <line x1="1125" y1="820" x2="1125" y2="870"/>
+    <line x1="175" y1="870" x2="1125" y2="870"/>
+    <line x1="650" y1="870" x2="650" y2="928" marker-end="url(#arrow)"/>
+
+    <!-- 412: atomic update -->
+    <rect x="250" y="930" width="800" height="260" fill="#ffffff"/>
+    <text x="650" y="965" text-anchor="middle" font-weight="bold" font-size="20">SINGLE ATOMIC UPDATE OF THE ITEM'S AGGREGATE STATISTICS   412</text>
+    <text x="650" y="1000" text-anchor="middle" font-size="18">set prior reference price to the previous value (or the</text>
+    <text x="650" y="1028" text-anchor="middle" font-size="18">current trade price if none existed)</text>
+    <text x="650" y="1058" text-anchor="middle" font-size="18">set reference price to the current trade price</text>
+    <text x="650" y="1088" text-anchor="middle" font-size="18">increment cumulative volume by the traded quantity</text>
+    <text x="650" y="1118" text-anchor="middle" font-size="18">increment cumulative deal count</text>
+    <text x="650" y="1148" text-anchor="middle" font-size="18">add the trade value to cumulative turnover and</text>
+    <text x="650" y="1176" text-anchor="middle" font-size="18">recompute the volume-weighted average price</text>
+    <line x1="650" y1="1190" x2="650" y2="1248" marker-end="url(#arrow)"/>
+
+    <!-- 414: publication -->
+    <rect x="290" y="1250" width="720" height="100" fill="#ffffff"/>
+    <text x="650" y="1290" text-anchor="middle" font-size="20">UPDATED RECORD BROADCAST ON THE</text>
+    <text x="650" y="1320" text-anchor="middle" font-size="20">REAL-TIME CHANGE-DATA PUBLICATION (SEE FIG. 1)   414</text>
+    <line x1="650" y1="1350" x2="650" y2="1408" marker-end="url(#arrow)"/>
+
+    <!-- 416: subscribers -->
+    <rect x="290" y="1410" width="720" height="130" rx="45" ry="45" fill="#ffffff"/>
+    <text x="650" y="1450" text-anchor="middle" font-size="20">SUBSCRIBED CLIENTS RECEIVE THE</text>
+    <text x="650" y="1480" text-anchor="middle" font-size="20">CHANGE EVENT AND RE-RENDER THE</text>
+    <text x="650" y="1510" text-anchor="middle" font-size="20">ORDER BOOK AND PRICE TICKER   416</text>
+
+  </g>
+  <text x="650" y="1650" text-anchor="middle" font-size="30" font-weight="bold">FIG. 4</text>
+</g></svg>

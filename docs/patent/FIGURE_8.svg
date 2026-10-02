@@ -1,0 +1,94 @@
+<svg viewBox="0 0 1500 1900" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="1500" height="1900" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,7 L10,3.5 z" fill="#000000"/>
+    </marker>
+    <style>text{stroke:none;fill:#000000;}</style>
+  </defs>
+  <text x="750" y="55" text-anchor="middle" font-size="27" font-weight="bold">FIGURE 8 — AUDIT-TRAIL AND BEHAVIOR-ANALYTICS DASHBOARD CONSUMPTION PATH</text>
+
+  <g stroke="#000000" stroke-width="2.5" fill="none" font-size="19">
+
+    <!-- 800: client-side behavioral event sources -->
+    <rect x="330" y="110" width="840" height="140" rx="45" ry="45" fill="#ffffff"/>
+    <text x="750" y="150" text-anchor="middle" font-size="20">CLIENT-SIDE BEHAVIORAL EVENT SOURCE:</text>
+    <text x="750" y="180" text-anchor="middle" font-size="19">page navigation, failed login attempt, or</text>
+    <text x="750" y="210" text-anchor="middle" font-size="19">404 not-found page render   800</text>
+    <line x1="750" y1="250" x2="750" y2="308" marker-end="url(#arrow)"/>
+
+    <!-- 802: beacon endpoint -->
+    <rect x="290" y="310" width="920" height="120" fill="#ffffff"/>
+    <text x="750" y="350" text-anchor="middle" font-weight="bold" font-size="20">POST /api/analytics/beacon   802</text>
+    <text x="750" y="380" text-anchor="middle" font-size="18">unauthenticated; whitelist limited to page_viewed,</text>
+    <text x="750" y="408" text-anchor="middle" font-size="18">login_failed, page_not_found — each with a fixed prop shape</text>
+    <line x1="750" y1="430" x2="750" y2="488" marker-end="url(#arrow)"/>
+
+    <!-- 804: decision diamond -->
+    <polygon points="750,490 970,590 750,690 530,590" fill="#ffffff"/>
+    <text x="750" y="575" text-anchor="middle" font-size="18">AUTHENTICATED</text>
+    <text x="750" y="603" text-anchor="middle" font-size="18">SESSION PRESENT?</text>
+    <text x="750" y="631" text-anchor="middle" font-size="17">804</text>
+
+    <line x1="970" y1="590" x2="1130" y2="590" marker-end="url(#arrow)"/>
+    <text x="1050" y="570" text-anchor="middle" font-size="18">YES</text>
+    <rect x="1130" y="545" width="320" height="90" fill="#ffffff"/>
+    <text x="1290" y="580" text-anchor="middle" font-size="18">distinctId = session</text>
+    <text x="1290" y="608" text-anchor="middle" font-size="18">user id</text>
+
+    <line x1="530" y1="590" x2="370" y2="590" marker-end="url(#arrow)"/>
+    <text x="450" y="570" text-anchor="middle" font-size="18">NO</text>
+    <rect x="50" y="545" width="320" height="90" fill="#ffffff"/>
+    <text x="210" y="580" text-anchor="middle" font-size="18">distinctId =</text>
+    <text x="210" y="608" text-anchor="middle" font-size="18">'anonymous'</text>
+
+    <line x1="210" y1="635" x2="210" y2="760"/>
+    <line x1="1290" y1="635" x2="1290" y2="760"/>
+    <line x1="210" y1="760" x2="1290" y2="760"/>
+    <line x1="750" y1="690" x2="750" y2="760"/>
+    <line x1="750" y1="760" x2="750" y2="818" marker-end="url(#arrow)"/>
+
+    <!-- 806: captureServerEvent -->
+    <rect x="330" y="820" width="840" height="100" fill="#ffffff"/>
+    <text x="750" y="858" text-anchor="middle" font-size="20">captureServerEvent(distinctId, {event, props})</text>
+    <text x="750" y="888" text-anchor="middle" font-size="18">dual-sink execution — see FIG. 6   806</text>
+    <line x1="750" y1="920" x2="750" y2="978" marker-end="url(#arrow)"/>
+
+    <!-- 808: local audit-log store -->
+    <rect x="330" y="980" width="840" height="100" fill="#ffffff"/>
+    <text x="750" y="1018" text-anchor="middle" font-weight="bold" font-size="20">LOCAL AUDIT-LOG STORE   808</text>
+    <text x="750" y="1048" text-anchor="middle" font-size="18">(actor identifier, event type, event detail, timestamp)</text>
+
+    <!-- branch to two dashboards -->
+    <line x1="500" y1="1080" x2="500" y2="1140" marker-end="url(#arrow)"/>
+    <line x1="1000" y1="1080" x2="1000" y2="1140" marker-end="url(#arrow)"/>
+    <line x1="500" y1="1080" x2="1000" y2="1080"/>
+
+    <!-- 810: per-user audit trail -->
+    <rect x="130" y="1142" width="740" height="330" fill="#ffffff"/>
+    <text x="500" y="1180" text-anchor="middle" font-weight="bold" font-size="19">PER-USER AUDIT TRAIL   810</text>
+    <text x="500" y="1210" text-anchor="middle" font-size="18">administrative user-detail view</text>
+    <text x="500" y="1248" text-anchor="middle" font-size="17">retrieve all log entries for the selected</text>
+    <text x="500" y="1276" text-anchor="middle" font-size="17">actor, then merge them in application</text>
+    <text x="500" y="1304" text-anchor="middle" font-size="17">code with that actor's catalog offers,</text>
+    <text x="500" y="1332" text-anchor="middle" font-size="17">bids, transactions (as buyer and as</text>
+    <text x="500" y="1360" text-anchor="middle" font-size="17">seller) and settled trades</text>
+    <text x="500" y="1398" text-anchor="middle" font-size="17">rendered as one chronological</text>
+    <text x="500" y="1426" text-anchor="middle" font-size="17">timeline, newest first</text>
+
+    <!-- 812: behavior analytics dashboard -->
+    <rect x="900" y="1142" width="480" height="330" fill="#ffffff"/>
+    <text x="1140" y="1180" text-anchor="middle" font-weight="bold" font-size="19">BEHAVIOR-ANALYTICS</text>
+    <text x="1140" y="1206" text-anchor="middle" font-weight="bold" font-size="19">DASHBOARD   812</text>
+    <text x="1140" y="1234" text-anchor="middle" font-size="18">administrative behavior dashboard</text>
+    <text x="1140" y="1268" text-anchor="middle" font-size="16">fetch most recent entries;</text>
+    <text x="1140" y="1292" text-anchor="middle" font-size="16">aggregate in application code by</text>
+    <text x="1140" y="1316" text-anchor="middle" font-size="16">actor and by page path to compute:</text>
+    <text x="1140" y="1352" text-anchor="middle" font-size="16">active users (24h / 7d),</text>
+    <text x="1140" y="1376" text-anchor="middle" font-size="16">most / least visited pages,</text>
+    <text x="1140" y="1400" text-anchor="middle" font-size="16">failed-login and 404 counts</text>
+    <text x="1140" y="1424" text-anchor="middle" font-size="16">with recent detail lists</text>
+
+  </g>
+  <text x="750" y="1850" text-anchor="middle" font-size="30" font-weight="bold">FIG. 8</text>
+</svg>

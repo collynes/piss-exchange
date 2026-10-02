@@ -1,0 +1,95 @@
+<svg viewBox="0 0 1550 1740" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <rect x="0" y="0" width="1550" height="1740" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,7 L10,3.5 z" fill="#000000"/>
+    </marker>
+  <style>text{stroke:none;fill:#000000;}</style></defs><text x="775.0" y="55" text-anchor="middle" font-size="27" font-weight="bold">FIGURE 5 — ORDER WORKFLOW STATE DIAGRAM WITH ESCROW COUPLING</text><g transform="translate(0,90)">
+  <g stroke="#000000" stroke-width="2.5" fill="none" font-size="19">
+
+    <!-- 500 PENDING -->
+    <ellipse cx="260" cy="120" rx="150" ry="75" fill="#ffffff"/>
+    <text x="260" y="112" text-anchor="middle" font-weight="bold" font-size="22">PENDING</text>
+    <text x="260" y="140" text-anchor="middle" font-size="17">escrow: HOLDING</text>
+    <text x="260" y="172" text-anchor="middle" font-size="17">500</text>
+
+    <!-- 502 PAID -->
+    <ellipse cx="260" cy="400" rx="150" ry="75" fill="#ffffff"/>
+    <text x="260" y="392" text-anchor="middle" font-weight="bold" font-size="22">PAID</text>
+    <text x="260" y="420" text-anchor="middle" font-size="17">escrow: HOLDING</text>
+    <text x="260" y="452" text-anchor="middle" font-size="17">502</text>
+
+    <!-- 504 CONFIRMED -->
+    <ellipse cx="260" cy="680" rx="150" ry="75" fill="#ffffff"/>
+    <text x="260" y="672" text-anchor="middle" font-weight="bold" font-size="22">CONFIRMED</text>
+    <text x="260" y="700" text-anchor="middle" font-size="17">escrow: HOLDING</text>
+    <text x="260" y="732" text-anchor="middle" font-size="17">504</text>
+
+    <!-- 506 SHIPPED -->
+    <ellipse cx="260" cy="960" rx="150" ry="75" fill="#ffffff"/>
+    <text x="260" y="952" text-anchor="middle" font-weight="bold" font-size="22">SHIPPED</text>
+    <text x="260" y="980" text-anchor="middle" font-size="17">escrow: HOLDING</text>
+    <text x="260" y="1012" text-anchor="middle" font-size="17">506</text>
+
+    <!-- 508 DELIVERED -->
+    <ellipse cx="260" cy="1240" rx="150" ry="75" fill="#ffffff"/>
+    <text x="260" y="1232" text-anchor="middle" font-weight="bold" font-size="22">DELIVERED</text>
+    <text x="260" y="1260" text-anchor="middle" font-size="17">escrow: RELEASED</text>
+    <text x="260" y="1292" text-anchor="middle" font-size="17">508</text>
+
+    <!-- main chain arrows with role labels -->
+    <line x1="260" y1="195" x2="260" y2="318" marker-end="url(#arrow)"/>
+    <text x="440" y="245" font-size="18">[SYSTEM: M-Pesa callback,</text>
+    <text x="440" y="273" font-size="18">ResultCode = 0 — see FIG. 3]</text>
+
+    <line x1="260" y1="475" x2="260" y2="598" marker-end="url(#arrow)"/>
+    <text x="440" y="545" font-size="18">[SELLER or ADMIN: confirm order]</text>
+
+    <line x1="260" y1="755" x2="260" y2="878" marker-end="url(#arrow)"/>
+    <text x="440" y="825" font-size="18">[SELLER or ADMIN: mark shipped]</text>
+
+    <line x1="260" y1="1035" x2="260" y2="1158" marker-end="url(#arrow)"/>
+    <text x="440" y="1090" font-size="18">[BUYER: confirm delivery —</text>
+    <text x="440" y="1118" font-size="18">releases escrow to seller]</text>
+
+    <!-- CANCELLED 510 -->
+    <ellipse cx="1000" cy="260" rx="160" ry="75" fill="#ffffff"/>
+    <text x="1000" y="252" text-anchor="middle" font-weight="bold" font-size="22">CANCELLED</text>
+    <text x="1000" y="280" text-anchor="middle" font-size="17">(terminal)</text>
+    <text x="1000" y="312" text-anchor="middle" font-size="17">510</text>
+    <line x1="405" y1="150" x2="875" y2="248" marker-end="url(#arrow)"/>
+    <text x="620" y="165" font-size="18">[BUYER or ADMIN: cancel —</text>
+    <text x="620" y="193" font-size="18">reserved stock released if held]</text>
+
+    <!-- DISPUTED 512 -->
+    <ellipse cx="1000" cy="680" rx="160" ry="75" fill="#ffffff"/>
+    <text x="1000" y="670" text-anchor="middle" font-weight="bold" font-size="22">DISPUTED</text>
+    <text x="1000" y="698" text-anchor="middle" font-size="17">(terminal, manual)</text>
+    <text x="1000" y="726" text-anchor="middle" font-size="17">512</text>
+    <line x1="405" y1="665" x2="850" y2="655" marker-end="url(#arrow)"/>
+    <text x="560" y="605" font-size="18">[ADMIN: manual intervention</text>
+    <text x="560" y="633" font-size="18">from any non-terminal state]</text>
+
+    <!-- Bid-acceptance alternate entry -->
+    <rect x="1080" y="850" width="400" height="160" fill="#ffffff"/>
+    <text x="1280" y="885" text-anchor="middle" font-size="18">BID ACCEPTED BY SELLER —</text>
+    <text x="1280" y="915" text-anchor="middle" font-size="18">ORDER CREATED DIRECTLY AT</text>
+    <text x="1280" y="945" text-anchor="middle" font-size="18">CONFIRMED, flagged for</text>
+    <text x="1280" y="975" text-anchor="middle" font-size="18">operator-mediated settlement</text>
+    <text x="1280" y="1005" text-anchor="middle" font-size="18">514</text>
+    <line x1="1080" y1="930" x2="390" y2="693" marker-end="url(#arrow)"/>
+
+    <!-- Dawahub settlement path -->
+    <rect x="1080" y="1140" width="420" height="220" fill="#ffffff"/>
+    <text x="1290" y="1178" text-anchor="middle" font-size="18">ADMIN: SETTLE —</text>
+    <text x="1290" y="1208" text-anchor="middle" font-size="18">applicable while escrow HOLDING</text>
+    <text x="1290" y="1238" text-anchor="middle" font-size="18">at CONFIRMED, SHIPPED or</text>
+    <text x="1290" y="1268" text-anchor="middle" font-size="18">DELIVERED — Dawahub pays seller</text>
+    <text x="1290" y="1298" text-anchor="middle" font-size="18">off-platform; escrow marked</text>
+    <text x="1290" y="1328" text-anchor="middle" font-size="18">RELEASED and the trade recorded</text>
+    <text x="1290" y="1356" text-anchor="middle" font-size="18">516</text>
+    <line x1="1080" y1="1250" x2="395" y2="1250" stroke-dasharray="8,5" marker-end="url(#arrow)"/>
+
+  </g>
+  <text x="775" y="1600" text-anchor="middle" font-size="30" font-weight="bold">FIG. 5</text>
+</g></svg>
